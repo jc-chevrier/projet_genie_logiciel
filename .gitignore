@@ -1,0 +1,20 @@
+# Configuration et genération de Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+# https://github.com/takari/maven-wrapper#usage-without-binary-jar
+.mvn/wrapper/maven-wrapper.jar
+
+# Configuration d'Itellij Idea
+.idea/
+*.iml
+
+# Configuraion de la base de données
+src/main/resources/fr/ul/miage/m1/projet_genie_logiciel/configuration/
+
