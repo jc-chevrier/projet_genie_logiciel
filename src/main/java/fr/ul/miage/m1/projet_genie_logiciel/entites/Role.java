@@ -12,14 +12,14 @@ import java.util.Map;
 public class Role extends Entite {
     //Nom de la table correspondant à l'entité.
     public static String NOM_TABLE = "ROLE";
-    //Structure de l'entité.
-    public static Map<String, String> STRUCTURE;
+    //Structure de l'entité [attribut -> type].
+    public static Map<String, Class> STRUCTURE;
 
     //Initialisation de la structure.
     static {
-        STRUCTURE = new HashMap<String, String>();
-        STRUCTURE.put("ID", "Integer");
-        STRUCTURE.put("LIBELLE", "String");
+        STRUCTURE = new HashMap<String, Class>();
+        STRUCTURE.put("ID", Integer.class);
+        STRUCTURE.put("LIBELLE", String.class);
     }
 
     public Role() {

@@ -18,8 +18,8 @@ import java.util.*;
  * @author CHEVRIER, HADJ MESSAOUD,LOUGADI
  */
 public class ORM {
+    //Configuration de la connexion à la base de données.
     private Properties configuration;
-
     //Connexion à la base de données.
     private Connection connexion;
     //Singleton.
@@ -43,7 +43,7 @@ public class ORM {
     }
 
     /**
-     * Charger la configuration.
+     * Charger la configuration de la connexion à la base de données.
      */
     private void chargerConfiguration() {
         configuration = new Properties();
@@ -97,10 +97,10 @@ public class ORM {
      * @param entiteClasse
      * @return
      */
-    private Map<String, String> getEntiteStructure(@NotNull Class entiteClasse) {
-        Map<String, String> entiteStructure = null;
+    private Map<String, Class> getEntiteStructure(@NotNull Class entiteClasse) {
+        Map<String, Class> entiteStructure = null;
         try {
-            entiteStructure = (Map<String, String>) entiteClasse.getDeclaredField("STRUCTURE").get(Map.class);
+            entiteStructure = (Map<String, Class>) entiteClasse.getDeclaredField("STRUCTURE").get(Map.class);
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(0);
@@ -138,7 +138,7 @@ public class ORM {
                                                     @NotNull Class entiteClasse) {
         //Récupération des métadonnées de la table.
         String nomTable = getEntiteNomTable(entiteClasse);
-        Map<String, String> structure = getEntiteStructure(entiteClasse);
+        Map<String, Class> structure = getEntiteStructure(entiteClasse);
 
         //Construction de la reuqête.
         Statement requete = null;
@@ -155,19 +155,15 @@ public class ORM {
                 Map<String, Object> nUpletAttributs = new HashMap<String, Object>();
                 for(String attribut : structure.keySet()) {
                     Object valeur = null;
-                    switch (structure.get(attribut)) {
-                        case "Integer" :
-                            valeur = resultatLignes.getInt(attribut);
-                            break;
-                        case "Double" :
-                           valeur =  resultatLignes.getDouble(attribut);
-                            break;
-                        case "String" :
-                            valeur = resultatLignes.getString(attribut);
-                            break;
-                        case "Date" :
-                            valeur = resultatLignes.getDate(attribut);
-                            break;
+                    Class type = structure.get(attribut);
+                    if (type.equals(Integer.class)) {
+                       valeur = resultatLignes.getInt(attribut);
+                    } else if (type.equals(Double.class)) {
+                       valeur = resultatLignes.getDouble(attribut);
+                    } else if (type.equals(String.class)) {
+                       valeur = resultatLignes.getString(attribut);
+                    } else if (type.equals(Date.class)) {
+                       valeur = resultatLignes.getDate(attribut);
                     }
                     nUpletAttributs.put(attribut, valeur);
                 }
@@ -203,7 +199,7 @@ public class ORM {
             //Récupération des métadonnées de la table.
             Class entiteClasse = nUplet.getClass();
             String nomTable =  getEntiteNomTable(entiteClasse);
-            Map<String, String> structure = getEntiteStructure(entiteClasse);
+            Map<String, Class> structure = getEntiteStructure(entiteClasse);
 
             //Construction de la requête.
             //Cas insertion.
