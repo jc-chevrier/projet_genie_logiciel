@@ -11,6 +11,12 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.*;
 
+/**
+ * ORM, pour la sélection, et la manipualtion
+ * de données de base de données PostgreSQL.
+ *
+ * @author CHEVRIER, HADJ MESSAOUD,LOUGADI
+ */
 public class ORM {
     private Properties configuration;
 
