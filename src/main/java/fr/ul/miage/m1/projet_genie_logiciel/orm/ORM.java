@@ -1,9 +1,8 @@
-package fr.ul.miage.m1.projet_genie_logiciel.outils;
+package fr.ul.miage.m1.projet_genie_logiciel.orm;
 
 import fr.ul.miage.m1.projet_genie_logiciel.Main;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Entite;
 import org.jetbrains.annotations.NotNull;
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,10 +11,10 @@ import java.sql.Statement;
 import java.util.*;
 
 /**
- * ORM, pour la sélection, et la manipualtion
+ * ORM, pour la sélection, et la manipulation
  * de données de base de données PostgreSQL.
  *
- * @author CHEVRIER, HADJ MESSAOUD,LOUGADI
+ * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */
 public class ORM {
     //Configuration de la connexion à la base de données.
@@ -75,58 +74,6 @@ public class ORM {
     }
 
     /**
-     * Récupérer la structure d'une entité.
-     *
-     * @param entiteClasse
-     * @return
-     */
-    private String getEntiteNomTable(@NotNull Class entiteClasse) {
-        String entiteNomTable = null;
-        try {
-            entiteNomTable = (String) entiteClasse.getDeclaredField("NOM_TABLE").get(String.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(0);
-        }
-        return entiteNomTable;
-    }
-
-    /**
-     * Récupérer la structure d'une entité.
-     *
-     * @param entiteClasse
-     * @return
-     */
-    private Map<String, Class> getEntiteStructure(@NotNull Class entiteClasse) {
-        Map<String, Class> entiteStructure = null;
-        try {
-            entiteStructure = (Map<String, Class>) entiteClasse.getDeclaredField("STRUCTURE").get(Map.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(0);
-        }
-        return entiteStructure;
-    }
-
-    /**
-     * Créer un nouvel n-uplet d'une entité.
-     *
-     * @param entiteClasse
-     * @return
-     */
-    private Entite instancierNUplet(@NotNull Class entiteClasse,
-                                    @NotNull Map<String, Object> nUpletAttributs) {
-        Entite nUplet = null;
-        try {
-            nUplet = (Entite) entiteClasse.getDeclaredConstructor(Map.class).newInstance(nUpletAttributs);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(0);
-        }
-        return nUplet;
-    }
-
-    /**
      * Chercher des n-uplets d'une table
      * avec un prédicat.
      *
@@ -134,11 +81,10 @@ public class ORM {
      * @param entiteClasse
      * @return
      */
-    public List<Entite> chercherNUpletsAvecPredicat(@NotNull String predicat,
-                                                    @NotNull Class entiteClasse) {
+    public List<Entite> chercherNUpletsAvecPredicat(@NotNull String predicat, @NotNull Class entiteClasse) {
         //Récupération des métadonnées de la table.
-        String nomTable = getEntiteNomTable(entiteClasse);
-        Map<String, Class> structure = getEntiteStructure(entiteClasse);
+        String nomTable = EntiteMetadonnee.getEntiteNomTable(entiteClasse);
+        Map<String, Class> structure = EntiteMetadonnee.getEntiteStructure(entiteClasse);
 
         //Construction de la reuqête.
         Statement requete = null;
@@ -167,7 +113,7 @@ public class ORM {
                     }
                     nUpletAttributs.put(attribut, valeur);
                 }
-                Entite nUplet = instancierNUplet(entiteClasse, nUpletAttributs);
+                Entite nUplet = EntiteMetadonnee.instancierNUplet(entiteClasse, nUpletAttributs);
                 listeNUplets.add(nUplet);
             }
 
@@ -184,10 +130,22 @@ public class ORM {
     }
 
     /**
+     * Chercher un n-uplet d'une table
+     * avec un prédicat.
+     *
+     * @param predicat
+     * @param entiteClasse
+     * @return
+     */
+    public Entite chercherNUpletAvecPredicat(@NotNull String predicat, @NotNull Class entiteClasse) {
+        return chercherNUpletsAvecPredicat(predicat, entiteClasse).get(0);
+    }
+
+    /**
      * Chercher tous les n-uplets d'une table.
      */
-    public List<Entite> chercherTousLesNUplets(@NotNull Class classe) {
-        return chercherNUpletsAvecPredicat("", classe);
+    public List<Entite> chercherTousLesNUplets(@NotNull Class entiteClasse) {
+        return chercherNUpletsAvecPredicat("", entiteClasse);
     }
 
     /**
@@ -198,8 +156,8 @@ public class ORM {
         try {
             //Récupération des métadonnées de la table.
             Class entiteClasse = nUplet.getClass();
-            String nomTable =  getEntiteNomTable(entiteClasse);
-            Map<String, Class> structure = getEntiteStructure(entiteClasse);
+            String nomTable = EntiteMetadonnee.getEntiteNomTable(entiteClasse);
+            Map<String, Class> structure = EntiteMetadonnee.getEntiteStructure(entiteClasse);
 
             //Construction de la requête.
             //Cas insertion.
@@ -255,7 +213,7 @@ public class ORM {
         try {
             //Récupération des métadonnées de la table.
             Class entiteClasse = nUplet.getClass();
-            String nomTable = getEntiteNomTable(entiteClasse);
+            String nomTable = EntiteMetadonnee.getEntiteNomTable(entiteClasse);
 
             //Requête.
             if(nUplet.getId() != null) {

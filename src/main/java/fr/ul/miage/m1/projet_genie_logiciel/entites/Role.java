@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Entité role.
+ * Entité rôle.
  *
- * @author CHEVRIER, HADJ MESSAOUD,LOUGADI
+ * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */
 public class Role extends Entite {
     //Nom de la table correspondant à l'entité.

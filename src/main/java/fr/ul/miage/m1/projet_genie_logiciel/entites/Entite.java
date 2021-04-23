@@ -1,5 +1,6 @@
 package fr.ul.miage.m1.projet_genie_logiciel.entites;
 
+import fr.ul.miage.m1.projet_genie_logiciel.orm.EntiteMetadonnee;
 import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
@@ -7,17 +8,21 @@ import java.util.Map;
 /**
  * Superlasse des entités.
  *
- * @author CHEVRIER, HADJ MESSAOUD,LOUGADI
+ * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */
 public abstract class Entite {
+    ///Attributs de l'entité.
     protected Map<String, Object> attributs;
 
     /**
      * Créer un nouvel n-uplet sur l'application.
      */
     public Entite() {
+        Map<String, Class> structure = EntiteMetadonnee.getEntiteStructure(getClass());
         attributs = new HashMap<String, Object>();
-        set("ID", null);
+        for(String attribut : structure.keySet()) {
+            set(attribut, null);
+        }
     }
 
     /**
@@ -29,13 +34,20 @@ public abstract class Entite {
     }
 
     /**
+     * Savoir si le n-uplet a renseigné un attribut.
+     */
+    public boolean renseigne(@NotNull String attribut) {
+        return attributs.containsKey(attribut);
+    }
+
+    /**
      * Obtenir un attribut.
      *
      * @param attribut
      * @return
      */
     public Object get(@NotNull String attribut) {
-        if(!attributs.containsKey(attribut)) {
+        if(!renseigne(attribut)) {
             throw new IllegalArgumentException("L'attribut " + attribut + " est introuvale !");
         }
         return attributs.get(attribut);
