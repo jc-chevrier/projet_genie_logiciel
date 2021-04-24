@@ -23,6 +23,8 @@ public class ORM {
     private Connection connexion;
     //Singleton.
     private static ORM ORMSingleton;
+    //Nom du fichier de configuration.
+    public static String CONFIGURATION_FILENAME = "./configuration/configuration_bdd.properties";
 
     private ORM() {
         chargerConfiguration();
@@ -47,7 +49,7 @@ public class ORM {
     private void chargerConfiguration() {
         configuration = new Properties();
         try {
-            configuration.load(Main.class.getResourceAsStream("./configuration/configuration_bdd.properties"));
+            configuration.load(Main.class.getResourceAsStream(CONFIGURATION_FILENAME));
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Erreur ! Problème au cours du chargement de la configuration de la base de données !");
@@ -138,7 +140,8 @@ public class ORM {
      * @return
      */
     public Entite chercherNUpletAvecPredicat(@NotNull String predicat, @NotNull Class entiteClasse) {
-        return chercherNUpletsAvecPredicat(predicat, entiteClasse).get(0);
+        List<Entite> nUplets = chercherNUpletsAvecPredicat(predicat, entiteClasse);
+        return nUplets.size() == 0 ? null : nUplets.get(0);
     }
 
     /**
