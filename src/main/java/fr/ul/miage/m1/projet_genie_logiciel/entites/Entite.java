@@ -3,6 +3,7 @@ package fr.ul.miage.m1.projet_genie_logiciel.entites;
 import fr.ul.miage.m1.projet_genie_logiciel.orm.EntiteMetadonnee;
 import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -89,12 +90,12 @@ public abstract class Entite {
 
     @Override
     public String toString() {
-        String contenu = getClass().getSimpleName() + "[";
+        String contenu = getClass().getSimpleName() + " [ ";
         for(String attribut : attributs.keySet()) {
             Object valeur = attributs.get(attribut);
-            contenu +=  attribut + " = " + valeur + ",";
+            contenu +=  attribut.toLowerCase(Locale.ROOT) + " = " + valeur + " ,";
         }
-        contenu = contenu.substring(0, contenu.length() - 1) + "]";
+        contenu = contenu.substring(0, contenu.length() - 1) + " ]";
         return contenu;
     }
 }
