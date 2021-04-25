@@ -6,6 +6,8 @@ import fr.ul.miage.m1.projet_genie_logiciel.entites.Unite;
 import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
 
+import java.util.List;
+
 public class IngredientControleur extends Controleur {
 
     /**
@@ -21,19 +23,32 @@ public class IngredientControleur extends Controleur {
 
         String libelle = ui.poserQuestion("Saisir un libellé : ", UI.REGEX_CHAINE_DE_CARACTERES, false);
         Double stock = ui.poserQuestionDecimal("Saisir le stock" , UI.REGEX_GRAND_DECIMAL_POSITIF , false);
-        Unite unite = new Unite();
-        Entite entite = orm.chercherNUpletAvecPredicat("WHERE ID = 1", Unite.class);
-        unite = (Unite) entite;
-        int id_untite = unite.getId();
+        List<Entite> liste = orm.chercherTousLesNUplets(Unite.class);
+        int idUnite = ui.poserQuestionListeNUplets(liste);
 
         Ingredient ingredient = new Ingredient();
         ingredient.setLibelle(libelle);
         ingredient.setStock(stock);
-        ingredient.setIdUnite(id_untite);
+        ingredient.setIdUnite(idUnite);
 
         orm.persisterNUplet(ingredient);
         ui.afficher("Ingrédient ajouté! ");
 
         AccueilControleur.get();
+    }
+    /**
+     * Lister ingédients.
+     */
+    public static void lister() {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Questions et entrées.
+        ui.afficher("\n" + UI.DELIMITEUR + "\nLister les ingrédient :");
+        List<Entite> liste = orm.chercherTousLesNUplets(Ingredient.class);
+        ui.listerNUplets(liste);
+        AccueilControleur.get();
+
     }
 }
