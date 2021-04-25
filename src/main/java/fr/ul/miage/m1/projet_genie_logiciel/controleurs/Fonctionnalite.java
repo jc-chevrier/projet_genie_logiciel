@@ -28,7 +28,7 @@ public class Fonctionnalite {
                               new Fonctionnalite("Modifier une unité", AccueilControleur::get), //TODO à modifier
                               new Fonctionnalite("Supprimer une unité", AccueilControleur::get), //TODO à modifier
                               new Fonctionnalite("Lister les unités", AccueilControleur::get), //TODO à modifier
-                              new Fonctionnalite("Ajouter un ingrédient au catalogue des ingrédients", AccueilControleur::get), //TODO à modifier
+                              new Fonctionnalite("Ajouter un ingrédient au catalogue des ingrédients", IngredientControleur::ajouter),
                               new Fonctionnalite("Supprimer un ingrédient au catalogue des ingrédients", AccueilControleur::get), //TODO à modifier
                               new Fonctionnalite("Modifier un ingrédient", AccueilControleur::get), //TODO à modifier
                               new Fonctionnalite("Lister les ingrédients", AccueilControleur::get), //TODO à modifier
