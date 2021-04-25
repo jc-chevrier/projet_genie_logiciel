@@ -53,6 +53,6 @@ public class AuthControleur extends Controleur {
         ui.afficher("Déconnexion réussie !");
 
         //Retour vers l'accueil.
-        AccueilControlleur.getAccueil();
+        AccueilControleur.get();
     }
 }

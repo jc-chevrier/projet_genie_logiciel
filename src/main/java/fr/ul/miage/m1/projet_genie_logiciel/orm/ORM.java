@@ -234,8 +234,8 @@ public class ORM {
             //Requête.
             if(nUplet.getId() != null) {
                 //Construction de la requête.
-                Statement requete = connexion.createStatement();
                 requeteString = "DELETE FROM " + nomTable + " WHERE ID = " + nUplet.getId()  + ";";
+                Statement requete = connexion.createStatement();
                 //Execution de la requête.
                 requete.executeUpdate(requeteString);
                 //Validation de la transaction.

@@ -8,11 +8,11 @@ import java.util.List;
  *
  * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */
-public class AccueilControlleur extends Controleur {
+public class AccueilControleur extends Controleur {
     /**
      * Obtenir l'accueil de l'interface.
      */
-    public static void getAccueil() {
+    public static void get() {
         //UI.
         UI ui = getUI();
 
