@@ -151,7 +151,7 @@ public class UI {
      *
      * @return
      */
-    public int poserQuestionListeNUplets(@NotNull Class entiteClasse, @NotNull List<Entite> nUplets) {
+    public int poserQuestionListeNUplets(@NotNull List<Entite> nUplets) {
         String question = "Sélectionner :";
         String reponsesPossiblesRegex = "";
         int nbNUplets = nUplets.size();
