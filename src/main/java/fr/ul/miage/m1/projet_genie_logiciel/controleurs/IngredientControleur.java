@@ -7,6 +7,9 @@ import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
 
 import java.util.List;
+/**
+ * Controleur pour les ingrédient.
+ */
 
 public class IngredientControleur extends Controleur {
 
@@ -26,6 +29,7 @@ public class IngredientControleur extends Controleur {
         List<Entite> liste = orm.chercherTousLesNUplets(Unite.class);
         int idUnite = ui.poserQuestionListeNUplets(liste);
 
+        //insertion d'un ingredient
         Ingredient ingredient = new Ingredient();
         ingredient.setLibelle(libelle);
         ingredient.setStock(stock);
@@ -34,10 +38,12 @@ public class IngredientControleur extends Controleur {
         orm.persisterNUplet(ingredient);
         ui.afficher("Ingrédient ajouté! ");
 
+        //retourner à l'accueil
         AccueilControleur.get();
     }
+
     /**
-     * Lister ingédients.
+     * Lister les ingédients.
      */
     public static void lister() {
         //UI et ORM.
@@ -46,9 +52,13 @@ public class IngredientControleur extends Controleur {
 
         //Questions et entrées.
         ui.afficher("\n" + UI.DELIMITEUR + "\nLister les ingrédient :");
-        List<Entite> liste = orm.chercherTousLesNUplets(Ingredient.class);
-        ui.listerNUplets(liste);
-        AccueilControleur.get();
 
+        //récupérer les ingrédients de la base
+        List<Entite> liste = orm.chercherTousLesNUplets(Ingredient.class);
+        //retourner la liste des ingrédients
+        ui.listerNUplets(liste);
+
+        //retour à l'accueil
+        AccueilControleur.get();
     }
 }
