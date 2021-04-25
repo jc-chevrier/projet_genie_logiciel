@@ -132,7 +132,7 @@ public class UI {
      * @return
      */
     public int poserQuestionListeOptions(@NotNull List<String> options) {
-        String question = "Sélectionner une option :";
+        String question = "Sélectionner :";
         String reponsesPossiblesRegex = "";
         int nbOptions = options.size();
         for(int index = 0; index < nbOptions; index++) {
@@ -151,8 +151,8 @@ public class UI {
      *
      * @return
      */
-    public int poserQuestionListeNUplets(@NotNull List<Entite> nUplets) {
-        String question = "Sélectionner une option :";
+    public int poserQuestionListeNUplets(@NotNull Class entiteClasse, @NotNull List<Entite> nUplets) {
+        String question = "Sélectionner :";
         String reponsesPossiblesRegex = "";
         int nbNUplets = nUplets.size();
         for(int index = 0; index < nbNUplets; index++) {
