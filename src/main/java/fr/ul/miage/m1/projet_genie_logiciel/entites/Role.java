@@ -10,6 +10,13 @@ import java.util.Map;
  * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */
 public class Role extends Entite {
+    //Ids des rôles existants.
+    public final static int DIRECTEUR = 1;
+    public final static int MAITRE_HOTEL = 2;
+    public final static int CUISINIER = 3;
+    public final static int SERVEUR = 4;
+    public final static int ASSISTANT_SERVICE = 5;
+
     //Nom de la table correspondant à l'entité.
     public static String NOM_TABLE = "ROLE";
     //Structure de l'entité [attribut -> type].

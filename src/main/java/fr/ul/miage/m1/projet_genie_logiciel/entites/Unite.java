@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * Entité unite.
  *
- * @author CHEVRIER, HADJ MESSAOUD,LOUGADI
+ * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */
 public class Unite extends Entite {
     //Nom de la table correspondant à l'entité.

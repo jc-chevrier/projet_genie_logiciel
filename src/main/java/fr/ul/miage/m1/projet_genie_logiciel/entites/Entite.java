@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Superlasse des entités.
+ * Superlasse abstraite des entités.
  *
  * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */

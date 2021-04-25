@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * Entité Compte.
  *
- * @author CHEVRIER, HADJ MESSAOUD,LOUGADI
+ * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */
 public class Compte extends Entite {
     //Nom de la table correspondant à l'entité.
@@ -64,6 +64,4 @@ public class Compte extends Entite {
     public void setIdRole(@NotNull Integer idRole) {
         set("ID_ROLE", idRole);
     }
-
-
 }
