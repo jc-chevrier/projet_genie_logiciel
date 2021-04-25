@@ -116,12 +116,12 @@ public class UI {
      * @return
      */
     public int poserQuestionListeOptions(List<String> options) {
-        String question = "Selectionner une option :";
+        String question = "Sélectionner une option :";
         String reponsesPossiblesRegex = "";
         int nbOptions = options.size();
         for(int index = 0; index < nbOptions; index++) {
             String groupeFonctionnalite = options.get(index);
-            question += "\n" + groupeFonctionnalite + "\t(saisir " + (index + 1) + ")";
+            question += "\n" + groupeFonctionnalite + " (saisir " + (index + 1) + ")";
             reponsesPossiblesRegex += (index + 1) + "{1}" + ((index < (nbOptions - 1)) ? "|" : "");
         }
         int index = poserQuestionEntier(question, reponsesPossiblesRegex, true) - 1;
