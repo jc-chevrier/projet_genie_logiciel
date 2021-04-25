@@ -125,6 +125,19 @@ public class UI {
     }
 
     /**
+     * Poser une question fermée (oui, non).
+     *
+     * @param question
+     * @return
+     */
+    public boolean poserQuestionFermee(@NotNull String question, boolean afficherDelimiteur) {
+        question += question + "(oui/non)";
+        String reponsesPossiblesRegex = "oui|non";
+        String reponse = poserQuestion(question, reponsesPossiblesRegex, afficherDelimiteur) ;
+        return reponse.equals("oui");
+    }
+
+    /**
      * Poser une question en proposant une liste d'options,
      * et obtenir l'indice de l'option sélectionnée.
      *
@@ -164,11 +177,11 @@ public class UI {
         return id;
     }
 
-    /*
+    /**
      * Afficher une liste de strings,
      * sans selection par al suite.
      *
-     * @param list
+     * @param elements
      * @return
      */
     public void lister(@NotNull List<String> elements) {
