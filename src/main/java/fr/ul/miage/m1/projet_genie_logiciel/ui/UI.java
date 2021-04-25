@@ -109,6 +109,20 @@ public class UI {
     }
 
     /**
+     * Poser une question dont la réponse est un nombre décimal
+     * Cette fonction sert à factoriser la conversion de chaine de caractères vers nombre décimal.
+     *
+     * @param question
+     * @param reponsesPossiblesRegex
+     * @param afficherDelimiteur
+     * @return
+     */
+    public double poserQuestionDecimal(@NotNull String question, @NotNull String reponsesPossiblesRegex,
+                                      boolean afficherDelimiteur) {
+        return Double.parseDouble(poserQuestion(question, reponsesPossiblesRegex, afficherDelimiteur));
+    }
+
+    /**
      * Poser une question en proposant une liste d'options,
      * et obtenir l'indice de l'option sélectionnée.
      *
