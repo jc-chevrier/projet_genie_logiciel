@@ -34,7 +34,16 @@ public abstract class Controleur {
      *
      * @return
      */
-    protected static Compte getUtilisateurCourant()  {
-        return getUI().getUtilisateurCourant();
+    protected static Compte getUtilisateurConnecte()  {
+        return getUI().getUtilisateurConnecte();
+    }
+
+    /**
+     * Savoir si un utilisateur est connecté.
+     *
+     * @return
+     */
+    protected static boolean utilisateurConnecte()  {
+        return getUtilisateurConnecte() != null;
     }
 }

@@ -36,7 +36,9 @@ public class Fonctionnalite {
                               new Fonctionnalite("Ajouter un plat au catalogue des plats", AccueilControlleur::getAccueil), //TODO à modifier
                               new Fonctionnalite("Supprimer un plat du catalogue des plats", AccueilControlleur::getAccueil), //TODO à modifier
                               new Fonctionnalite("Modifier un plat", AccueilControlleur::getAccueil), //TODO à modifier
-                              new Fonctionnalite("Lister les plats du catalogue des plats", AccueilControlleur::getAccueil)); //TODO à modifier
+                              new Fonctionnalite("Lister les plats du catalogue des plats", AccueilControlleur::getAccueil), //TODO à modifier
+                              new Fonctionnalite("Se déconnecter", AuthControleur::seDeconnecter),
+                              new Fonctionnalite("Quitter", () -> System.exit(0)));
 
         //TODO ajouter pour autres rôles.
 

@@ -30,13 +30,13 @@ public class UI {
     private Scanner scanner;
 
     //Utilisateur connecté.
-    private Compte utilisateurCourant;
+    private Compte utilisateurConnecte;
 
 
 
     private UI() {
         scanner = new Scanner(System.in);
-        utilisateurCourant = null;
+        utilisateurConnecte = null;
     }
 
     /**
@@ -131,20 +131,20 @@ public class UI {
 
 
     /**
-     * Obtenir l'utilisateur connecté courant.
+     * Obtenir l'utilisateur connecté.
      *
      * @return
      */
-    public Compte getUtilisateurCourant() {
-        return utilisateurCourant;
+    public Compte getUtilisateurConnecte() {
+        return utilisateurConnecte;
     }
 
     /**
-     * Modifier l'utilisateur connecté courant.
+     * Modifier l'utilisateur connecté.
      *
-     * @param utilisateurCourant
+     * @param utilisateurConnecte
      */
-    public void setUtilisateurCourant(@NotNull Compte utilisateurCourant) {
-        this.utilisateurCourant = utilisateurCourant;
+    public void setUtilisateurConnecte(Compte utilisateurConnecte) {
+        this.utilisateurConnecte = utilisateurConnecte;
     }
 }

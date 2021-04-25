@@ -1,6 +1,5 @@
 package fr.ul.miage.m1.projet_genie_logiciel.controleurs;
 
-import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
 import java.util.List;
 
@@ -18,15 +17,17 @@ public class AccueilControlleur extends Controleur {
         UI ui = getUI();
 
         //Connexion.
-        AuthControleur.seConnecter();
+        if(!utilisateurConnecte()) {
+            AuthControleur.seConnecter();
+        }
 
         //Question fonctionnalités.
-        int idRoleUtilisateurCourant = getUtilisateurCourant().getIdRole();
-        List<String> fonctionnalitesLibelles = Fonctionnalite.getRoleFonctionnalitesLibelles(idRoleUtilisateurCourant);
-        int indexFonctionnaliteSelectionnee = ui.poserQuestionListeOptions(fonctionnalitesLibelles);
+        int idRole = getUtilisateurConnecte().getIdRole();
+        List<String> fonctionnalitesLibelles = Fonctionnalite.getRoleFonctionnalitesLibelles(idRole);
+        int indexFonctionnalite = ui.poserQuestionListeOptions(fonctionnalitesLibelles);
 
-        //Exécution de la focntionnalité.
-        Fonctionnalite fonctionnalite = Fonctionnalite.getFonctionnalite(idRoleUtilisateurCourant, indexFonctionnaliteSelectionnee);
+        //Exécution de la fonctionnalité sélectionnée.
+        Fonctionnalite fonctionnalite = Fonctionnalite.getFonctionnalite(idRole, indexFonctionnalite);
         fonctionnalite.executer();
     }
 }

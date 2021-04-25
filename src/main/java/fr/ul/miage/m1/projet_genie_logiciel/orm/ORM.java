@@ -51,7 +51,7 @@ public class ORM {
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Erreur ! Problème au cours du chargement de la configuration de la base de données !");
-            System.exit(0);
+            System.exit(1);
         }
     }
 
@@ -69,7 +69,7 @@ public class ORM {
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Erreur ! Connexion impossible à la base de données !");
-            System.exit(0);
+            System.exit(1);
         }
     }
 
@@ -124,7 +124,7 @@ public class ORM {
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Erreur ! Une requête se sélection a échouée : \"" + requeteString + "\" !");
-            System.exit(0);
+            System.exit(1);
         }
 
         return listeNUplets;
@@ -215,7 +215,7 @@ public class ORM {
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Erreur ! Une requête de persistence a échouée : \"" + requeteString + "\" !");
-            System.exit(0);
+            System.exit(1);
         }
     }
 
@@ -246,7 +246,7 @@ public class ORM {
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Erreur ! Une requête de suppression a échouée : \"" + requeteString + "\" !");
-            System.exit(0);
+            System.exit(1);
         }
     }
 }

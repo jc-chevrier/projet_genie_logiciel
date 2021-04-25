@@ -22,7 +22,7 @@ public class AuthControleur extends Controleur {
         ORM orm = getORM();
 
         //Questions et entrées.
-        ui.afficher(UI.DELIMITEUR + "\nMe connecter :");
+        ui.afficher("\n" + UI.DELIMITEUR + "\nMe connecter :");
         String nom = ui.poserQuestion("Saisir votre nom :", UI.REGEX_CHAINE_DE_CARACTERES, false);
         String prenom = ui.poserQuestion("Saisir votre prenom :", UI.REGEX_CHAINE_DE_CARACTERES, false);
 
@@ -31,13 +31,13 @@ public class AuthControleur extends Controleur {
                                                                 "AND LOWER(prenom) = LOWER('" + prenom + "')", Compte.class);
         //Cas récursif.
         if(compte == null) {
-            ui.afficher("Erreur durant la tentative de connexion !" + "\n");
+            ui.afficher("Erreur durant la tentative de connexion !");
             seConnecter();
         //Cas trivial.
         } else {
             ui.afficher("Connexion réussie !");
             //On retient l'utilisateur courant connecté.
-            ui.setUtilisateurCourant(compte);
+            ui.setUtilisateurConnecte(compte);
         }
     }
 
@@ -49,10 +49,10 @@ public class AuthControleur extends Controleur {
         UI ui = getUI();
 
         //On retient la déconnexion.
-        ui.setUtilisateurCourant(null);
+        ui.setUtilisateurConnecte(null);
         ui.afficher("Déconnexion réussie !");
 
-        //Retour vers la connexion.
-        seConnecter();
+        //Retour vers l'accueil.
+        AccueilControlleur.getAccueil();
     }
 }
