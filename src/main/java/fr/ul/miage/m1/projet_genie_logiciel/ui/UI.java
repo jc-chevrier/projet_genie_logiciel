@@ -131,7 +131,7 @@ public class UI {
      * @return
      */
     public boolean poserQuestionFermee(@NotNull String question, boolean afficherDelimiteur) {
-        question += question + "(oui/non)";
+        question += " (oui/non)";
         String reponsesPossiblesRegex = "oui|non";
         String reponse = poserQuestion(question, reponsesPossiblesRegex, afficherDelimiteur) ;
         return reponse.equals("oui");
