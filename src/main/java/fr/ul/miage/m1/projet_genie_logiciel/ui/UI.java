@@ -160,7 +160,7 @@ public class UI {
             question += "\n" + nUplet + " (saisir " + (nUplet.getId()) + ")";
             reponsesPossiblesRegex += (nUplet.getId()) + "{1}" + ((index < (nbNUplets - 1)) ? "|" : "");
         }
-        int id = poserQuestionEntier(question, reponsesPossiblesRegex, true) - 1;
+        int id = poserQuestionEntier(question, reponsesPossiblesRegex, true);
         return id;
     }
 
