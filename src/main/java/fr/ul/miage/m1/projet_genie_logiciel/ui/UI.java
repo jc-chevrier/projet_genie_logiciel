@@ -1,9 +1,11 @@
 package fr.ul.miage.m1.projet_genie_logiciel.ui;
 
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Compte;
+import fr.ul.miage.m1.projet_genie_logiciel.entites.Entite;
 import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class UI {
     //Délimiteur sur la console entre des contenus.
@@ -129,19 +131,66 @@ public class UI {
      * @param options
      * @return
      */
-    public int poserQuestionListeOptions(List<String> options) {
-        String question = "Sélectionner une option :";
+    public int poserQuestionListeOptions(@NotNull List<String> options) {
+        String question = "Sélectionner :";
         String reponsesPossiblesRegex = "";
         int nbOptions = options.size();
         for(int index = 0; index < nbOptions; index++) {
-            String groupeFonctionnalite = options.get(index);
-            question += "\n" + groupeFonctionnalite + " (saisir " + (index + 1) + ")";
+            String option = options.get(index);
+            question += "\n" + option + " (saisir " + (index + 1) + ")";
             reponsesPossiblesRegex += (index + 1) + "{1}" + ((index < (nbOptions - 1)) ? "|" : "");
         }
         int index = poserQuestionEntier(question, reponsesPossiblesRegex, true) - 1;
         return index;
     }
 
+    /**
+     * Poser une question en proposant une liste d'options
+     * pour une liste de n-uplets, et obtenir l'id de
+     * du n-uplet sélectionné.
+     *
+     * @return
+     */
+    public int poserQuestionListeNUplets(@NotNull List<Entite> nUplets) {
+        String question = "Sélectionner :";
+        String reponsesPossiblesRegex = "";
+        int nbNUplets = nUplets.size();
+        for(int index = 0; index < nbNUplets; index++) {
+            Entite nUplet = nUplets.get(index);
+            question += "\n" + nUplet + " (saisir " + (nUplet.getId()) + ")";
+            reponsesPossiblesRegex += (nUplet.getId()) + "{1}" + ((index < (nbNUplets - 1)) ? "|" : "");
+        }
+        int id = poserQuestionEntier(question, reponsesPossiblesRegex, true);
+        return id;
+    }
+
+    /*
+     * Afficher une liste de strings,
+     * sans selection par al suite.
+     *
+     * @param list
+     * @return
+     */
+    public void lister(@NotNull List<String> elements) {
+        String contenu = "";
+        int nbElements = elements.size();
+        for(int index = 0; index < nbElements; index++) {
+            String element = elements.get(index);
+            contenu += element + ((index < (nbElements - 1)) ? "\n" : "");;
+        }
+        afficher(contenu);
+    }
+
+    /**
+     * Afficher une liste de n-uplets,
+     * sans selection par al suite.
+     *
+     * @param nUplets
+     * @return
+     */
+    public void listerNUplets(@NotNull List<Entite> nUplets) {
+        lister(nUplets.stream().map(nUplet -> nUplet.toString()).collect(Collectors.toList()));
+    }
 
 
     /**
