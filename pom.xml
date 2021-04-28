@@ -21,14 +21,11 @@
             <artifactId>annotations</artifactId>
             <version>16.0.2</version>
         </dependency>
-<<<<<<< HEAD
-=======
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>5.6.2</version>
             <scope>test</scope>
         </dependency>
->>>>>>> ad2e01bfd92cc902f7f5c4dd52063f20b6480318
     </dependencies>
 </project>

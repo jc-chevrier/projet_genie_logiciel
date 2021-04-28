@@ -1,7 +1,9 @@
 package fr.ul.miage.m1.projet_genie_logiciel.entites;
 
+import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -63,5 +65,36 @@ public class Plat extends Entite {
 
     public void setIdCategorie(@NotNull Integer idCategorie) {
         set("ID_CATEGORIE", idCategorie);
+    }
+
+
+    @Override
+    public String toString() {
+        ORM orm = ORM.getInstance();
+        String contenu = "Plat [ ";
+        Object id = attributs.get("ID");
+        contenu +=  "id = " + id + ", ";
+        Object libelle = attributs.get("LIBELLE");
+        contenu +=  "libellé = " + libelle + ", ";
+        Object prix = attributs.get("PRIX");
+        contenu +=  "prix = " + prix + "€ ]\nComposition [ ";
+        //TODO catégorie.
+        List<Entite> platIngredients = orm.chercherNUpletsAvecPredicat(
+                                                                "WHERE ID_PLAT = "  + id,
+                                                                 PlatIngredients.class);
+        int nbPlatsIngredients = platIngredients.size();
+        for(int index = 0; index < nbPlatsIngredients; index++) {
+            PlatIngredients platIngredient = (PlatIngredients) platIngredients.get(index);
+            Ingredient ingredient = (Ingredient) orm.chercherNUpletAvecPredicat(
+                                                        "WHERE ID = " + platIngredient.getIdIngredient(),
+                                                        Ingredient.class);
+            Unite unite = (Unite) orm.chercherNUpletAvecPredicat(
+                                                        "WHERE ID = " + ingredient.getIdUnite(),
+                                                         Unite.class);
+            contenu += "(" + ingredient.getLibelle() + " : " +
+                       platIngredient.getQuantite() + " " + unite.getLibelle() + ")" +
+                       ((index < (nbPlatsIngredients - 1)) ? ", " : " ]");
+        }
+        return contenu;
     }
 }
