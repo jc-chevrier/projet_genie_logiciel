@@ -127,6 +127,7 @@ public class UI {
     /**
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
      * Poser une question fermée (oui, non).
      *
      * @param question
@@ -144,6 +145,8 @@ public class UI {
 >>>>>>> fd99e4c965e1ed812db89102c5c8ad3d79efe4f3
 =======
 >>>>>>> 2496e6ed7b551e1964eeed3d8e697b1c40905eb5
+=======
+>>>>>>> 3b29530ceedfde8db6fcf2c07969249d093c4cb0
      * Poser une question en proposant une liste d'options,
      * et obtenir l'indice de l'option sélectionnée.
      *
@@ -210,7 +213,7 @@ public class UI {
     public void listerNUplets(@NotNull List<Entite> nUplets) {
         lister(nUplets.stream().map(nUplet -> nUplet.toString()).collect(Collectors.toList()));
     }
-
+    git
     /**
      * Obtenir l'utilisateur connecté.
      *

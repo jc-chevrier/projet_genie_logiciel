@@ -4,16 +4,12 @@ import fr.ul.miage.m1.projet_genie_logiciel.entites.Entite;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Unite;
 import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
+
 import java.util.List;
 
-/**
- * Contrôleur pour l'unité.
- *
- * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
- */
 public class UniteControleur extends Controleur{
     /**
-     * Ajouter une unité
+     * Obtenir l'accueil de l'interface.
      */
     public static void ajouterUnite() {
         //UI.
@@ -78,6 +74,33 @@ public class UniteControleur extends Controleur{
             orm.persisterNUplet(unite);
             ui.afficher("Unité listé !");
         }
+        //Retour vers l'accueil.
+        AccueilControleur.get();
+    }
+
+    /**
+     * Lister les unités
+     */
+    public static void supprimer(){
+        //UI.
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Afficher la liste des unités
+        List<Entite> liste = orm.chercherTousLesNUplets(Unite.class);
+        int idUnite = ui.poserQuestionListeNUplets(liste);
+
+        if(liste.isEmpty()){
+            ui.afficher("\n" + UI.DELIMITEUR + "\nAucune liste d'unité à supprimer trouvé dans le cataloque !");
+            //Sinon
+        } else {
+            ui.afficher("\n" + UI.DELIMITEUR + "\nSupprimer une unité :");
+            //Supprimer une unité
+            Unite unite = (Unite) orm.chercherNUpletAvecPredicat("WHERE ID = " + idUnite, Unite.class);
+            orm.supprimerNUplet(unite);
+            ui.afficher("Unité supprimé !");
+        }
+
         //Retour vers l'accueil.
         AccueilControleur.get();
     }
