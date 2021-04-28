@@ -176,6 +176,7 @@ public class UI {
         int id = poserQuestionEntier(question, reponsesPossiblesRegex, true);
         return id;
     }
+
     /**
      * Afficher une liste de strings,
      * sans selection par al suite.

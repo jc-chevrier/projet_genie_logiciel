@@ -58,6 +58,7 @@ public class Ingredient extends Entite {
     }
 
 
+
     @Override
     public String toString() {
         String contenu = "Ingrédient [ ";

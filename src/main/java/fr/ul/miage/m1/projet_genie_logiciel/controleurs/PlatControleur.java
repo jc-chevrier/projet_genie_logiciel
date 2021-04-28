@@ -4,7 +4,6 @@ import fr.ul.miage.m1.projet_genie_logiciel.entites.*;
 import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -105,7 +104,7 @@ public class PlatControleur extends Controleur {
         ORM orm = getORM();
 
         //Plat.
-        ui.afficher("\n" + UI.DELIMITEUR + "\nAjouter un plat :");
+        ui.afficher("\n" + UI.DELIMITEUR + "\nAjout d'un plat au catalogue :");
         String libelle = ui.poserQuestion("Saisir un libellé :", UI.REGEX_CHAINE_DE_CARACTERES, false);
         Double prix = ui.poserQuestionDecimal("Saisir un prix : ", UI.REGEX_DECIMAL_POSITIF, false);
 
@@ -124,6 +123,29 @@ public class PlatControleur extends Controleur {
         });
         ui.afficher("Plat ajouté !");
         ui.afficher(plat.toString());
+
+        //Retour vers l'accueil.
+        AccueilControleur.get();
+    }
+
+    /**
+     * Lister les plats.
+     */
+    public static void lister() {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Listing.
+        List<Entite> plats = orm.chercherTousLesNUplets(Plat.class);
+        //Si pas de plats dans le cataloque.
+        if(plats.isEmpty()) {
+            ui.afficher("\n" + UI.DELIMITEUR + "\nAucun plat trouvé dans le cataloque !");
+        //Sinon.
+        } else {
+            ui.afficher("\n" + UI.DELIMITEUR + "\nListing des plats du catalogue :");
+            ui.listerNUplets(plats);
+        }
 
         //Retour vers l'accueil.
         AccueilControleur.get();

@@ -68,6 +68,7 @@ public class Plat extends Entite {
     }
 
 
+
     @Override
     public String toString() {
         ORM orm = ORM.getInstance();
@@ -77,7 +78,7 @@ public class Plat extends Entite {
         Object libelle = attributs.get("LIBELLE");
         contenu +=  "libellé = " + libelle + ", ";
         Object prix = attributs.get("PRIX");
-        contenu +=  "prix = " + prix + "€ ]\nComposition [ ";
+        contenu +=  "prix = " + prix + " € ]\nComposition [ ";
         //TODO catégorie.
         List<Entite> platIngredients = orm.chercherNUpletsAvecPredicat(
                                                                 "WHERE ID_PLAT = "  + id,

@@ -28,14 +28,14 @@ public class Fonctionnalite {
                               new Fonctionnalite("Modifier une unité", AccueilControleur::get), //TODO à modifier
                               new Fonctionnalite("Supprimer une unité", AccueilControleur::get), //TODO à modifier
                               new Fonctionnalite("Lister les unités", AccueilControleur::get), //TODO à modifier
-                              new Fonctionnalite("Ajouter un ingrédient au catalogue des ingrédients", IngredientControleur::ajouter),
-                              new Fonctionnalite("Supprimer un ingrédient au catalogue des ingrédients", IngredientControleur::supprimer),
-                              new Fonctionnalite("Modifier un ingrédient", IngredientControleur::modifier),
-                              new Fonctionnalite("Lister les ingrédients", IngredientControleur::lister),
-                              new Fonctionnalite("Ajouter un plat au catalogue des plats", AccueilControleur::get), //TODO à modifier
-                              new Fonctionnalite("Supprimer un plat du catalogue des plats", AccueilControleur::get), //TODO à modifier
+                              new Fonctionnalite("Ajouter un ingrédient au catalogue", AccueilControleur::get), //TODO à modifier
+                              new Fonctionnalite("Supprimer un ingrédient du catalogue", AccueilControleur::get), //TODO à modifier
+                              new Fonctionnalite("Modifier un ingrédient", AccueilControleur::get), //TODO à modifier
+                              new Fonctionnalite("Lister les ingrédients du catalogue", AccueilControleur::get), //TODO à modifier
+                              new Fonctionnalite("Ajouter un plat au catalogue", PlatControleur::ajouter),
+                              new Fonctionnalite("Supprimer un plat du catalogue", AccueilControleur::get), //TODO à modifier
                               new Fonctionnalite("Modifier un plat", AccueilControleur::get), //TODO à modifier
-                              new Fonctionnalite("Lister les plats du catalogue des plats", AccueilControleur::get), //TODO à modifier
+                              new Fonctionnalite("Lister les plats du catalogue", PlatControleur::lister),
                               new Fonctionnalite("Se déconnecter", AuthControleur::seDeconnecter),
                               new Fonctionnalite("Quitter", () -> System.exit(0)));
 
