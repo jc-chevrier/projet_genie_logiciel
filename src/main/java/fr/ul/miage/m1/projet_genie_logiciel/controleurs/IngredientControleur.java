@@ -35,7 +35,9 @@ public class IngredientControleur extends Controleur {
         ingredient.setStock(stock);
         ingredient.setIdUnite(idUnite);
 
+        //Ajouter l'ingrédient' dans la base de données
         orm.persisterNUplet(ingredient);
+
         ui.afficher("Ingrédient ajouté! ");
 
         //retourner à l'accueil
@@ -53,6 +55,7 @@ public class IngredientControleur extends Controleur {
         //Questions et entrées.
         ui.afficher("\n" + UI.DELIMITEUR + "\nLister les ingrédient :");
 
+
         //récupérer les ingrédients de la base
         List<Entite> liste = orm.chercherTousLesNUplets(Ingredient.class);
         //le cas ou la liste est vide :
@@ -64,7 +67,44 @@ public class IngredientControleur extends Controleur {
             //retourner la liste des ingrédients
             ui.listerNUplets(liste);
         }
-        //retour à l'accueil
+        //Retour à l'accueil
         AccueilControleur.get();
     }
-}
+
+    /**
+     * Modifier un ingédient.
+     */
+    public static void modifier() {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Questions et entrées.
+        ui.afficher("\n" + UI.DELIMITEUR + "\nModifier un ingrédient :");
+
+        //Afficher les ingrédients de la base
+        List<Entite> liste = orm.chercherTousLesNUplets(Ingredient.class);
+        if (liste.isEmpty()){
+            ui.afficher("\n" + UI.DELIMITEUR + "\nAucun ingrédient trouvé dans le cataloque !");
+        }
+        else{
+            ui.afficher("\n" + UI.DELIMITEUR + "\nListing des ingrédients du catalogue :");
+            int idIngredient = ui.poserQuestionListeNUplets(liste);
+            //Modifier l'ingrédient choisi
+            Ingredient ingredient = (Ingredient) orm.chercherNUpletAvecPredicat("WHERE ID = " + idIngredient, Ingredient.class);
+            String libelle = ui.poserQuestion("Saisir le nouveau libellé : ", UI.REGEX_CHAINE_DE_CARACTERES, false);
+            ingredient.setLibelle(libelle);
+
+            //Ajouter la modification dans la base de données
+            orm.persisterNUplet(ingredient);
+
+            ui.afficher("Ingrédient modifié! ");
+        }
+
+        //retourner à l'accueil
+        AccueilControleur.get();
+
+
+    }
+
+    }
