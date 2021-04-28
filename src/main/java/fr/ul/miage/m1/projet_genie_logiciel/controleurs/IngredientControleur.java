@@ -12,7 +12,6 @@ import java.util.List;
  */
 
 public class IngredientControleur extends Controleur {
-
     /**
      * Ajouter un ingrédient.
      */
@@ -43,7 +42,6 @@ public class IngredientControleur extends Controleur {
         //retourner à l'accueil
         AccueilControleur.get();
     }
-
     /**
      * Lister les ingédients.
      */
@@ -54,8 +52,6 @@ public class IngredientControleur extends Controleur {
 
         //Questions et entrées.
         ui.afficher("\n" + UI.DELIMITEUR + "\nLister les ingrédient :");
-
-
         //récupérer les ingrédients de la base
         List<Entite> liste = orm.chercherTousLesNUplets(Ingredient.class);
         //le cas ou la liste est vide :
@@ -70,7 +66,6 @@ public class IngredientControleur extends Controleur {
         //Retour à l'accueil
         AccueilControleur.get();
     }
-
     /**
      * Modifier un ingédient.
      */
@@ -99,6 +94,7 @@ public class IngredientControleur extends Controleur {
             orm.persisterNUplet(ingredient);
 
             ui.afficher("Ingrédient modifié! ");
+
         }
 
         //retourner à l'accueil
@@ -106,5 +102,34 @@ public class IngredientControleur extends Controleur {
 
 
     }
+    /**
+     * Supprimer un ingédient.
+     */
+    public static void supprimer() {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
 
+        //Questions et entrées.
+        ui.afficher("\n" + UI.DELIMITEUR + "\nModifier un ingrédient :");
+
+        //Afficher tous les ingrédients de la base
+        List<Entite> liste = orm.chercherTousLesNUplets(Ingredient.class);
+        //si la liste des ingrédients est vide
+        if(liste.isEmpty()){
+            ui.afficher("\n"+UI.DELIMITEUR+"\nAucun ingrédient trouvé dans le catalogue!");
+        }
+        //sinon
+        else {
+            ui.afficher("\n" + UI.DELIMITEUR + "\nListing des ingrédients du catalogue :");
+            int idIngredient = ui.poserQuestionListeNUplets(liste);
+
+            //Supprimer l'ingrédient sélectionné de la base
+            Ingredient ingredient = (Ingredient) orm.chercherNUpletAvecPredicat("WHERE ID = " + idIngredient, Ingredient.class);
+            orm.supprimerNUplet(ingredient);
+            ui.afficher("Ingrédient supprimé! ");
+        }
+        //retourner à l'accueil
+        AccueilControleur.get();
     }
+}
