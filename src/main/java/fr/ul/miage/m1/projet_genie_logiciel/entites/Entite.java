@@ -4,9 +4,11 @@ import fr.ul.miage.m1.projet_genie_logiciel.orm.EntiteMetadonnee;
 import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Locale;
+import java.util.Objects;
 
 /**
- * Superlasse des entités.
+ * Superlasse abstraite des entités.
  *
  * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */
@@ -74,9 +76,26 @@ public abstract class Entite {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Entite entite = (Entite) o;
+        return getId().equals(entite.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(attributs);
+    }
+
+    @Override
     public String toString() {
-        return "Entite{" +
-                    "attributs=" + attributs +
-               "}";
+        String contenu = getClass().getSimpleName() + " [ ";
+        for(String attribut : attributs.keySet()) {
+            Object valeur = attributs.get(attribut);
+            contenu +=  attribut.toLowerCase(Locale.ROOT) + " = " + valeur + ", ";
+        }
+        contenu = contenu.substring(0, contenu.length() - 2) + " ]";
+        return contenu;
     }
 }

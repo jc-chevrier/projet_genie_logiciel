@@ -22,7 +22,7 @@ public class EntiteMetadonnee {
             entiteNomTable = (String) entiteClasse.getDeclaredField("NOM_TABLE").get(String.class);
         } catch (Exception e) {
             e.printStackTrace();
-            System.exit(0);
+            System.exit(1);
         }
         return entiteNomTable;
     }
@@ -39,7 +39,7 @@ public class EntiteMetadonnee {
             entiteStructure = (Map<String, Class>) entiteClasse.getDeclaredField("STRUCTURE").get(Map.class);
         } catch (Exception e) {
             e.printStackTrace();
-            System.exit(0);
+            System.exit(1);
         }
         return entiteStructure;
     }
@@ -57,7 +57,7 @@ public class EntiteMetadonnee {
             nUplet = (Entite) entiteClasse.getDeclaredConstructor(Map.class).newInstance(nUpletAttributs);
         } catch (Exception e) {
             e.printStackTrace();
-            System.exit(0);
+            System.exit(1);
         }
         return nUplet;
     }

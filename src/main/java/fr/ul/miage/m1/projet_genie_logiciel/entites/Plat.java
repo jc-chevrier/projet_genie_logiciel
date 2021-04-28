@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * Entité Plat.
  *
- * @author CHEVRIER, HADJ MESSAOUD,LOUGADI
+ * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */
 public class Plat extends Entite {
     //Nom de la table correspondant à l'entité.
@@ -64,6 +64,4 @@ public class Plat extends Entite {
     public void setIdCategorie(@NotNull Integer idCategorie) {
         set("ID_CATEGORIE", idCategorie);
     }
-
-
 }

@@ -4,11 +4,9 @@ import fr.ul.miage.m1.projet_genie_logiciel.Main;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Entite;
 import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
 /**
  * ORM, pour la sélection, et la manipulation
@@ -53,7 +51,7 @@ public class ORM {
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Erreur ! Problème au cours du chargement de la configuration de la base de données !");
-            System.exit(0);
+            System.exit(1);
         }
     }
 
@@ -71,7 +69,7 @@ public class ORM {
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Erreur ! Connexion impossible à la base de données !");
-            System.exit(0);
+            System.exit(1);
         }
     }
 
@@ -121,11 +119,12 @@ public class ORM {
 
             //Fin de la lecture du résultat de la requête.
             resultatLignes.close();
+            //Fin de la requête.
             requete.close();
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Erreur ! Une requête se sélection a échouée : \"" + requeteString + "\" !");
-            System.exit(0);
+            System.exit(1);
         }
 
         return listeNUplets;
@@ -162,9 +161,12 @@ public class ORM {
             String nomTable = EntiteMetadonnee.getEntiteNomTable(entiteClasse);
             Map<String, Class> structure = EntiteMetadonnee.getEntiteStructure(entiteClasse);
 
+            //Mode : insertion ou mise à jour ?
+            boolean modeInsertion = nUplet.getId() == null;
+
             //Construction de la requête.
             //Cas insertion.
-            if(nUplet.getId() == null) {
+            if(modeInsertion) {
                 requeteString = "INSERT INTO " + nomTable + "(";
                 //Colonnes.
                 for(String attribut : structure.keySet()) {
@@ -177,7 +179,12 @@ public class ORM {
                 //Valeurs.
                 for(String attribut : structure.keySet()) {
                     if(!attribut.equals("ID")) {
-                        requeteString += "'" + nUplet.get(attribut) + "',";
+                        Object valeur = nUplet.get(attribut);
+                        if(valeur == null) {
+                            requeteString += "NULL,";
+                        } else {
+                            requeteString += "'" + valeur + "',";
+                        }
                     }
                 }
                 requeteString = requeteString.substring(0, requeteString.length() - 1)
@@ -188,21 +195,37 @@ public class ORM {
                 //Nouvelles valeurs.
                 for(String attribut : structure.keySet()) {
                     if(!attribut.equals("ID")) {
-                        requeteString += attribut + " = '" + nUplet.get(attribut) + "',";
+                        Object valeur = nUplet.get(attribut);
+                        if(valeur == null) {
+                            requeteString += attribut + " = NULL,";
+                        } else {
+                            requeteString += attribut + " = '" + valeur + "',";
+                        }
                     }
                 }
                 requeteString = requeteString.substring(0, requeteString.length() - 1) +
                                 " WHERE ID = " + nUplet.getId() + ";";
             }
 
-            //Execution nde la erquête.
-            Statement requete = connexion.createStatement();
-            requete.executeUpdate(requeteString);
+            //Execution de la requête.
+            PreparedStatement requete = connexion.prepareStatement(requeteString, Statement.RETURN_GENERATED_KEYS);
+            requete.executeUpdate();
+            //Validation de la transaction.
             connexion.commit();
+            //Si insertion, on fournit l'id généré à l'ibjet.
+            if(modeInsertion) {
+                ResultSet clesGenerees = requete.getGeneratedKeys();
+                clesGenerees.next();
+                nUplet.set("ID", clesGenerees.getInt("ID"));
+                //Fin de la lecture des clés générées.
+                clesGenerees.close();
+            }
+            //Fin de la requête.
+            requete.close();
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Erreur ! Une requête de persistence a échouée : \"" + requeteString + "\" !");
-            System.exit(0);
+            System.exit(1);
         }
     }
 
@@ -221,17 +244,19 @@ public class ORM {
             //Requête.
             if(nUplet.getId() != null) {
                 //Construction de la requête.
-                Statement requete = connexion.createStatement();
                 requeteString = "DELETE FROM " + nomTable + " WHERE ID = " + nUplet.getId()  + ";";
-
+                Statement requete = connexion.createStatement();
                 //Execution de la requête.
                 requete.executeUpdate(requeteString);
+                //Validation de la transaction.
                 connexion.commit();
+                //Fin de la requête.
+                requete.close();
             }
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Erreur ! Une requête de suppression a échouée : \"" + requeteString + "\" !");
-            System.exit(0);
+            System.exit(1);
         }
     }
 }
