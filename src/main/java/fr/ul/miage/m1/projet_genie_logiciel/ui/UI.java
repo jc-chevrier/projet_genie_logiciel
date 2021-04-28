@@ -177,6 +177,7 @@ public class UI {
         return id;
     }
 
+
     /**
      * Afficher une liste de strings,
      * sans selection par al suite.

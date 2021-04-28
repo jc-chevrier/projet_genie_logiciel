@@ -31,7 +31,7 @@ public class Fonctionnalite {
                               new Fonctionnalite("Ajouter un ingrédient au catalogue des ingrédients", IngredientControleur::ajouter),
                               new Fonctionnalite("Supprimer un ingrédient au catalogue des ingrédients", AccueilControleur::get), //TODO à modifier
                               new Fonctionnalite("Modifier un ingrédient", AccueilControleur::get), //TODO à modifier
-                              new Fonctionnalite("Lister les ingrédients", AccueilControleur::get), //TODO à modifier
+                              new Fonctionnalite("Lister les ingrédients", IngredientControleur::lister),
                               new Fonctionnalite("Ajouter un plat au catalogue des plats", AccueilControleur::get), //TODO à modifier
                               new Fonctionnalite("Supprimer un plat du catalogue des plats", AccueilControleur::get), //TODO à modifier
                               new Fonctionnalite("Modifier un plat", AccueilControleur::get), //TODO à modifier
