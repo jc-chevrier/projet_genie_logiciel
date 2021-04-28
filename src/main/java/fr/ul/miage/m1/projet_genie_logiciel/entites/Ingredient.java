@@ -57,6 +57,8 @@ public class Ingredient extends Entite {
         set("ID_UNITE", idUnite);
     }
 
+
+
     @Override
     public String toString() {
         String contenu = "Ingrédient [ ";
