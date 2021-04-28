@@ -179,7 +179,12 @@ public class ORM {
                 //Valeurs.
                 for(String attribut : structure.keySet()) {
                     if(!attribut.equals("ID")) {
-                        requeteString += "'" + nUplet.get(attribut) + "',";
+                        Object valeur = nUplet.get(attribut);
+                        if(valeur == null) {
+                            requeteString += "NULL,";
+                        } else {
+                            requeteString += "'" + valeur + "',";
+                        }
                     }
                 }
                 requeteString = requeteString.substring(0, requeteString.length() - 1)
@@ -190,7 +195,12 @@ public class ORM {
                 //Nouvelles valeurs.
                 for(String attribut : structure.keySet()) {
                     if(!attribut.equals("ID")) {
-                        requeteString += attribut + " = '" + nUplet.get(attribut) + "',";
+                        Object valeur = nUplet.get(attribut);
+                        if(valeur == null) {
+                            requeteString += attribut + " = NULL,";
+                        } else {
+                            requeteString += attribut + " = '" + valeur + "',";
+                        }
                     }
                 }
                 requeteString = requeteString.substring(0, requeteString.length() - 1) +
