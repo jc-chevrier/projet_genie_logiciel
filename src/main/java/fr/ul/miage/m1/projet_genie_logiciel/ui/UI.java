@@ -204,7 +204,6 @@ public class UI {
         lister(nUplets.stream().map(nUplet -> nUplet.toString()).collect(Collectors.toList()));
     }
 
-
     /**
      * Obtenir l'utilisateur connecté.
      *

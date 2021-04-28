@@ -8,10 +8,14 @@ import java.util.Map;
  * Entité Compte.
  *
 <<<<<<< HEAD
+<<<<<<< HEAD
  * @author CHEVRIER, HADJ MESSAOUD,LOUGADI
 =======
  * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
 >>>>>>> ad2e01bfd92cc902f7f5c4dd52063f20b6480318
+=======
+ * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
+>>>>>>> 198fc4e98eb3e7e0c548e20cd9ba8574a7386d14
  */
 public class Compte extends Entite {
     //Nom de la table correspondant à l'entité.

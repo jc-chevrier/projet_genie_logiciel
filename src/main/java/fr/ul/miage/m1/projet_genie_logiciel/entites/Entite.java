@@ -4,8 +4,8 @@ import fr.ul.miage.m1.projet_genie_logiciel.orm.EntiteMetadonnee;
 import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Locale;
 import java.util.Objects;
+
 
 /**
  * Superlasse abstraite des entités.
