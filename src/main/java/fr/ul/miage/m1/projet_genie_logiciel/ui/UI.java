@@ -213,7 +213,7 @@ public class UI {
     public void listerNUplets(@NotNull List<Entite> nUplets) {
         lister(nUplets.stream().map(nUplet -> nUplet.toString()).collect(Collectors.toList()));
     }
-    git
+
     /**
      * Obtenir l'utilisateur connecté.
      *
