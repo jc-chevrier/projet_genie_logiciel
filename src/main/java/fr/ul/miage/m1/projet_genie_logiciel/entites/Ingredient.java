@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Entité Ingredient.
  *
- * @author CHEVRIER, HADJ MESSAOUD,LOUGADI
+ * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */
 public class Ingredient extends Entite {
     //Nom de la table correspondant à l'entité.

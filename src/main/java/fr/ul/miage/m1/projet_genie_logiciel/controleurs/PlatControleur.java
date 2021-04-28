@@ -136,7 +136,7 @@ public class PlatControleur extends Controleur {
         UI ui = getUI();
         ORM orm = getORM();
 
-        //Listing.
+        //Listing des plats.
         List<Entite> plats = orm.chercherTousLesNUplets(Plat.class);
         //Si pas de plats dans le cataloque.
         if(plats.isEmpty()) {
@@ -145,6 +145,35 @@ public class PlatControleur extends Controleur {
         } else {
             ui.afficher("\n" + UI.DELIMITEUR + "\nListing des plats du catalogue :");
             ui.listerNUplets(plats);
+        }
+
+        //Retour vers l'accueil.
+        AccueilControleur.get();
+    }
+
+    /**
+     * Suuprimer un plat.
+     */
+    public static void supprimer() {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Listing des plats.
+        List<Entite> plats = orm.chercherTousLesNUplets(Plat.class);
+        //Si pas de plats dans le cataloque.
+        if(plats.isEmpty()) {
+            ui.afficher("\n" + UI.DELIMITEUR + "\nAucun plat trouvé dans le cataloque !");
+        //Sinon.
+        } else {
+            //Question.
+            int idPlat = ui.poserQuestionListeNUplets(plats);
+            //Suppression.
+            Plat plat = (Plat) plats.stream().filter((_plat) -> _plat.getId().equals(idPlat)).findFirst().get();
+            List<Entite> platIngredients = orm.chercherNUpletsAvecPredicat("WHERE ID_PLAT = " + plat.getId(), PlatIngredients.class);
+            platIngredients.forEach(orm::supprimerNUplet);
+            orm.supprimerNUplet(plat);
+            ui.afficher("Plat supprimé !");
         }
 
         //Retour vers l'accueil.

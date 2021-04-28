@@ -22,7 +22,7 @@ public abstract class Entite {
     public Entite() {
         Map<String, Class> structure = EntiteMetadonnee.getEntiteStructure(getClass());
         attributs = new HashMap<String, Object>();
-        for(String attribut : structure.keySet()) {
+        for (String attribut : structure.keySet()) {
             set(attribut, null);
         }
     }
@@ -49,7 +49,7 @@ public abstract class Entite {
      * @return
      */
     public Object get(@NotNull String attribut) {
-        if(!renseigne(attribut)) {
+        if (!renseigne(attribut)) {
             throw new IllegalArgumentException("L'attribut " + attribut + " est introuvale !");
         }
         return attributs.get(attribut);
@@ -91,9 +91,9 @@ public abstract class Entite {
     @Override
     public String toString() {
         String contenu = getClass().getSimpleName() + " [ ";
-        for(String attribut : attributs.keySet()) {
+        for (String attribut : attributs.keySet()) {
             Object valeur = attributs.get(attribut);
-            contenu +=  attribut.toLowerCase() + " = " + valeur + ", ";
+            contenu += attribut.toLowerCase() + " = " + valeur + ", ";
         }
         contenu = contenu.substring(0, contenu.length() - 2) + " ]";
         return contenu;

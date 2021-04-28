@@ -33,7 +33,7 @@ public class Fonctionnalite {
                               new Fonctionnalite("Modifier un ingrédient", AccueilControleur::get), //TODO à modifier
                               new Fonctionnalite("Lister les ingrédients du catalogue", AccueilControleur::get), //TODO à modifier
                               new Fonctionnalite("Ajouter un plat au catalogue", PlatControleur::ajouter),
-                              new Fonctionnalite("Supprimer un plat du catalogue", AccueilControleur::get), //TODO à modifier
+                              new Fonctionnalite("Supprimer un plat du catalogue", PlatControleur::supprimer), //TODO à modifier
                               new Fonctionnalite("Modifier un plat", AccueilControleur::get), //TODO à modifier
                               new Fonctionnalite("Lister les plats du catalogue", PlatControleur::lister),
                               new Fonctionnalite("Se déconnecter", AuthControleur::seDeconnecter),
