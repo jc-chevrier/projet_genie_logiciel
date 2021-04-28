@@ -1,5 +1,6 @@
 package fr.ul.miage.m1.projet_genie_logiciel.entites;
 
+import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,5 +55,21 @@ public class Ingredient extends Entite {
 
     public void setIdUnite(@NotNull Integer idUnite) {
         set("ID_UNITE", idUnite);
+    }
+
+
+    @Override
+    public String toString() {
+        String contenu = "Ingrédient [ ";
+        Object id = attributs.get("ID");
+        contenu +=  "id = " + id + ", ";
+        Object libelle = attributs.get("LIBELLE");
+        contenu +=  "libellé = " + libelle + ", ";
+        Object idUnite = attributs.get("ID_UNITE");
+        Unite unite = (Unite) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = " + idUnite, Unite.class);
+        contenu +=  "unité = " + unite.getLibelle() + ", ";
+        Object stock = attributs.get("STOCK");
+        contenu +=  "stock = " + stock + " " + unite.getLibelle() + " ]";
+        return contenu;
     }
 }

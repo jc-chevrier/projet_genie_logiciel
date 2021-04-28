@@ -93,7 +93,7 @@ public abstract class Entite {
         String contenu = getClass().getSimpleName() + " [ ";
         for(String attribut : attributs.keySet()) {
             Object valeur = attributs.get(attribut);
-            contenu +=  attribut.toLowerCase(Locale.ROOT) + " = " + valeur + ", ";
+            contenu +=  attribut.toLowerCase() + " = " + valeur + ", ";
         }
         contenu = contenu.substring(0, contenu.length() - 2) + " ]";
         return contenu;
