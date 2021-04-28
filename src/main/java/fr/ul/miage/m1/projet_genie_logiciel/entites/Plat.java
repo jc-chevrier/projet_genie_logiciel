@@ -67,8 +67,6 @@ public class Plat extends Entite {
         set("ID_CATEGORIE", idCategorie);
     }
 
-
-
     @Override
     public String toString() {
         ORM orm = ORM.getInstance();

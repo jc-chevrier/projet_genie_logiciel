@@ -24,18 +24,18 @@ public class Fonctionnalite {
     static {
         //Fonctionnalités du cuisiner.
         List<Fonctionnalite> fonctionnalitesCuisinier =
-                Arrays.asList(new Fonctionnalite("Ajouter une unité", AccueilControleur::get), //TODO à modifier
-                              new Fonctionnalite("Modifier une unité", AccueilControleur::get), //TODO à modifier
+                Arrays.asList(new Fonctionnalite("Ajouter une unité", UniteControleur::ajouterUnite),
+                              new Fonctionnalite("Modifier une unité", UniteControleur::modifier), //TODO à modifier
                               new Fonctionnalite("Supprimer une unité", AccueilControleur::get), //TODO à modifier
                               new Fonctionnalite("Lister les unités", AccueilControleur::get), //TODO à modifier
-                              new Fonctionnalite("Ajouter un ingrédient au catalogue", AccueilControleur::get), //TODO à modifier
-                              new Fonctionnalite("Supprimer un ingrédient du catalogue", AccueilControleur::get), //TODO à modifier
+                              new Fonctionnalite("Ajouter un ingrédient au catalogue des ingrédients", AccueilControleur::get), //TODO à modifier
+                              new Fonctionnalite("Supprimer un ingrédient au catalogue des ingrédients",AccueilControleur::get), //TODO à modifier
                               new Fonctionnalite("Modifier un ingrédient", AccueilControleur::get), //TODO à modifier
-                              new Fonctionnalite("Lister les ingrédients du catalogue", AccueilControleur::get), //TODO à modifier
-                              new Fonctionnalite("Ajouter un plat au catalogue", PlatControleur::ajouter),
-                              new Fonctionnalite("Supprimer un plat du catalogue", AccueilControleur::get), //TODO à modifier
+                              new Fonctionnalite("Lister les ingrédients", AccueilControleur::get), //TODO à modifier
+                              new Fonctionnalite("Ajouter un plat au catalogue des plats", AccueilControleur::get), //TODO à modifier
+                              new Fonctionnalite("Supprimer un plat du catalogue des plats", AccueilControleur::get), //TODO à modifier
                               new Fonctionnalite("Modifier un plat", AccueilControleur::get), //TODO à modifier
-                              new Fonctionnalite("Lister les plats du catalogue", PlatControleur::lister),
+                              new Fonctionnalite("Lister les plats du catalogue des plats", AccueilControleur::get), //TODO à modifier
                               new Fonctionnalite("Se déconnecter", AuthControleur::seDeconnecter),
                               new Fonctionnalite("Quitter", () -> System.exit(0)));
 

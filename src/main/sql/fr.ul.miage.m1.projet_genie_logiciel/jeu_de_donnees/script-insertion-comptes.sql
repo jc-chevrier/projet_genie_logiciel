@@ -5,6 +5,7 @@ INSERT INTO COMPTE(ID, NOM, PRENOM, ACTIF, ID_ROLE) VALUES (4, 'DUPONT',' Théo'
 INSERT INTO COMPTE(ID, NOM, PRENOM, ACTIF, ID_ROLE) VALUES (5, 'ANDERSON', 'Christa', 1, 5);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 ALTER SEQUENCE compte_id_seq RESTART WITH 6;
@@ -13,3 +14,7 @@ ALTER SEQUENCE compte_id_seq RESTART WITH 6;
 
 ALTER SEQUENCE compte_id_seq RESTART WITH 6;
 >>>>>>> 198fc4e98eb3e7e0c548e20cd9ba8574a7386d14
+=======
+
+ALTER SEQUENCE compte_id_seq RESTART WITH 6;
+>>>>>>> fd99e4c965e1ed812db89102c5c8ad3d79efe4f3

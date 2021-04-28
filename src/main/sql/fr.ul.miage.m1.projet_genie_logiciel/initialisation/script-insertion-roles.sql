@@ -6,6 +6,7 @@ INSERT INTO ROLE (ID, LIBELLE) values (5, 'Assistant service');
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 ALTER SEQUENCE role_id_seq RESTART WITH 6;
@@ -13,5 +14,8 @@ ALTER SEQUENCE role_id_seq RESTART WITH 6;
 =======
 ALTER SEQUENCE role_id_seq RESTART WITH 6;
 >>>>>>> 198fc4e98eb3e7e0c548e20cd9ba8574a7386d14
+=======
+ALTER SEQUENCE role_id_seq RESTART WITH 6;
+>>>>>>> fd99e4c965e1ed812db89102c5c8ad3d79efe4f3
 
  

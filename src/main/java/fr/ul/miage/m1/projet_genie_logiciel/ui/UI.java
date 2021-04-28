@@ -125,6 +125,7 @@ public class UI {
     }
 
     /**
+<<<<<<< HEAD
      * Poser une question fermée (oui, non).
      *
      * @param question
@@ -138,6 +139,8 @@ public class UI {
     }
 
     /**
+=======
+>>>>>>> fd99e4c965e1ed812db89102c5c8ad3d79efe4f3
      * Poser une question en proposant une liste d'options,
      * et obtenir l'indice de l'option sélectionnée.
      *
