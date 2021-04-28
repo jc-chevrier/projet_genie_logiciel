@@ -6,6 +6,23 @@
     <groupId>fr.ul.miage.m1</groupId>
     <artifactId>projet_genie_logiciel</artifactId>
     <version>1.0-SNAPSHOT</version>
+<<<<<<< HEAD
+=======
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>14</source>
+                    <target>14</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+>>>>>>> 5c18651 (feature (sql): modification des commentaires script)
+>>>>>>> 2496e6ed7b551e1964eeed3d8e697b1c40905eb5
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>

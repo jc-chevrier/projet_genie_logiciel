@@ -25,21 +25,15 @@ public class Fonctionnalite {
         //Fonctionnalités du cuisiner.
         List<Fonctionnalite> fonctionnalitesCuisinier =
                 Arrays.asList(new Fonctionnalite("Ajouter une unité", UniteControleur::ajouterUnite),
-                              new Fonctionnalite("Modifier une unité", UniteControleur::modifier), //TODO à modifier
+                              new Fonctionnalite("Modifier une unité", UniteControleur::modifier),
                               new Fonctionnalite("Supprimer une unité", AccueilControleur::get), //TODO à modifier
-                              new Fonctionnalite("Lister les unités", AccueilControleur::get), //TODO à modifier
+                              new Fonctionnalite("Lister les unités", UniteControleur::lister),
                               new Fonctionnalite("Ajouter un ingrédient au catalogue des ingrédients", AccueilControleur::get), //TODO à modifier
-                              new Fonctionnalite("Supprimer un ingrédient au catalogue des ingrédients",AccueilControleur::get), //TODO à modifier
+                              new Fonctionnalite("Supprimer un ingrédient au catalogue des ingrédients", AccueilControleur::get), //TODO à modifier
                               new Fonctionnalite("Modifier un ingrédient", AccueilControleur::get), //TODO à modifier
-<<<<<<< HEAD
                               new Fonctionnalite("Lister les ingrédients", AccueilControleur::get), //TODO à modifier
                               new Fonctionnalite("Ajouter un plat au catalogue des plats", AccueilControleur::get), //TODO à modifier
                               new Fonctionnalite("Supprimer un plat du catalogue des plats", AccueilControleur::get), //TODO à modifier
-=======
-                              new Fonctionnalite("Lister les ingrédients du catalogue", AccueilControleur::get), //TODO à modifier
-                              new Fonctionnalite("Ajouter un plat au catalogue", PlatControleur::ajouter),
-                              new Fonctionnalite("Supprimer un plat du catalogue", PlatControleur::supprimer), //TODO à modifier
->>>>>>> 08ae4a4a70eaf71d6a4e936247701c0e7ed37815
                               new Fonctionnalite("Modifier un plat", AccueilControleur::get), //TODO à modifier
                               new Fonctionnalite("Lister les plats du catalogue des plats", AccueilControleur::get), //TODO à modifier
                               new Fonctionnalite("Se déconnecter", AuthControleur::seDeconnecter),
