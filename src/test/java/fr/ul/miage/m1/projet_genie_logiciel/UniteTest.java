@@ -1,6 +1,5 @@
 package fr.ul.miage.m1.projet_genie_logiciel;
 
-import fr.ul.miage.m1.projet_genie_logiciel.controleurs.AccueilControleur;
 import fr.ul.miage.m1.projet_genie_logiciel.controleurs.UniteControleur;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Compte;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Unite;

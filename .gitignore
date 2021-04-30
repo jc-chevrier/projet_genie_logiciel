@@ -17,4 +17,4 @@ buildNumber.properties
 
 # Configuraion de la base de données
 src/main/resources/fr/ul/miage/m1/projet_genie_logiciel/configuration/
-
+src/test/resources/fr/ul/miage/m1/projet_genie_logiciel/configuration/
