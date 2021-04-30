@@ -50,7 +50,7 @@ public class UniteTest {
         ui.reinitialiserScanner();
 
         //On simule le scénario d'ajout.
-        AccueilControleur.consulter();
+        UniteControleur.ajouter();
 
         //L'unité insérée doit avoir ce libellé : "libellé test ajouter cas 2 bon libellé".
         Unite uniteInseree = (Unite) orm.chercherNUpletAvecPredicat("ORDER BY ID DESC " +
