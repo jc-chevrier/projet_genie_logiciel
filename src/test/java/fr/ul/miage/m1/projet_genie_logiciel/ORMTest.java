@@ -1,5 +1,6 @@
 package fr.ul.miage.m1.projet_genie_logiciel;
 
+import fr.ul.miage.m1.projet_genie_logiciel.entites.Compte;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Unite;
 import org.junit.jupiter.api.*;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Entite;
@@ -96,11 +97,34 @@ public class ORMTest {
     }
 
     @Test
+    @DisplayName("Test - faire persister un n-uplet - cas insérer un n-uplet avec plusieurs attributs")
+    void testPersisterNUpletCasMiseAJourPlusieursAttributs() {
+        Compte nUpletAMettreAJour = (Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 5 ", Compte.class);
+        nUpletAMettreAJour.setNom("TestNom");
+        nUpletAMettreAJour.setPrenom("TestPrenom");
+        orm.persisterNUplet(nUpletAMettreAJour);
+        Compte nUpletMisAJour = (Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 5 ", Compte.class);
+        nUpletAMettreAJour.getId();
+        assertEquals("TestNom", nUpletMisAJour.getNom());
+        assertEquals("TestPrenom", nUpletMisAJour.getPrenom());
+    }
+
+    @Test
+    @DisplayName("Test - faire persister un n-uplet - cas null un n-uplet")
+    void testPersisterNUpletCasNull() {
+        Role nUpletAPersister = new Role();
+        nUpletAPersister.setLibelle("TESTid");
+        assertNull(nUpletAPersister.getId());
+        orm.persisterNUplet(nUpletAPersister);
+        assertNotNull(nUpletAPersister.getId());
+    }
+
+    @Test
     @DisplayName("Test - supprimer un n-uplet - cas supprimer un n-uplet")
     void testSupprimerNUplet() {
-        Role nUpletASupprimer = (Role) orm.chercherNUpletAvecPredicat("WHERE ID = 5", Role.class);
+        Role nUpletASupprimer = (Role) orm.chercherNUpletAvecPredicat("WHERE ID = 6", Role.class);
         orm.supprimerNUplet(nUpletASupprimer);
-        Role nUpletSupprime = (Role) orm.chercherNUpletAvecPredicat("WHERE ID = 5", Role.class);
+        Role nUpletSupprime = (Role) orm.chercherNUpletAvecPredicat("WHERE ID = 6", Role.class);
         assertEquals(null, nUpletSupprime);
     }
 }
