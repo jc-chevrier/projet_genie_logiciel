@@ -7,6 +7,11 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+/**
+ * Programme utilitaire pour l'interface console.
+ *
+ * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
+ */
 public class UI {
     //Délimiteur sur la console entre des contenus.
     public final static String DELIMITEUR = "-------------------------------------------------------------------------------------------------------";
@@ -34,8 +39,6 @@ public class UI {
     //Utilisateur connecté.
     private Compte utilisateurConnecte;
 
-
-
     private UI() {
         scanner = new Scanner(System.in);
         utilisateurConnecte = null;
@@ -53,10 +56,9 @@ public class UI {
         return UISingleton;
     }
 
-
-
     /**
      * Alias de System.out.println(...).
+     *
      * @param contenu
      */
     public void afficher(@NotNull String contenu) {
@@ -64,35 +66,36 @@ public class UI {
     }
 
     /**
+     * Afficher un contenu en ajoutant avant un saut avec le délimiteur,
+     * et l'utilisateur connecté.
+     *
+     * @param contenu
+     */
+    public void afficherAvecDelimiteurEtUtilisateur(@NotNull String contenu) {
+        afficher("\n" + UI.DELIMITEUR + "\n" + utilisateurConnecte.toSimpleString() + " " + contenu + "\n");
+    }
+
+    /**
      * Poser une question, en précisant :
      * - la question ;
      * - une expression régulière décrivant les réponses possibles autorisées ;
-     * - si la question doit être précédée ou non du délimiteur.
      * Tant que la réponse donnée est incorrecte, la fonction boucle récursivement.
      * La réponse correcte donnée est retournée.
      *
      * @param question
      * @param reponsesPossiblesRegex
-     * @param afficherDelimiteur
      * @return
      */
-    public String poserQuestion(@NotNull String question, @NotNull String reponsesPossiblesRegex,
-                                 boolean afficherDelimiteur) {
-        String questionAffichee = null;
-        if(afficherDelimiteur) {
-            questionAffichee = "\n"+ DELIMITEUR + "\n" + question;
-        } else {
-            questionAffichee = question;
-        }
-        afficher(questionAffichee);
+    public String poserQuestion(@NotNull String question, @NotNull String reponsesPossiblesRegex) {
+        afficher(question);
         String reponse = scanner.nextLine();
         //Cas trivial.
         if(reponse.matches("^" + reponsesPossiblesRegex + "$")) {
             return reponse;
         //Cas récursif.
         } else {
-            afficher("La réponse donnée est incorrecte.");
-            return poserQuestion(question, reponsesPossiblesRegex, afficherDelimiteur);
+            afficher("La réponse donnée est incorrecte.\n");
+            return poserQuestion(question, reponsesPossiblesRegex);
         }
     }
 
@@ -102,12 +105,10 @@ public class UI {
      *
      * @param question
      * @param reponsesPossiblesRegex
-     * @param afficherDelimiteur
      * @return
      */
-    public int poserQuestionEntier(@NotNull String question, @NotNull String reponsesPossiblesRegex,
-                                    boolean afficherDelimiteur) {
-        return Integer.parseInt(poserQuestion(question, reponsesPossiblesRegex, afficherDelimiteur));
+    public int poserQuestionEntier(@NotNull String question, @NotNull String reponsesPossiblesRegex) {
+        return Integer.parseInt(poserQuestion(question, reponsesPossiblesRegex));
     }
 
     /**
@@ -116,37 +117,26 @@ public class UI {
      *
      * @param question
      * @param reponsesPossiblesRegex
-     * @param afficherDelimiteur
      * @return
      */
-    public double poserQuestionDecimal(@NotNull String question, @NotNull String reponsesPossiblesRegex,
-                                      boolean afficherDelimiteur) {
-        return Double.parseDouble(poserQuestion(question, reponsesPossiblesRegex, afficherDelimiteur));
+    public double poserQuestionDecimal(@NotNull String question, @NotNull String reponsesPossiblesRegex) {
+        return Double.parseDouble(poserQuestion(question, reponsesPossiblesRegex));
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
      * Poser une question fermée (oui, non).
      *
      * @param question
      * @return
      */
-    public boolean poserQuestionFermee(@NotNull String question, boolean afficherDelimiteur) {
+    public boolean poserQuestionFermee(@NotNull String question) {
         question += " (oui/non)";
         String reponsesPossiblesRegex = "oui|non";
-        String reponse = poserQuestion(question, reponsesPossiblesRegex, afficherDelimiteur) ;
+        String reponse = poserQuestion(question, reponsesPossiblesRegex) ;
         return reponse.equals("oui");
     }
 
     /**
-=======
->>>>>>> fd99e4c965e1ed812db89102c5c8ad3d79efe4f3
-=======
->>>>>>> 2496e6ed7b551e1964eeed3d8e697b1c40905eb5
-=======
->>>>>>> 3b29530ceedfde8db6fcf2c07969249d093c4cb0
      * Poser une question en proposant une liste d'options,
      * et obtenir l'indice de l'option sélectionnée.
      *
@@ -162,7 +152,7 @@ public class UI {
             question += "\n" + option + " (saisir " + (index + 1) + ")";
             reponsesPossiblesRegex += (index + 1) + "{1}" + ((index < (nbOptions - 1)) ? "|" : "");
         }
-        int index = poserQuestionEntier(question, reponsesPossiblesRegex, true) - 1;
+        int index = poserQuestionEntier(question, reponsesPossiblesRegex) - 1;
         return index;
     }
 
@@ -171,6 +161,7 @@ public class UI {
      * pour une liste de n-uplets, et obtenir l'id de
      * du n-uplet sélectionné.
      *
+     * @param nUplets
      * @return
      */
     public int poserQuestionListeNUplets(@NotNull List<Entite> nUplets) {
@@ -182,16 +173,15 @@ public class UI {
             question += "\n" + nUplet + " (saisir " + (nUplet.getId()) + ")";
             reponsesPossiblesRegex += (nUplet.getId()) + "{1}" + ((index < (nbNUplets - 1)) ? "|" : "");
         }
-        int id = poserQuestionEntier(question, reponsesPossiblesRegex, true);
+        int id = poserQuestionEntier(question, reponsesPossiblesRegex);
         return id;
     }
 
     /**
      * Afficher une liste de strings,
-     * sans selection par al suite.
+     * sans selection par la suite.
      *
      * @param elements
-     * @return
      */
     public void lister(@NotNull List<String> elements) {
         String contenu = "";
@@ -205,10 +195,9 @@ public class UI {
 
     /**
      * Afficher une liste de n-uplets,
-     * sans selection par al suite.
+     * sans selection par la suite.
      *
      * @param nUplets
-     * @return
      */
     public void listerNUplets(@NotNull List<Entite> nUplets) {
         lister(nUplets.stream().map(nUplet -> nUplet.toString()).collect(Collectors.toList()));

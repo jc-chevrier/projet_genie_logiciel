@@ -1,7 +1,9 @@
 package fr.ul.miage.m1.projet_genie_logiciel.entites;
 
+import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -63,5 +65,11 @@ public class Compte extends Entite {
 
     public void setIdRole(@NotNull Integer idRole) {
         set("ID_ROLE", idRole);
+    }
+
+    public String toSimpleString() {
+        Integer idRole = getIdRole();
+        Role role = (Role) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = " + idRole, Role.class);
+        return "[ " + getNom() + " " + getPrenom() + " / " + role.getLibelle() + " ]";
     }
 }

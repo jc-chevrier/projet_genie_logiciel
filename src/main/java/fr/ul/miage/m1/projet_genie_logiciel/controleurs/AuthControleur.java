@@ -21,10 +21,10 @@ public class AuthControleur extends Controleur {
         UI ui = getUI();
         ORM orm = getORM();
 
-        //Questions et entrées.
+        //Questions et saisies.
         ui.afficher("\n" + UI.DELIMITEUR + "\nMe connecter :");
-        String nom = ui.poserQuestion("Saisir votre nom :", UI.REGEX_CHAINE_DE_CARACTERES, false);
-        String prenom = ui.poserQuestion("Saisir votre prenom :", UI.REGEX_CHAINE_DE_CARACTERES, false);
+        String nom = ui.poserQuestion("Saisir votre nom :", UI.REGEX_CHAINE_DE_CARACTERES);
+        String prenom = ui.poserQuestion("Saisir votre prenom :", UI.REGEX_CHAINE_DE_CARACTERES);
 
         //Vérification.
         Compte compte = (Compte) orm.chercherNUpletAvecPredicat("WHERE LOWER(nom) = LOWER('" + nom + "') " +
@@ -53,6 +53,6 @@ public class AuthControleur extends Controleur {
         ui.afficher("Déconnexion réussie !");
 
         //Retour vers l'accueil.
-        AccueilControleur.get();
+        AccueilControleur.consulter();
     }
 }

@@ -59,16 +59,9 @@ public class Ingredient extends Entite {
 
     @Override
     public String toString() {
-        String contenu = "Ingrédient [ ";
-        Object id = attributs.get("ID");
-        contenu +=  "id = " + id + ", ";
-        Object libelle = attributs.get("LIBELLE");
-        contenu +=  "libellé = " + libelle + ", ";
-        Object idUnite = attributs.get("ID_UNITE");
+        Integer idUnite = getIdUnite();
         Unite unite = (Unite) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = " + idUnite, Unite.class);
-        contenu +=  "unité = " + unite.getLibelle() + ", ";
-        Object stock = attributs.get("STOCK");
-        contenu +=  "stock = " + stock + " " + unite.getLibelle() + " ]";
-        return contenu;
+        return "Ingrédient [ id = " + getId() + ", libellé = " + getLibelle() + ", unité = " + unite.getLibelle() +
+                ", stock = " + getStock() + " " + unite.getLibelle() + " ]";
     }
 }

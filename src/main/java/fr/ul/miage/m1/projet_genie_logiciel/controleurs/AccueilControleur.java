@@ -1,5 +1,6 @@
 package fr.ul.miage.m1.projet_genie_logiciel.controleurs;
 
+import fr.ul.miage.m1.projet_genie_logiciel.entites.Compte;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class AccueilControleur extends Controleur {
     /**
      * Obtenir l'accueil de l'interface.
      */
-    public static void get() {
+    public static void consulter() {
         //UI.
         UI ui = getUI();
 
@@ -21,7 +22,10 @@ public class AccueilControleur extends Controleur {
             AuthControleur.seConnecter();
         }
 
-        //Question fonctionnalités.
+        //Message titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Accueil :");
+
+        //Question et saisie fonctionnalités.
         int idRole = getUtilisateurConnecte().getIdRole();
         List<String> fonctionnalitesLibelles = Fonctionnalite.getRoleFonctionnalitesLibelles(idRole);
         int indexFonctionnalite = ui.poserQuestionListeOptions(fonctionnalitesLibelles);

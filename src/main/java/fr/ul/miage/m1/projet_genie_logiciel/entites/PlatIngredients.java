@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Entité Ingredient.
+ * Entité PlatIngredients.
  *
  * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */

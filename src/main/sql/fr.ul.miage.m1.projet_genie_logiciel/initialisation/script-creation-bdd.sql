@@ -81,14 +81,6 @@ CREATE TABLE PLAT (
 	CONSTRAINT CST_FK_PLAT_ID_CATEGORIE FOREIGN KEY (ID_CATEGORIE) REFERENCES CATEGORIE(ID)
 );
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> 2496e6ed7b551e1964eeed3d8e697b1c40905eb5
-=======
-
->>>>>>> 3b29530ceedfde8db6fcf2c07969249d093c4cb0
 --création de la table plat_ingredients
 CREATE TABLE PLAT_INGREDIENTS (
 	ID SERIAL8 NOT NULL,

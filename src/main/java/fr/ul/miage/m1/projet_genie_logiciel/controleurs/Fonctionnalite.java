@@ -1,5 +1,7 @@
 package fr.ul.miage.m1.projet_genie_logiciel.controleurs;
 
+import fr.ul.miage.m1.projet_genie_logiciel.entites.Ingredient;
+import fr.ul.miage.m1.projet_genie_logiciel.entites.PlatIngredients;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Role;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -24,20 +26,20 @@ public class Fonctionnalite {
     static {
         //Fonctionnalités du cuisiner.
         List<Fonctionnalite> fonctionnalitesCuisinier =
-                Arrays.asList(new Fonctionnalite("Ajouter une unité", UniteControleur::ajouterUnite),
-                        new Fonctionnalite("Modifier une unité", UniteControleur::modifier),
-                        new Fonctionnalite("Supprimer une unité", UniteControleur::supprimer), //TODO à modifier
-                        new Fonctionnalite("Lister les unités", UniteControleur::lister),
-                        new Fonctionnalite("Ajouter un ingrédient au catalogue des ingrédients", AccueilControleur::get), //TODO à modifier
-                        new Fonctionnalite("Supprimer un ingrédient au catalogue des ingrédients", AccueilControleur::get), //TODO à modifier
-                        new Fonctionnalite("Modifier un ingrédient", AccueilControleur::get), //TODO à modifier
-                        new Fonctionnalite("Lister les ingrédients", AccueilControleur::get), //TODO à modifier
-                        new Fonctionnalite("Ajouter un plat au catalogue des plats", AccueilControleur::get), //TODO à modifier
-                        new Fonctionnalite("Supprimer un plat du catalogue des plats", AccueilControleur::get), //TODO à modifier
-                        new Fonctionnalite("Modifier un plat", AccueilControleur::get), //TODO à modifier
-                        new Fonctionnalite("Lister les plats du catalogue des plats", AccueilControleur::get), //TODO à modifier
-                        new Fonctionnalite("Se déconnecter", AuthControleur::seDeconnecter),
-                        new Fonctionnalite("Quitter", () -> System.exit(0)));
+                Arrays.asList(new Fonctionnalite("Lister les unités", UniteControleur::lister),
+                              new Fonctionnalite("Ajouter une unité", UniteControleur::ajouter),
+                              new Fonctionnalite("Modifier une unité", UniteControleur::modifier),
+                              new Fonctionnalite("Supprimer une unité", UniteControleur::supprimer),
+                              new Fonctionnalite("Lister les ingrédients", IngredientControleur::lister),
+                              new Fonctionnalite("Ajouter un ingrédient au catalogue des ingrédients", IngredientControleur::ajouter),
+                              new Fonctionnalite("Modifier un ingrédient", IngredientControleur::modifier),
+                              new Fonctionnalite("Supprimer un ingrédient au catalogue des ingrédients", IngredientControleur::supprimer),
+                              new Fonctionnalite("Lister les plats du catalogue des plats", PlatControleur::lister),
+                              new Fonctionnalite("Ajouter un plat au catalogue des plats", PlatControleur::ajouter),
+                              new Fonctionnalite("Modifier un plat", AccueilControleur::consulter), //TODO à modifier
+                              new Fonctionnalite("Supprimer un plat du catalogue des plats", PlatControleur::supprimer),
+                              new Fonctionnalite("Se déconnecter", AuthControleur::seDeconnecter),
+                              new Fonctionnalite("Quitter", () -> System.exit(0)));
 
         //TODO ajouter pour autres rôles.
 

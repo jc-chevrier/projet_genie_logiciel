@@ -69,15 +69,10 @@ public class Plat extends Entite {
 
     @Override
     public String toString() {
+        //TODO ajouter catégorie.
         ORM orm = ORM.getInstance();
-        String contenu = "Plat [ ";
-        Object id = attributs.get("ID");
-        contenu +=  "id = " + id + ", ";
-        Object libelle = attributs.get("LIBELLE");
-        contenu +=  "libellé = " + libelle + ", ";
-        Object prix = attributs.get("PRIX");
-        contenu +=  "prix = " + prix + " € ]\nComposition [ ";
-        //TODO catégorie.
+        Integer id = getId();
+        String contenu = "Plat [ id = " + id + ", libellé = " + getlibelle() + ", " + getPrix() + " € ]\nComposition [ ";
         List<Entite> platIngredients = orm.chercherNUpletsAvecPredicat(
                                                                 "WHERE ID_PLAT = "  + id,
                                                                  PlatIngredients.class);

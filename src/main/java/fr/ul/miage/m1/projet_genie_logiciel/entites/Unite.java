@@ -1,11 +1,12 @@
 package fr.ul.miage.m1.projet_genie_logiciel.entites;
 
+import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Entité unite.
+ * Entité Unité.
  *
  * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */
@@ -36,5 +37,10 @@ public class Unite extends Entite {
 
     public void setLibelle(@NotNull String libelle) {
         set("LIBELLE", libelle);
+    }
+
+    @Override
+    public String toString() {
+        return "Unité [ id = " + getId() + ", libellé = " + getLibelle() + " ]";
     }
 }

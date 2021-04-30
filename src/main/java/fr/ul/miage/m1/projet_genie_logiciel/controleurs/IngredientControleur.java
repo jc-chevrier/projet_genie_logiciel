@@ -2,16 +2,48 @@ package fr.ul.miage.m1.projet_genie_logiciel.controleurs;
 
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Entite;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Ingredient;
+import fr.ul.miage.m1.projet_genie_logiciel.entites.Plat;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Unite;
 import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-/**
- * Controleur pour les ingrédient.
- */
 
+/**
+ * Controleur pour les ingrédients.
+ *
+ * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
+ */
 public class IngredientControleur extends Controleur {
+    /**
+     * Lister les ingrédients.
+     */
+    public static void lister() {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Listing des ingrédients :");
+
+        //Récupération des ingrédients existants.
+        List<Entite> ingredients = orm.chercherTousLesNUplets(Ingredient.class);
+
+        //Si pas d'ingrédients dans le catalogue.
+        if(ingredients.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucun ingrédient trouvé dans le catalogue !");
+        //Sinon.
+        } else {
+            //Listing.
+            ui.listerNUplets(ingredients);
+        }
+
+        //Retour à l'accueil.
+        AccueilControleur.consulter();
+    }
+
     /**
      * Ajouter un ingrédient.
      */
@@ -20,52 +52,38 @@ public class IngredientControleur extends Controleur {
         UI ui = getUI();
         ORM orm = getORM();
 
-        //Questions et entrées.
-        ui.afficher("\n" + UI.DELIMITEUR + "\nAjout d'un ingrédient :");
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Ajout d'un ingrédient :");
 
-        String libelle = ui.poserQuestion("Saisir un libellé : ", UI.REGEX_CHAINE_DE_CARACTERES, false);
-        Double stock = ui.poserQuestionDecimal("Saisir le stock" , UI.REGEX_GRAND_DECIMAL_POSITIF , false);
-        List<Entite> liste = orm.chercherTousLesNUplets(Unite.class);
-        int idUnite = ui.poserQuestionListeNUplets(liste);
+        List<Entite> unites = orm.chercherTousLesNUplets(Unite.class);
+        //Si pas d'unités dans le catalogue.
+        if(unites.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucune unité trouvée dans le cataloque à associer pour l'ingrédient à ajouter !");
+            ui.afficher("Ajoutez d'abord une unité avant d'ajouter un ingrédient !");
+        //Sinon.
+        } else {
+            //Questions et saisies.
+            String libelle = ui.poserQuestion("Saisir un libellé : ", UI.REGEX_CHAINE_DE_CARACTERES);;
+            ui.afficher("Saisir une unité :");
+            int idUnite = ui.poserQuestionListeNUplets(unites);
 
-        //insertion d'un ingredient
-        Ingredient ingredient = new Ingredient();
-        ingredient.setLibelle(libelle);
-        ingredient.setStock(stock);
-        ingredient.setIdUnite(idUnite);
+            //Sauvegarde : insertion de l'ingrédient.
+            Ingredient ingredient = new Ingredient();
+            ingredient.setLibelle(libelle);
+            ingredient.setStock(0.0);
+            ingredient.setIdUnite(idUnite);
+            orm.persisterNUplet(ingredient);
 
-        //Ajouter l'ingrédient' dans la base de données
-        orm.persisterNUplet(ingredient);
-
-        ui.afficher("Ingrédient ajouté! ");
+            //Message de résultat.
+            ui.afficher("Ingrédient ajouté !");
+            ui.afficher(ingredient.toString());
+        }
 
         //retourner à l'accueil
-        AccueilControleur.get();
+        AccueilControleur.consulter();
     }
-    /**
-     * Lister les ingédients.
-     */
-    public static void lister() {
-        //UI et ORM.
-        UI ui = getUI();
-        ORM orm = getORM();
 
-        //Questions et entrées.
-        ui.afficher("\n" + UI.DELIMITEUR + "\nLister les ingrédient :");
-        //récupérer les ingrédients de la base
-        List<Entite> liste = orm.chercherTousLesNUplets(Ingredient.class);
-        //le cas ou la liste est vide :
-        if(liste.isEmpty()){
-            ui.afficher("\n"+UI.DELIMITEUR+ "\nAucun ingrédient trouvé dans la liste !");
-        }//sinon
-        else {
-            ui.afficher("\n" + UI.DELIMITEUR + "\nAucun ingrédient trouvé dans la liste !");
-            //retourner la liste des ingrédients
-            ui.listerNUplets(liste);
-        }
-        //Retour à l'accueil
-        AccueilControleur.get();
-    }
     /**
      * Modifier un ingédient.
      */
@@ -74,34 +92,40 @@ public class IngredientControleur extends Controleur {
         UI ui = getUI();
         ORM orm = getORM();
 
-        //Questions et entrées.
-        ui.afficher("\n" + UI.DELIMITEUR + "\nModifier un ingrédient :");
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Modification d'un ingrédient :");
 
-        //Afficher les ingrédients de la base
-        List<Entite> liste = orm.chercherTousLesNUplets(Ingredient.class);
-        if (liste.isEmpty()){
-            ui.afficher("\n" + UI.DELIMITEUR + "\nAucun ingrédient trouvé dans le cataloque !");
-        }
-        else{
-            ui.afficher("\n" + UI.DELIMITEUR + "\nListing des ingrédients du catalogue :");
-            int idIngredient = ui.poserQuestionListeNUplets(liste);
-            //Modifier l'ingrédient choisi
-            Ingredient ingredient = (Ingredient) orm.chercherNUpletAvecPredicat("WHERE ID = " + idIngredient, Ingredient.class);
-            String libelle = ui.poserQuestion("Saisir le nouveau libellé : ", UI.REGEX_CHAINE_DE_CARACTERES, false);
+        //Récupération des ingrédients existants.
+        List<Entite> ingredients = orm.chercherTousLesNUplets(Ingredient.class);
+
+        //Si pas d'ingrédoents dans le catalogue.
+        if (ingredients.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucun ingrédient trouvé dans le cataloque !");
+        //Sinon.
+        } else {
+            //Questions et saisies.
+            int idIngredient = ui.poserQuestionListeNUplets(ingredients);
+            Ingredient ingredient = (Ingredient) filterListeNUpletsAvecId(ingredients, idIngredient);
+            String libelle = ui.poserQuestion("Saisir le nouveau libellé : ", UI.REGEX_CHAINE_DE_CARACTERES);
+            ui.afficher("Saisier une nouvelle unité :");
+            List<Entite> unites = orm.chercherTousLesNUplets(Unite.class);
+            int idUnite = ui.poserQuestionListeNUplets(unites);
+
+            //Sauvegarde : modification de l'ingrédient.
             ingredient.setLibelle(libelle);
-
-            //Ajouter la modification dans la base de données
+            ingredient.setIdUnite(idUnite);
             orm.persisterNUplet(ingredient);
 
-            ui.afficher("Ingrédient modifié! ");
-
+            //Message de résultat.
+            ui.afficher("Ingrédient modifié !");
+            ui.afficher(ingredient.toString());
         }
 
-        //retourner à l'accueil
-        AccueilControleur.get();
-
-
+        //Retour à l'accueil.
+        AccueilControleur.consulter();
     }
+
     /**
      * Supprimer un ingédient.
      */
@@ -110,26 +134,29 @@ public class IngredientControleur extends Controleur {
         UI ui = getUI();
         ORM orm = getORM();
 
-        //Questions et entrées.
-        ui.afficher("\n" + UI.DELIMITEUR + "\nModifier un ingrédient :");
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Suppression d'un ingrédient :");
 
-        //Afficher tous les ingrédients de la base
-        List<Entite> liste = orm.chercherTousLesNUplets(Ingredient.class);
-        //si la liste des ingrédients est vide
-        if(liste.isEmpty()){
-            ui.afficher("\n"+UI.DELIMITEUR+"\nAucun ingrédient trouvé dans le catalogue!");
-        }
-        //sinon
-        else {
-            ui.afficher("\n" + UI.DELIMITEUR + "\nListing des ingrédients du catalogue :");
-            int idIngredient = ui.poserQuestionListeNUplets(liste);
+        //Ingrédients.
+        List<Entite> ingredients = orm.chercherTousLesNUplets(Ingredient.class);
 
-            //Supprimer l'ingrédient sélectionné de la base
-            Ingredient ingredient = (Ingredient) orm.chercherNUpletAvecPredicat("WHERE ID = " + idIngredient, Ingredient.class);
+        //Si pas d'ingrédients dans le catalogue.
+        if(ingredients.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucun ingrédient trouvé dans le catalogue !");
+        } else {
+            //Questions et saisies.
+            int idIngredient = ui.poserQuestionListeNUplets(ingredients);
+            Ingredient ingredient = (Ingredient) filterListeNUpletsAvecId(ingredients, idIngredient);
+
+            //Sauvegarde : suppression de l'ingrédient.
             orm.supprimerNUplet(ingredient);
-            ui.afficher("Ingrédient supprimé! ");
+
+            //Message de résultat.
+            ui.afficher("Ingrédient supprimé !");
         }
+
         //retourner à l'accueil
-        AccueilControleur.get();
+        AccueilControleur.consulter();
     }
 }

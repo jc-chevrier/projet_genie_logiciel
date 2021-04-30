@@ -9,12 +9,39 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Contrôleur pour la gestion du catalogue
- * des plats.
+ * Contrôleur pour le catalogue des plats.
  *
  * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */
 public class PlatControleur extends Controleur {
+    /**
+     * Lister les plats.
+     */
+    public static void lister() {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Listing des plats du catalogue :");
+
+        //Récupération des plats exsitants.
+        List<Entite> plats = orm.chercherTousLesNUplets(Plat.class);
+
+        //Si pas de plats dans le cataloque.
+        if(plats.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucun plat trouvé dans le cataloque !");
+        //Sinon.
+        } else {
+            //Listing.
+            ui.listerNUplets(plats);
+        }
+
+        //Retour vers l'accueil.
+        AccueilControleur.consulter();
+    }
+
     /**
      * Choisir un ingrédient pour un plat,
      * et saisir la quantité associée pour le plat.
@@ -51,10 +78,10 @@ public class PlatControleur extends Controleur {
             return null;
         //Sinon.
         } else {
-            //Questions.
+            //Questions et saisies.
             ui.afficher("Ajout d'un ingrédient au plat :");
             int idIngredient = ui.poserQuestionListeNUplets(ingredients);
-            double quantite = ui.poserQuestionDecimal("Saisir une quantité : ", UI.REGEX_GRAND_DECIMAL_POSITIF, false);
+            double quantite = ui.poserQuestionDecimal("Saisir une quantité : ", UI.REGEX_GRAND_DECIMAL_POSITIF);
 
             //Création du n-uplet PlatIngredients.
             PlatIngredients platIngredient = new PlatIngredients();
@@ -87,7 +114,7 @@ public class PlatControleur extends Controleur {
             } else {
                 platIngredients.add(platIngredient);
                 ui.afficher("Ingrédient ajouté !");
-                continuerComposition = ui.poserQuestionFermee("Voulez-vous ajouter un autre ingrédient ?", false);
+                continuerComposition = ui.poserQuestionFermee("Voulez-vous ajouter un autre ingrédient ?");
             }
         } while (continuerComposition);
         ui.afficher("Composition du plat terminée !");
@@ -103,52 +130,46 @@ public class PlatControleur extends Controleur {
         UI ui = getUI();
         ORM orm = getORM();
 
-        //Plat.
-        ui.afficher("\n" + UI.DELIMITEUR + "\nAjout d'un plat au catalogue :");
-        String libelle = ui.poserQuestion("Saisir un libellé :", UI.REGEX_CHAINE_DE_CARACTERES, false);
-        Double prix = ui.poserQuestionDecimal("Saisir un prix : ", UI.REGEX_DECIMAL_POSITIF, false);
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Ajout d'un plat au catalogue :");
 
-        //Composition du plat.
-        List<PlatIngredients> platIngredients = composer();
+        List<Entite> ingredients = orm.chercherTousLesNUplets(Ingredient.class);
 
-        //Sauvegarde.
-        Plat plat = new Plat();
-        plat.setLibelle(libelle);
-        plat.setPrix(prix);
-        plat.setCarte(0);
-        orm.persisterNUplet(plat);
-        platIngredients.forEach((platIngredient) -> {
-            platIngredient.setIdPlat(plat.getId());
-            orm.persisterNUplet(platIngredient);
-        });
-        ui.afficher("Plat ajouté !");
-        ui.afficher(plat.toString());
-
-        //Retour vers l'accueil.
-        AccueilControleur.get();
-    }
-
-    /**
-     * Lister les plats.
-     */
-    public static void lister() {
-        //UI et ORM.
-        UI ui = getUI();
-        ORM orm = getORM();
-
-        //Listing des plats.
-        List<Entite> plats = orm.chercherTousLesNUplets(Plat.class);
-        //Si pas de plats dans le cataloque.
-        if(plats.isEmpty()) {
-            ui.afficher("\n" + UI.DELIMITEUR + "\nAucun plat trouvé dans le cataloque !");
+        //Si pas d'ingrdéient dans le catalogue.
+        if(ingredients.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucun ingrédient trouvé dans le cataloque pour composer le plat !");
+            ui.afficher("Ajoutez d'abord des ingrédients avant d'ajouter un plat !");
         //Sinon.
         } else {
-            ui.afficher("\n" + UI.DELIMITEUR + "\nListing des plats du catalogue :");
-            ui.listerNUplets(plats);
+            //Plat.
+            //Questions et saisies.
+            String libelle = ui.poserQuestion("Saisir un libellé :", UI.REGEX_CHAINE_DE_CARACTERES);
+            Double prix = ui.poserQuestionDecimal("Saisir un prix : ", UI.REGEX_DECIMAL_POSITIF);
+
+            //Composition du plat.
+            List<PlatIngredients> platIngredients = composer();
+
+            //Sauvegarde : insertion du plat et de sa composition.
+            //Plat.
+            Plat plat = new Plat();
+            plat.setLibelle(libelle);
+            plat.setPrix(prix);
+            plat.setCarte(0);
+            orm.persisterNUplet(plat);
+            //Composition.
+            platIngredients.forEach((platIngredient) -> {
+                platIngredient.setIdPlat(plat.getId());
+                orm.persisterNUplet(platIngredient);
+            });
+
+            //Message de résultat.
+            ui.afficher("Plat ajouté !");
+            ui.afficher(plat.toString());
         }
 
         //Retour vers l'accueil.
-        AccueilControleur.get();
+        AccueilControleur.consulter();
     }
 
     /**
@@ -159,24 +180,33 @@ public class PlatControleur extends Controleur {
         UI ui = getUI();
         ORM orm = getORM();
 
-        //Listing des plats.
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Suppression d'un plat :");
+
+        //Récupération des plats exsitants.
         List<Entite> plats = orm.chercherTousLesNUplets(Plat.class);
+
         //Si pas de plats dans le cataloque.
         if(plats.isEmpty()) {
-            ui.afficher("\n" + UI.DELIMITEUR + "\nAucun plat trouvé dans le cataloque !");
+            //Message d'erreur.
+            ui.afficher("Aucun plat trouvé dans le cataloque !");
         //Sinon.
         } else {
-            //Question.
+            //Question et saisies.
             int idPlat = ui.poserQuestionListeNUplets(plats);
-            //Suppression.
-            Plat plat = (Plat) plats.stream().filter((_plat) -> _plat.getId().equals(idPlat)).findFirst().get();
-            List<Entite> platIngredients = orm.chercherNUpletsAvecPredicat("WHERE ID_PLAT = " + plat.getId(), PlatIngredients.class);
+            Plat plat = (Plat) filterListeNUpletsAvecId(plats, idPlat);
+
+            //Sauvegarde : suppression du plat et de sa composition.
+            List<Entite> platIngredients = orm.chercherNUpletsAvecPredicat("WHERE ID_PLAT = " + plat.getId(),
+                                                                           PlatIngredients.class);
             platIngredients.forEach(orm::supprimerNUplet);
             orm.supprimerNUplet(plat);
+
+            //Message de résultat.
             ui.afficher("Plat supprimé !");
         }
 
         //Retour vers l'accueil.
-        AccueilControleur.get();
+        AccueilControleur.consulter();
     }
 }
