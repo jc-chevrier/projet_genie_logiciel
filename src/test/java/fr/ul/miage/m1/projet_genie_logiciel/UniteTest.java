@@ -55,9 +55,7 @@ public class UniteTest {
         UniteControleur.ajouter();
 
         //L'unité insérée doit avoir ce libellé : "libellé test ajouter cas 2 bon libellé".
-        Unite uniteInseree = (Unite) orm.chercherNUpletAvecPredicat("ORDER BY ID DESC " +
-                                                                    "OFFSET 0 " +
-                                                                    "LIMIT 1", Unite.class);
+        Unite uniteInseree = (Unite) orm.chercherNUpletAvecPredicat("WHERE ID = 2", Unite.class);
         assertEquals("libellé test ajouter cas 2 bon libellé", uniteInseree.getLibelle());
     }
 
