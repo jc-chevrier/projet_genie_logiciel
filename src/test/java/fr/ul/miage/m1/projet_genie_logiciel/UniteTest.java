@@ -28,7 +28,7 @@ public class UniteTest {
     @Test
     @Order(1)
     @DisplayName("Test - ajouter une unité - cas 1 : n-uplet unité bien ajoutée")
-    void testAjouterUniteCasBienAjoute() {
+    void testAjouterUniteCasBienAjoutee() {
         //On simule les saisies de l'ajout dans ce fichier.
         System.setIn(UniteTest.class.getResourceAsStream("./saisies/unite_test/ajouter_cas_1.txt"));
         ui.reinitialiserScanner();
@@ -86,7 +86,7 @@ public class UniteTest {
     @Test
     @Order(4)
     @DisplayName("Test - supprimer une unité - cas 2 : aucun n-uplet unité trouvé")
-    void testSupprimerUniteCas2Supprimee() {
+    void testSupprimerUniteCas2PasDeUnite() {
         //On vide la table unité.
         orm.chercherTousLesNUplets(Unite.class).forEach(orm::supprimerNUplet);
 
