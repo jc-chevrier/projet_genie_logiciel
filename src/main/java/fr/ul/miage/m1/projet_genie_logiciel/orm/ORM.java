@@ -88,7 +88,7 @@ public class ORM {
 
         //Construction de la reuqête.
         Statement requete = null;
-        String requeteString = "SELECT * FROM " + nomTable + " " + predicat + ";";
+        String requeteString = "SELECT FROM_TABLE.* FROM " + nomTable + " AS FROM_TABLE " + predicat + ";";
 
         List<Entite> listeNUplets = new ArrayList<Entite>();
         try {

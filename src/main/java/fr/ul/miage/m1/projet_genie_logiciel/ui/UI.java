@@ -220,4 +220,14 @@ public class UI {
     public void setUtilisateurConnecte(Compte utilisateurConnecte) {
         this.utilisateurConnecte = utilisateurConnecte;
     }
+
+    /**
+     * (Ré-)initialiser le scanner
+     * avec le flux d'entrée du système.
+     *
+     * (Cette méthode sert aux tests.)
+     */
+    public void reinitialiserScanner() {
+        scanner = new Scanner(System.in);
+    }
 }

@@ -3,6 +3,8 @@ package fr.ul.miage.m1.projet_genie_logiciel.controleurs;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Ingredient;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.PlatIngredients;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Role;
+import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +41,7 @@ public class Fonctionnalite {
                               new Fonctionnalite("Modifier un plat", AccueilControleur::consulter), //TODO à modifier
                               new Fonctionnalite("Supprimer un plat du catalogue des plats", PlatControleur::supprimer),
                               new Fonctionnalite("Se déconnecter", AuthControleur::seDeconnecter),
-                              new Fonctionnalite("Quitter", () -> System.exit(0)));
+                              new Fonctionnalite("Quitter", () -> UI.getInstance().afficherAvecDelimiteurEtUtilisateur("Fin.")));
 
         //TODO ajouter pour autres rôles.
 
@@ -53,7 +55,7 @@ public class Fonctionnalite {
      * @param idRole
      * @return
      */
-    public static List<Fonctionnalite> getRokeFonctionnalite(int idRole) {
+    public static List<Fonctionnalite> getRoleFonctionnalite(int idRole) {
         return FONCTIONNALITES_PAR_ROLE.get(idRole);
     }
 
@@ -74,7 +76,7 @@ public class Fonctionnalite {
      * @return
      */
     public static List<String> getRoleFonctionnalitesLibelles(int idRole) {
-        return getRokeFonctionnalite(idRole).stream().map(Fonctionnalite::getLibelle).collect(Collectors.toList());
+        return getRoleFonctionnalite(idRole).stream().map(Fonctionnalite::getLibelle).collect(Collectors.toList());
     }
 
     public Fonctionnalite(String libelle, Runnable runnable) {
