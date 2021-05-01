@@ -1,6 +1,7 @@
 package fr.ul.miage.m1.projet_genie_logiciel.controleurs;
 
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Ingredient;
+import fr.ul.miage.m1.projet_genie_logiciel.entites.Place;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.PlatIngredients;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Role;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
@@ -67,7 +68,7 @@ public class Fonctionnalite {
         //fonctionnalitesDirecteur.addAll(fonctionnalitesCuisinier);
         //fonctionnalitesDirecteur.addAll(fonctionnalitesAssistantService);
 
-        fonctionnalitesServeur.add(0, new Fonctionnalite("Lister mes tables", AccueilControleur::consulter));
+        fonctionnalitesServeur.add(0, new Fonctionnalite("Lister mes tables", PlaceControleur::listerAlloueesPourServeur));
 
         List<Fonctionnalite> fonctionnalitesUtilisateur = new ArrayList<Fonctionnalite>(
                 Arrays.asList(new Fonctionnalite("Se déconnecter", AuthControleur::seDeconnecter),
