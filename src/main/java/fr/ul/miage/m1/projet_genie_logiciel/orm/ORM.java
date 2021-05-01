@@ -90,8 +90,10 @@ public class ORM {
         //Construction de la reuqête.
         Statement requete = null;
         String requeteString = "SELECT " +
-                               structure.keySet().stream().collect(Collectors.joining(", FROM_TABLE.", "FROM_TABLE.", ""))  +
-                               " FROM " + nomTable + " AS FROM_TABLE " + predicat + ";";
+                                structure.keySet()
+                                        .stream()
+                                        .collect(Collectors.joining(", FROM_TABLE.", "FROM_TABLE.", "")) +
+                                " FROM " + nomTable + " AS FROM_TABLE " + predicat + ";";
 
         List<Entite> listeNUplets = new ArrayList<Entite>();
         try {
@@ -106,16 +108,14 @@ public class ORM {
                     Object valeur = null;
                     Class type = structure.get(attribut);
                     if (type.equals(Integer.class)) {
+                        valeur = resultatLignes.getInt(attribut);
                         if(resultatLignes.wasNull()) {
-                            resultatLignes.getInt(attribut);
-                        } else {
-                            valeur = resultatLignes.getInt(attribut);
+                            valeur = null;
                         }
                     } else if (type.equals(Double.class)) {
+                        valeur = resultatLignes.getDouble(attribut);
                         if(resultatLignes.wasNull()) {
-                            resultatLignes.getDouble(attribut);
-                        } else {
-                            valeur = resultatLignes.getDouble(attribut);
+                            valeur = null;
                         }
                     } else if (type.equals(String.class)) {
                         valeur = resultatLignes.getString(attribut);
