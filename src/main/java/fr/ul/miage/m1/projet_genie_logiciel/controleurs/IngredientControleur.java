@@ -159,4 +159,40 @@ public class IngredientControleur extends Controleur {
         //retourner à l'accueil
         AccueilControleur.consulter();
     }
+    /**
+     * Modifier le stock d'un ingédient.
+     */
+    public static void IncrementerStock() {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Incrementer le stock d'un ingrédient :");
+
+        //Récupération des ingrédients existants.
+        List<Entite> ingredients = orm.chercherTousLesNUplets(Ingredient.class);
+
+        //Si pas d'ingrédoents dans le catalogue.
+        if (ingredients.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucun ingrédient trouvé dans le cataloque !");
+            //Sinon.
+        } else {
+            //Questions et saisies.
+            int idIngredient = ui.poserQuestionListeNUplets(ingredients);
+            Ingredient ingredient = (Ingredient) filterListeNUpletsAvecId(ingredients, idIngredient);
+            Double stock = ui.poserQuestionDecimal("Saisir le stock que vous voulez ajouter :" , UI.REGEX_GRAND_DECIMAL_POSITIF);
+            //Sauvegarde : incrémentation du stock de l'ingrédient.
+            ingredient.setStock(ingredient.getStock()+stock);
+            orm.persisterNUplet(ingredient);
+
+            //Message de résultat.
+            ui.afficher("Ingrédient modifié !");
+            ui.afficher(ingredient.toString());
+        }
+
+        //Retour à l'accueil.
+        AccueilControleur.consulter();
+    }
 }
