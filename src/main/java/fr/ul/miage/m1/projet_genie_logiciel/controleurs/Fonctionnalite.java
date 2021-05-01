@@ -25,7 +25,7 @@ public class Fonctionnalite {
     static {
         List<Fonctionnalite> fonctionnalitesDirecteur = new ArrayList<Fonctionnalite>(
                 Arrays.asList(new Fonctionnalite("Ajouter un plat à la carte du jour", AccueilControleur::consulter),//TODO à modifier
-                              new Fonctionnalite("Supprimer un plat de la carte du jour", AccueilControleur::consulter)));//TODO à modifier
+                              new Fonctionnalite("Supprimer un plat de la carte du jour", PlatControleur::supprimerDeCarte)));
 
         List<Fonctionnalite> fonctionnalitesMaitreHotel = new ArrayList<Fonctionnalite>(
                 Arrays.asList(new Fonctionnalite("Lister toutes les tables", AccueilControleur::consulter),//TODO à modifier
