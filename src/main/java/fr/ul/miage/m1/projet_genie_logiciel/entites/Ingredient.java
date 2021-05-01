@@ -64,4 +64,15 @@ public class Ingredient extends Entite {
         return "Ingrédient [ id = " + getId() + ", libellé = " + getLibelle() + ", unité = " + unite.getLibelle() +
                 ", stock = " + getStock() + " " + unite.getLibelle() + " ]";
     }
+
+    /**
+     * Savoir si un ingrédient est utilisé par un plat.
+     *
+     * @return
+     */
+    public boolean estUtiliseParPlat() {
+        return ORM.getInstance().compterNUpletsAvecPredicat(
+                "INNER JOIN PLAT_INGREDIENTS AS PI " +
+                "ON PI.ID_INGREDIENT = " + getId(), Ingredient.class) > 0;
+    }
 }

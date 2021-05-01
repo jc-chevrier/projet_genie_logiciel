@@ -43,4 +43,15 @@ public class Unite extends Entite {
     public String toString() {
         return "Unité [ id = " + getId() + ", libellé = " + getLibelle() + " ]";
     }
+
+    /**
+     * Savoir si une unité est utilisé par des ingrédients.
+     *
+     * @return
+     */
+    public boolean estUtiliseParIngredient() {
+        return ORM.getInstance().compterNUpletsAvecPredicat(
+                                "INNER JOIN INGREDIENT AS I " +
+                                "ON I.ID_UNITE = " + getId(), Unite.class) > 0;
+    }
 }
