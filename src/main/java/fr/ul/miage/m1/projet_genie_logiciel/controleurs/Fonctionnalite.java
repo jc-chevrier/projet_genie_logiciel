@@ -34,7 +34,7 @@ public class Fonctionnalite {
                               new Fonctionnalite("Supprimer une table", AccueilControleur::consulter),//TODO à modifier
                               new Fonctionnalite("Allouer une table à un client", AccueilControleur::consulter),//TODO à modifier
                               new Fonctionnalite("Désallouer une table à un client", AccueilControleur::consulter), //TODO à modifier
-                              new Fonctionnalite("Allouer une table à un serveur", AccueilControleur::consulter),//TODO à modifier
+                              new Fonctionnalite("Allouer une table à un serveur", PlaceControleur::allouerPourServeur),
                               new Fonctionnalite("Désallouer une table à un serveur", AccueilControleur::consulter)));//TODO à modifier
 
         List<Fonctionnalite> fonctionnalitesCuisinier = new ArrayList<Fonctionnalite>(
