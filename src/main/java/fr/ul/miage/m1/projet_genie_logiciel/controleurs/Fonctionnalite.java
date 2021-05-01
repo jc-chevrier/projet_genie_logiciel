@@ -1,5 +1,6 @@
 package fr.ul.miage.m1.projet_genie_logiciel.controleurs;
 
+import fr.ul.miage.m1.projet_genie_logiciel.entites.Categorie;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Ingredient;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.PlatIngredients;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Role;
@@ -47,7 +48,7 @@ public class Fonctionnalite {
                               new Fonctionnalite("Modifier un ingrédient", IngredientControleur::modifier),
                               new Fonctionnalite("Supprimer un ingrédient au catalogue des ingrédients", IngredientControleur::supprimer),
                               new Fonctionnalite("Lister les catégories", AccueilControleur::consulter),//TODO à modifier
-                              new Fonctionnalite("Ajouter une catégorie", AccueilControleur::consulter),//TODO à modifier
+                              new Fonctionnalite("Ajouter une catégorie", CategorieControleur::ajouter),
                               new Fonctionnalite("Modifier une catégorie", AccueilControleur::consulter),//TODO à modifier
                               new Fonctionnalite("Supprimer une catégorie", AccueilControleur::consulter),//TODO à modifier
                               new Fonctionnalite("Incrémenter le stock d'un ingrédient", AccueilControleur::consulter), //TODO à modifier
