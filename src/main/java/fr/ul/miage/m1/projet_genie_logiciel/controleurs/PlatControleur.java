@@ -209,4 +209,39 @@ public class PlatControleur extends Controleur {
         //Retour vers l'accueil.
         AccueilControleur.consulter();
     }
+    /**
+     * Ajouter d'un plat à la carte du jour.
+     */
+    public static void ajouterDansCarte() {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Ajout d'un plat à la carte du jour :");
+        //Récupération des plats qui ne font pas partie de la carte.
+        System.out.println("Nous listons uniquement les plats qui ne font pas partie de la carte du jour.");
+        List<Entite> plats = orm.chercherNUpletsAvecPredicat("WHERE CARTE = 0",Plat.class);
+        //Si pas de plats dans le cataloque.
+        if(plats.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucun plat trouvé dans le cataloque !");
+            //Sinon.
+        } else {
+            //Question et saisies.
+            int idPlat = ui.poserQuestionListeNUplets(plats);
+            Plat plat = (Plat) filterListeNUpletsAvecId(plats, idPlat);
+
+            //Sauvegarde : Ajout du plat à la carte du jour
+            plat.setCarte(1);
+            orm.persisterNUplet(plat);
+            //Message de résultat.
+            ui.afficher("Plat ajouté à la carte du jour !");
+            ui.afficher(plat.toString());
+        }
+
+        //Retour à l'accueil.
+        AccueilControleur.consulter();
+
+    }
 }

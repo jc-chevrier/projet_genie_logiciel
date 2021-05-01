@@ -24,7 +24,7 @@ public class Fonctionnalite {
 
     static {
         List<Fonctionnalite> fonctionnalitesDirecteur = new ArrayList<Fonctionnalite>(
-                Arrays.asList(new Fonctionnalite("Ajouter un plat à la carte du jour", AccueilControleur::consulter),//TODO à modifier
+                Arrays.asList(new Fonctionnalite("Ajouter un plat à la carte du jour", PlatControleur::ajouterDansCarte),
                               new Fonctionnalite("Supprimer un plat de la carte du jour", AccueilControleur::consulter)));//TODO à modifier
 
         List<Fonctionnalite> fonctionnalitesMaitreHotel = new ArrayList<Fonctionnalite>(
@@ -56,7 +56,7 @@ public class Fonctionnalite {
                 Arrays.asList(new Fonctionnalite("Lister tous les plats de la carte", AccueilControleur::consulter), //TODO à modifier
                               new Fonctionnalite("Lister tous les plats disponibles de la carte", AccueilControleur::consulter), //TODO à modifier
                               new Fonctionnalite("Lister les plats disponibles de la carte pour une catégorie", AccueilControleur::consulter), //TODO à modifier
-                             new Fonctionnalite("Lister les catégories de plats disponibles de la carte", AccueilControleur::consulter))); //TODO à modifier
+                              new Fonctionnalite("Lister les catégories de plats disponibles de la carte", AccueilControleur::consulter))); //TODO à modifier
 
         List<Fonctionnalite> fonctionnalitesAssistantService = new ArrayList<Fonctionnalite>(
                 Arrays.asList(new Fonctionnalite("Lister les tables à préparer", AccueilControleur::consulter), //TODO à modifier
