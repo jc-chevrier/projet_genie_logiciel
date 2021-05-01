@@ -102,14 +102,16 @@ public class ORM {
                 for(String attribut : structure.keySet()) {
                     Object valeur = null;
                     Class type = structure.get(attribut);
-                    if (type.equals(Integer.class)) {
-                       valeur = resultatLignes.getInt(attribut);
-                    } else if (type.equals(Double.class)) {
-                       valeur = resultatLignes.getDouble(attribut);
-                    } else if (type.equals(String.class)) {
-                       valeur = resultatLignes.getString(attribut);
-                    } else if (type.equals(Date.class)) {
-                       valeur = resultatLignes.getDate(attribut);
+                    if(!resultatLignes.wasNull()) {
+                        if (type.equals(Integer.class)) {
+                            valeur = resultatLignes.getInt(attribut);
+                        } else if (type.equals(Double.class)) {
+                            valeur = resultatLignes.getDouble(attribut);
+                        } else if (type.equals(String.class)) {
+                            valeur = resultatLignes.getString(attribut);
+                        } else if (type.equals(Date.class)) {
+                            valeur = resultatLignes.getDate(attribut);
+                        }
                     }
                     nUpletAttributs.put(attribut, valeur);
                 }
