@@ -149,11 +149,18 @@ public class IngredientControleur extends Controleur {
             int idIngredient = ui.poserQuestionListeNUplets(ingredients);
             Ingredient ingredient = (Ingredient) filterListeNUpletsAvecId(ingredients, idIngredient);
 
-            //Sauvegarde : suppression de l'ingrédient.
-            orm.supprimerNUplet(ingredient);
+            //Si l'ingrédient a été utilisé par des plats.
+            if(ingredient.estUtiliseParPlat()) {
+                //Message d'erreur.
+                ui.afficher("Cet ingrédient est utilisé par des plats, il ne peut pas être supprimé !");
+            //Sinon.
+            } else {
+                //Sauvegarde : suppression de l'ingrédient.
+                orm.supprimerNUplet(ingredient);
 
-            //Message de résultat.
-            ui.afficher("Ingrédient supprimé !");
+                //Message de résultat.
+                ui.afficher("Ingrédient supprimé !");
+            }
         }
 
         //retourner à l'accueil
