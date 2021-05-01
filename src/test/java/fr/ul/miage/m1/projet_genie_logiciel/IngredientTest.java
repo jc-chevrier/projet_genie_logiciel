@@ -1,20 +1,15 @@
 package fr.ul.miage.m1.projet_genie_logiciel;
 
 import fr.ul.miage.m1.projet_genie_logiciel.controleurs.IngredientControleur;
-import fr.ul.miage.m1.projet_genie_logiciel.controleurs.UniteControleur;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Compte;
-import fr.ul.miage.m1.projet_genie_logiciel.entites.Entite;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Ingredient;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Unite;
 import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
 import org.junit.jupiter.api.*;
-
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-@DisplayName("Unite")
+@DisplayName("Ingrédient")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class IngredientTest {
     private static ORM orm;
@@ -46,7 +41,7 @@ public class IngredientTest {
         System.setIn(IngredientTest.class.getResourceAsStream("./saisies/ingredient_test/supprimer_cas_1.txt"));
         ui.reinitialiserScanner();
 
-        //Unité existant avant.
+        //Ingrédient existant avant.
         Ingredient ingredientAvant = (Ingredient) orm.chercherNUpletAvecPredicat("WHERE ID = 3", Ingredient.class);
         assertNotNull(ingredientAvant);
 
