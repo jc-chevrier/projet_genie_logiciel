@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.*;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 /**
  * ORM, pour la sélection, et la manipulation
@@ -84,11 +85,13 @@ public class ORM {
     public List<Entite> chercherNUpletsAvecPredicat(@NotNull String predicat, @NotNull Class entiteClasse) {
         //Récupération des métadonnées de la table.
         String nomTable = EntiteMetadonnee.getEntiteNomTable(entiteClasse);
-        Map<String, Class> structure = EntiteMetadonnee.getEntiteStructure(entiteClasse);
+        Map<String, Class> structure = new TreeMap<>(EntiteMetadonnee.getEntiteStructure(entiteClasse));
 
         //Construction de la reuqête.
         Statement requete = null;
-        String requeteString = "SELECT FROM_TABLE.* FROM " + nomTable + " AS FROM_TABLE " + predicat + ";";
+        String requeteString = "SELECT " +
+                               structure.keySet().stream().collect(Collectors.joining(", FROM_TABLE.", "FROM_TABLE.", ""))  +
+                               " FROM " + nomTable + " AS FROM_TABLE " + predicat + ";";
 
         List<Entite> listeNUplets = new ArrayList<Entite>();
         try {
@@ -115,17 +118,9 @@ public class ORM {
                             valeur = resultatLignes.getDouble(attribut);
                         }
                     } else if (type.equals(String.class)) {
-                        if(resultatLignes.wasNull()) {
-                            resultatLignes.getString(attribut);
-                        } else {
-                            valeur = resultatLignes.getString(attribut);
-                        }
+                        valeur = resultatLignes.getString(attribut);
                     } else if (type.equals(Date.class)) {
-                        if(resultatLignes.wasNull()) {
-                            resultatLignes.getDate(attribut);
-                        } else {
-                            valeur = resultatLignes.getDate(attribut);
-                        }
+                        valeur = resultatLignes.getDate(attribut);
                     }
                     nUpletAttributs.put(attribut, valeur);
                 }
