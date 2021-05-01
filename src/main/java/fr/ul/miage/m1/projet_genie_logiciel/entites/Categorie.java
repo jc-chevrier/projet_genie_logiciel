@@ -38,4 +38,8 @@ public class Categorie extends Entite {
     public void setLibelle(@NotNull String libelle) {
         set("LIBELLE", libelle);
     }
+    @Override
+    public String toString() {
+        return "Catégorie [ id = " + getId() + ", libellé = " + getLibelle() + " ]";
+    }
 }
