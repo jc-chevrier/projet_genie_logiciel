@@ -5,10 +5,7 @@ import fr.ul.miage.m1.projet_genie_logiciel.entites.PlatIngredients;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Role;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -26,8 +23,21 @@ public class Fonctionnalite {
     private Runnable runnable;
 
     static {
-        //Fonctionnalités du cuisiner.
-        List<Fonctionnalite> fonctionnalitesCuisinier =
+        List<Fonctionnalite> fonctionnalitesDirecteur = new ArrayList<Fonctionnalite>(
+                Arrays.asList(new Fonctionnalite("Ajouter un plat à la carte du jour", AccueilControleur::consulter),//TODO à modifier
+                              new Fonctionnalite("Supprimer un plat de la carte du jour", AccueilControleur::consulter)));//TODO à modifier
+
+        List<Fonctionnalite> fonctionnalitesMaitreHotel = new ArrayList<Fonctionnalite>(
+                Arrays.asList(new Fonctionnalite("Lister toutes les tables", AccueilControleur::consulter),//TODO à modifier
+                              new Fonctionnalite("Lister toutes les tables disponibles", AccueilControleur::consulter),//TODO à modifier
+                              new Fonctionnalite("Ajouter une table", AccueilControleur::consulter),//TODO à modifier
+                              new Fonctionnalite("Supprimer une table", AccueilControleur::consulter),//TODO à modifier
+                              new Fonctionnalite("Allouer une table à un client", AccueilControleur::consulter),//TODO à modifier
+                              new Fonctionnalite("Désallouer une table à un client", AccueilControleur::consulter), //TODO à modifier
+                              new Fonctionnalite("Allouer une table à un serveur", AccueilControleur::consulter),//TODO à modifier
+                              new Fonctionnalite("Désallouer une table à un serveur", AccueilControleur::consulter)));//TODO à modifier
+
+        List<Fonctionnalite> fonctionnalitesCuisinier = new ArrayList<Fonctionnalite>(
                 Arrays.asList(new Fonctionnalite("Lister les unités", UniteControleur::lister),
                               new Fonctionnalite("Ajouter une unité", UniteControleur::ajouter),
                               new Fonctionnalite("Modifier une unité", UniteControleur::modifier),
@@ -36,17 +46,45 @@ public class Fonctionnalite {
                               new Fonctionnalite("Ajouter un ingrédient au catalogue des ingrédients", IngredientControleur::ajouter),
                               new Fonctionnalite("Modifier un ingrédient", IngredientControleur::modifier),
                               new Fonctionnalite("Supprimer un ingrédient au catalogue des ingrédients", IngredientControleur::supprimer),
+                              new Fonctionnalite("Incrémenter le stock d'un ingrédient", AccueilControleur::consulter), //TODO à modifier
                               new Fonctionnalite("Lister les plats du catalogue des plats", PlatControleur::lister),
                               new Fonctionnalite("Ajouter un plat au catalogue des plats", PlatControleur::ajouter),
                               new Fonctionnalite("Modifier un plat", AccueilControleur::consulter), //TODO à modifier
-                              new Fonctionnalite("Supprimer un plat du catalogue des plats", PlatControleur::supprimer),
-                              new Fonctionnalite("Se déconnecter", AuthControleur::seDeconnecter),
-                              new Fonctionnalite("Quitter", () -> UI.getInstance().afficherAvecDelimiteurEtUtilisateur("Fin.")));
+                              new Fonctionnalite("Supprimer un plat du catalogue des plats", PlatControleur::supprimer)));
 
-        //TODO ajouter pour autres rôles.
+        List<Fonctionnalite> fonctionnalitesServeur = new ArrayList<Fonctionnalite>(
+                Arrays.asList(new Fonctionnalite("Lister tous les plats de la carte", AccueilControleur::consulter), //TODO à modifier
+                              new Fonctionnalite("Lister tous les plats disponibles de la carte", AccueilControleur::consulter), //TODO à modifier
+                              new Fonctionnalite("Lister les plats disponibles de la carte pour une catégorie", AccueilControleur::consulter), //TODO à modifier
+                             new Fonctionnalite("Lister les catégories de plats disponibles de la carte", AccueilControleur::consulter))); //TODO à modifier
+
+        List<Fonctionnalite> fonctionnalitesAssistantService = new ArrayList<Fonctionnalite>(
+                Arrays.asList(new Fonctionnalite("Lister les tables à préparer", AccueilControleur::consulter), //TODO à modifier
+                              new Fonctionnalite("Valider la préparation d'une table", AccueilControleur::consulter))); //TODO à modifier
+
+        fonctionnalitesDirecteur.addAll(0, fonctionnalitesServeur);
+        //fonctionnalitesDirecteur.addAll(fonctionnalitesMaitreHotel);
+        //fonctionnalitesDirecteur.addAll(fonctionnalitesCuisinier);
+        //fonctionnalitesDirecteur.addAll(fonctionnalitesAssistantService);
+
+        fonctionnalitesServeur.add(0, new Fonctionnalite("Lister mes tables", AccueilControleur::consulter));
+
+        List<Fonctionnalite> fonctionnalitesUtilisateur = new ArrayList<Fonctionnalite>(
+                Arrays.asList(new Fonctionnalite("Se déconnecter", AuthControleur::seDeconnecter),
+                              new Fonctionnalite("Quitter", () -> UI.getInstance().afficherAvecDelimiteurEtUtilisateur("Fin."))));
+
+        fonctionnalitesDirecteur.addAll(fonctionnalitesUtilisateur);
+        fonctionnalitesCuisinier.addAll(fonctionnalitesUtilisateur);
+        fonctionnalitesMaitreHotel.addAll(fonctionnalitesUtilisateur);
+        fonctionnalitesServeur.addAll(fonctionnalitesUtilisateur);
+        fonctionnalitesAssistantService.addAll(fonctionnalitesUtilisateur);
 
         FONCTIONNALITES_PAR_ROLE = new HashMap<Integer, List<Fonctionnalite>>();
+        FONCTIONNALITES_PAR_ROLE.put(Role.DIRECTEUR, fonctionnalitesDirecteur);
+        FONCTIONNALITES_PAR_ROLE.put(Role.MAITRE_HOTEL, fonctionnalitesMaitreHotel);
         FONCTIONNALITES_PAR_ROLE.put(Role.CUISINIER, fonctionnalitesCuisinier);
+        FONCTIONNALITES_PAR_ROLE.put(Role.SERVEUR, fonctionnalitesServeur);
+        FONCTIONNALITES_PAR_ROLE.put(Role.ASSISTANT_SERVICE, fonctionnalitesAssistantService);
     }
 
     /**
