@@ -162,13 +162,13 @@ public class IngredientControleur extends Controleur {
     /**
      * Modifier le stock d'un ingédient.
      */
-    public static void IncrementerStock() {
+    public static void incrementerStock() {
         //UI et ORM.
         UI ui = getUI();
         ORM orm = getORM();
 
         //Message de titre.
-        ui.afficherAvecDelimiteurEtUtilisateur("Incrementer le stock d'un ingrédient :");
+        ui.afficherAvecDelimiteurEtUtilisateur("Incrementation du stock d'un ingrédient :");
 
         //Récupération des ingrédients existants.
         List<Entite> ingredients = orm.chercherTousLesNUplets(Ingredient.class);
