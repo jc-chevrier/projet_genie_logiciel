@@ -31,7 +31,7 @@ public class Fonctionnalite {
                 Arrays.asList(new Fonctionnalite("Lister toutes les tables", AccueilControleur::consulter),//TODO à modifier
                               new Fonctionnalite("Lister toutes les tables disponibles", AccueilControleur::consulter),//TODO à modifier
                               new Fonctionnalite("Ajouter une table", AccueilControleur::consulter),//TODO à modifier
-                              new Fonctionnalite("Supprimer une table", AccueilControleur::consulter),//TODO à modifier
+                              new Fonctionnalite("Supprimer une table", PlaceControleur::supprimer),//TODO à modifier
                               new Fonctionnalite("Allouer une table à un client", AccueilControleur::consulter),//TODO à modifier
                               new Fonctionnalite("Désallouer une table à un client", AccueilControleur::consulter), //TODO à modifier
                               new Fonctionnalite("Allouer une table à un serveur", AccueilControleur::consulter),//TODO à modifier
