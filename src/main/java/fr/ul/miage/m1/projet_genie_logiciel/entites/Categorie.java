@@ -39,4 +39,9 @@ public class Categorie extends Entite {
         set("LIBELLE", libelle);
     }
     
+    @Override
+    public String toString() {
+        return "Catégorie [ id = " + getId() + ", libellé = " + getLibelle() + " ]";
+    }
+
 }
