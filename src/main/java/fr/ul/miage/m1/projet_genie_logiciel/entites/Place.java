@@ -1,5 +1,6 @@
 package fr.ul.miage.m1.projet_genie_logiciel.entites;
 
+import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;
@@ -68,4 +69,7 @@ public class Place extends Entite {
 
     public void setIdCompteServeur(@NotNull Integer idCompteServeur) { set("ID_COMPTE_SERVEUR", idCompteServeur);}
 
+    public String toEtatString() {
+        return "Table [ id = " + getId() + ", état = " + getEtat() + " ]";
+    }
 }

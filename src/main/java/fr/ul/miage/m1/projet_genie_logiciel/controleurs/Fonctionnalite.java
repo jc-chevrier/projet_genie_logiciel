@@ -29,7 +29,7 @@ public class Fonctionnalite {
 
         List<Fonctionnalite> fonctionnalitesMaitreHotel = new ArrayList<Fonctionnalite>(
                 Arrays.asList(new Fonctionnalite("Lister toutes les tables", AccueilControleur::consulter),//TODO à modifier
-                              new Fonctionnalite("Lister toutes les tables disponibles", AccueilControleur::consulter),//TODO à modifier
+                              new Fonctionnalite("Lister toutes les tables disponibles", PlaceControleur::lister),//TODO à modifier
                               new Fonctionnalite("Ajouter une table", AccueilControleur::consulter),//TODO à modifier
                               new Fonctionnalite("Supprimer une table", AccueilControleur::consulter),//TODO à modifier
                               new Fonctionnalite("Allouer une table à un client", AccueilControleur::consulter),//TODO à modifier
