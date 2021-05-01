@@ -50,7 +50,7 @@ public class Fonctionnalite {
     }
 
     /**
-     * Obtenir les fonctionnalités pourr un rôle, avec  l'identifiant du rôle.
+     * Obtenir les fonctionnalités pour un rôle, avec  l'identifiant du rôle.
      *
      * @param idRole
      * @return
@@ -63,6 +63,7 @@ public class Fonctionnalite {
      * Obtenir une fonctionnalité, avec l'identifiant du rôle, et l'indice de la fonctionnalité.
      *
      * @param idRole
+     *  @param indexFonctionnalite
      * @return
      */
     public static Fonctionnalite getFonctionnalite(int idRole, int indexFonctionnalite) {

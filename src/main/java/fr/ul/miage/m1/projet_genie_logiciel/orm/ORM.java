@@ -86,7 +86,7 @@ public class ORM {
         String nomTable = EntiteMetadonnee.getEntiteNomTable(entiteClasse);
         Map<String, Class> structure = EntiteMetadonnee.getEntiteStructure(entiteClasse);
 
-        //Construction de la reuqête.
+        //Construction de la requête.
         Statement requete = null;
         String requeteString = "SELECT FROM_TABLE.* FROM " + nomTable + " AS FROM_TABLE " + predicat + ";";
 
@@ -151,6 +151,57 @@ public class ORM {
     }
 
     /**
+     * Compter le nombre de n-uplets
+     * d'une table avec un prédicat.
+     *
+     * @param predicat
+     * @param entiteClasse
+     * @return
+     */
+    public Integer compterNUpletsAvecPredicat(@NotNull String predicat, @NotNull Class entiteClasse) {
+        //Récupération des métadonnées de la table.
+        String nomTable = EntiteMetadonnee.getEntiteNomTable(entiteClasse);
+
+        //Construction de la requête.
+        Statement requete = null;
+        String requeteString = "SELECT COUNT(FROM_TABLE.*) AS NOMBRE_NUPLETS FROM " + nomTable + " AS FROM_TABLE " + predicat + ";";
+
+        Integer nombreNUplets = 0;
+        try {
+            //Execution de la requête.
+            requete = connexion.createStatement();
+            ResultSet resultatLignes = requete.executeQuery(requeteString);
+
+            //Lecture du résultat de la requête.
+            while(resultatLignes.next()) {
+                nombreNUplets = resultatLignes.getInt("NOMBRE_NUPLETS");
+            }
+
+            //Fin de la lecture du résultat de la requête.
+            resultatLignes.close();
+            //Fin de la requête.
+            requete.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Erreur ! Une requête se sélection a échouée : \"" + requeteString + "\" !");
+            System.exit(1);
+        }
+
+        return nombreNUplets;
+    }
+
+    /**
+     * Compter le nombre total de
+     * n-uplets d'une table.
+     *
+     * @param entiteClasse
+     * @return
+     */
+    public Integer compterTousLesNUpletsAvecPredicat(@NotNull Class entiteClasse) {
+        return compterNUpletsAvecPredicat("", entiteClasse);
+    }
+
+    /**
      * Faire persister une modification.
      */
     public void persisterNUplet(@NotNull Entite nUplet) {
@@ -212,7 +263,7 @@ public class ORM {
             requete.executeUpdate();
             //Validation de la transaction.
             connexion.commit();
-            //Si insertion, on fournit l'id généré à l'ibjet.
+            //Si insertion, on fournit l'id généré à l'objet.
             if(modeInsertion) {
                 ResultSet clesGenerees = requete.getGeneratedKeys();
                 clesGenerees.next();
