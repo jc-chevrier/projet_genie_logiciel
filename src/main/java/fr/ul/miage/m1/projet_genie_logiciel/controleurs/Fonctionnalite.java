@@ -59,7 +59,7 @@ public class Fonctionnalite {
                              new Fonctionnalite("Lister les catégories de plats disponibles de la carte", AccueilControleur::consulter))); //TODO à modifier
 
         List<Fonctionnalite> fonctionnalitesAssistantService = new ArrayList<Fonctionnalite>(
-                Arrays.asList(new Fonctionnalite("Lister les tables à préparer", AccueilControleur::consulter), //TODO à modifier
+                Arrays.asList(new Fonctionnalite("Lister les tables à préparer", PlaceControleur::listerAPreparer),
                               new Fonctionnalite("Valider la préparation d'une table", AccueilControleur::consulter))); //TODO à modifier
 
         fonctionnalitesDirecteur.addAll(0, fonctionnalitesServeur);
