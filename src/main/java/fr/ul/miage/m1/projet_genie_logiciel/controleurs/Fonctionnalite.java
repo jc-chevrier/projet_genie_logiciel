@@ -49,7 +49,7 @@ public class Fonctionnalite {
                               new Fonctionnalite("Lister les catégories", AccueilControleur::consulter),//TODO à modifier
                               new Fonctionnalite("Ajouter une catégorie", AccueilControleur::consulter),//TODO à modifier
                               new Fonctionnalite("Modifier une catégorie", AccueilControleur::consulter),//TODO à modifier
-                              new Fonctionnalite("Supprimer une catégorie", AccueilControleur::consulter),//TODO à modifier
+                              new Fonctionnalite("Supprimer une catégorie", CategorieControleur::supprimer),//TODO à modifier
                               new Fonctionnalite("Incrémenter le stock d'un ingrédient", AccueilControleur::consulter), //TODO à modifier
                               new Fonctionnalite("Lister les plats du catalogue des plats", PlatControleur::lister),
                               new Fonctionnalite("Ajouter un plat au catalogue des plats", PlatControleur::ajouter),
