@@ -209,4 +209,32 @@ public class PlatControleur extends Controleur {
         //Retour vers l'accueil.
         AccueilControleur.consulter();
     }
+
+    /**
+     * Lister tous les plats de la carte.
+     */
+    public static void listerPlatCarte() {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Lister tous les plats de la carte :");
+
+        //Récupération des plats de la carte.
+        List<Entite> plats = orm.chercherNUpletsAvecPredicat("WHERE CARTE = 1", Plat.class);
+
+        //Si pas de plats de la carte.
+        if(plats.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucun plat de la carte trouvé !");
+            //Sinon.
+        } else {
+            //Listing.
+            ui.listerNUplets(plats);
+        }
+
+        //Retour vers l'accueil.
+        AccueilControleur.consulter();
+    }
 }
