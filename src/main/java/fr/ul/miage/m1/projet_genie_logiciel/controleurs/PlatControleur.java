@@ -133,40 +133,53 @@ public class PlatControleur extends Controleur {
         //Message de titre.
         ui.afficherAvecDelimiteurEtUtilisateur("Ajout d'un plat au catalogue :");
 
+        List<Entite> categories = orm.chercherTousLesNUplets(Categorie.class);
         List<Entite> ingredients = orm.chercherTousLesNUplets(Ingredient.class);
 
-        //Si pas d'ingrdéient dans le catalogue.
-        if(ingredients.isEmpty()) {
+        //Si pas de catégories trouvées.
+        if(categories.isEmpty()) {
             //Message d'erreur.
-            ui.afficher("Aucun ingrédient trouvé dans le cataloque pour composer le plat !");
-            ui.afficher("Ajoutez d'abord des ingrédients avant d'ajouter un plat !");
+            ui.afficher("Aucune catégorie trouvée pour les plats !");
+            ui.afficher("Ajoutez d'abord des catégories avant d'ajouter un plat !");
         //Sinon.
-        } else {
-            //Plat.
-            //Questions et saisies.
-            String libelle = ui.poserQuestion("Saisir un libellé :", UI.REGEX_CHAINE_DE_CARACTERES);
-            Double prix = ui.poserQuestionDecimal("Saisir un prix : ", UI.REGEX_DECIMAL_POSITIF);
+        }else {
+            //Si pas d'ingrdéient dans le catalogue.
+            if(ingredients.isEmpty()) {
+                //Message d'erreur.
+                ui.afficher("Aucun ingrédient trouvé dans le cataloque pour composer le plat !");
+                ui.afficher("Ajoutez d'abord des ingrédients avant d'ajouter un plat !");
+            //Sinon.
+            } else {
+                //Plat.
+                //Questions et saisies.
+                //Choix de la catégorie.
+                int idCategorie = ui.poserQuestionListeNUplets(categories);
+                //Caractéristiques du plat.
+                String libelle = ui.poserQuestion("Saisir un libellé :", UI.REGEX_CHAINE_DE_CARACTERES);
+                Double prix = ui.poserQuestionDecimal("Saisir un prix : ", UI.REGEX_DECIMAL_POSITIF);
+                //Composition du plat.
+                List<PlatIngredients> platIngredients = composer();
 
-            //Composition du plat.
-            List<PlatIngredients> platIngredients = composer();
+                //Sauvegarde : insertion du plat et de sa composition.
+                //Plat.
+                Plat plat = new Plat();
+                plat.setIdCategorie(idCategorie);
+                plat.setLibelle(libelle);
+                plat.setPrix(prix);
+                plat.setCarte(0);
+                orm.persisterNUplet(plat);
+                //Composition.
+                platIngredients.forEach((platIngredient) -> {
+                    platIngredient.setIdPlat(plat.getId());
+                    orm.persisterNUplet(platIngredient);
+                });
 
-            //Sauvegarde : insertion du plat et de sa composition.
-            //Plat.
-            Plat plat = new Plat();
-            plat.setLibelle(libelle);
-            plat.setPrix(prix);
-            plat.setCarte(0);
-            orm.persisterNUplet(plat);
-            //Composition.
-            platIngredients.forEach((platIngredient) -> {
-                platIngredient.setIdPlat(plat.getId());
-                orm.persisterNUplet(platIngredient);
-            });
-
-            //Message de résultat.
-            ui.afficher("Plat ajouté !");
-            ui.afficher(plat.toString());
+                //Message de résultat.
+                ui.afficher("Plat ajouté !");
+                ui.afficher(plat.toString());
+            }
         }
+
 
         //Retour vers l'accueil.
         AccueilControleur.consulter();

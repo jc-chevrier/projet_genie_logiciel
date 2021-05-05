@@ -72,10 +72,14 @@ public class Plat extends Entite {
         //TODO ajouter catégorie.
         ORM orm = ORM.getInstance();
         Integer id = getId();
-        String contenu = "Plat [ id = " + id + ", libellé = " + getlibelle() + ", " + getPrix() + " € ]\nComposition [ ";
+        Categorie categorie = (Categorie) orm.chercherNUpletAvecPredicat(
+                                                                    "WHERE ID = " + getIdCategorie(),
+                                                                     Categorie.class);
         List<Entite> platIngredients = orm.chercherNUpletsAvecPredicat(
                                                                 "WHERE ID_PLAT = "  + id,
                                                                  PlatIngredients.class);
+        String contenu = "Plat [ id = " + id + ", libellé = " + getlibelle() + ", " + getPrix() + " €, catégorie = " +
+                          categorie.getLibelle() + " ]\nComposition [ ";
         int nbPlatsIngredients = platIngredients.size();
         for(int index = 0; index < nbPlatsIngredients; index++) {
             PlatIngredients platIngredient = (PlatIngredients) platIngredients.get(index);
