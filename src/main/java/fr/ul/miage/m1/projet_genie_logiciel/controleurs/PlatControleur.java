@@ -123,6 +123,38 @@ public class PlatControleur extends Controleur {
     }
 
     /**
+     * Méthode permettant d'éditer, et de sauvegarder un plat,
+     * qu'il soit déjà ajouté ou non.
+     *
+     * @param plat
+     */
+    private static void editerEtPersister(Plat plat) {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Plat.
+        //Questions et saisies.
+        String libelle = ui.poserQuestion("Saisir un libellé :", UI.REGEX_CHAINE_DE_CARACTERES);
+        Double prix = ui.poserQuestionDecimal("Saisir un prix : ", UI.REGEX_DECIMAL_POSITIF);
+
+        //Composition du plat.
+        List<PlatIngredients> platIngredients = composer();
+
+        //Sauvegarde : insertion du plat et de sa composition.
+        //Plat.
+        plat.setLibelle(libelle);
+        plat.setPrix(prix);
+        plat.setCarte(0);
+        orm.persisterNUplet(plat);
+        //Composition.
+        platIngredients.forEach((platIngredient) -> {
+            platIngredient.setIdPlat(plat.getId());
+            orm.persisterNUplet(platIngredient);
+        });
+    }
+
+    /**
      * Ajouter un plat.
      */
     public static void ajouter() {
@@ -142,29 +174,52 @@ public class PlatControleur extends Controleur {
             ui.afficher("Ajoutez d'abord des ingrédients avant d'ajouter un plat !");
         //Sinon.
         } else {
-            //Plat.
-            //Questions et saisies.
-            String libelle = ui.poserQuestion("Saisir un libellé :", UI.REGEX_CHAINE_DE_CARACTERES);
-            Double prix = ui.poserQuestionDecimal("Saisir un prix : ", UI.REGEX_DECIMAL_POSITIF);
-
-            //Composition du plat.
-            List<PlatIngredients> platIngredients = composer();
-
-            //Sauvegarde : insertion du plat et de sa composition.
-            //Plat.
+            //Saisie et sauvegarde.
             Plat plat = new Plat();
-            plat.setLibelle(libelle);
-            plat.setPrix(prix);
-            plat.setCarte(0);
-            orm.persisterNUplet(plat);
-            //Composition.
-            platIngredients.forEach((platIngredient) -> {
-                platIngredient.setIdPlat(plat.getId());
-                orm.persisterNUplet(platIngredient);
-            });
+            editerEtPersister(plat);
 
             //Message de résultat.
             ui.afficher("Plat ajouté !");
+            ui.afficher(plat.toString());
+        }
+
+        //Retour vers l'accueil.
+        AccueilControleur.consulter();
+    }
+
+    /**
+     * Modifier une plat.
+     */
+    public static void modifier() {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Modification d'un plat :");
+
+        //Récupération des plats existantes.
+        List<Entite> plats = orm.chercherTousLesNUplets(Plat.class);
+
+        //Si pas d'unités trouvées.
+        if(plats.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucune plat trouvé dans le cataloque !");
+            //Sinon.
+        } else {
+            //Saisie du plat à modofier.
+            int idPlat = ui.poserQuestionListeNUplets(plats);
+            Plat plat = (Plat) filterListeNUpletsAvecId(plats, idPlat);
+
+            //Suppression de l'ancienne composition du plat.
+            orm.chercherNUpletsAvecPredicat("WHERE ID_PLAT = " + idPlat, PlatIngredients.class)
+               .forEach(orm::supprimerNUplet);
+
+            //Saisie et sauvegarde.
+            editerEtPersister(plat);
+
+            //Message de résultat.
+            ui.afficher("Plat modifié !");
             ui.afficher(plat.toString());
         }
 

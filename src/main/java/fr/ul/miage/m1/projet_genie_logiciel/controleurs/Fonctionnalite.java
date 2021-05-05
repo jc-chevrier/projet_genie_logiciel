@@ -53,7 +53,7 @@ public class Fonctionnalite {
                               new Fonctionnalite("Incrémenter le stock d'un ingrédient", AccueilControleur::consulter), //TODO à modifier
                               new Fonctionnalite("Lister les plats du catalogue des plats", PlatControleur::lister),
                               new Fonctionnalite("Ajouter un plat au catalogue des plats", PlatControleur::ajouter),
-                              new Fonctionnalite("Modifier un plat", AccueilControleur::consulter), //TODO à modifier
+                              new Fonctionnalite("Modifier un plat", PlatControleur::modifier), //TODO à modifier
                               new Fonctionnalite("Supprimer un plat du catalogue des plats", PlatControleur::supprimer)));
 
         List<Fonctionnalite> fonctionnalitesServeur = new ArrayList<Fonctionnalite>(
