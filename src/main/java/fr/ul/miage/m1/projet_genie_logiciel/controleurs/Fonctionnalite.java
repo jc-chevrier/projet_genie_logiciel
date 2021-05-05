@@ -1,6 +1,7 @@
 package fr.ul.miage.m1.projet_genie_logiciel.controleurs;
 
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Ingredient;
+import fr.ul.miage.m1.projet_genie_logiciel.entites.Place;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.PlatIngredients;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Role;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
@@ -33,7 +34,7 @@ public class Fonctionnalite {
                               new Fonctionnalite("Ajouter une table", AccueilControleur::consulter),//TODO à modifier
                               new Fonctionnalite("Supprimer une table", AccueilControleur::consulter),//TODO à modifier
                               new Fonctionnalite("Allouer une table à un client", AccueilControleur::consulter),//TODO à modifier
-                              new Fonctionnalite("Désallouer une table à un client", AccueilControleur::consulter), //TODO à modifier
+                              new Fonctionnalite("Désallouer une table à un client", PlaceControleur::desallouerPourClient),
                               new Fonctionnalite("Allouer une table à un serveur", AccueilControleur::consulter),//TODO à modifier
                               new Fonctionnalite("Désallouer une table à un serveur", AccueilControleur::consulter)));//TODO à modifier
 
