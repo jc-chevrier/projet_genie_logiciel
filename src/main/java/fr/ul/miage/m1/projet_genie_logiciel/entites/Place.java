@@ -68,4 +68,9 @@ public class Place extends Entite {
 
     public void setIdCompteServeur(@NotNull Integer idCompteServeur) { set("ID_COMPTE_SERVEUR", idCompteServeur);}
 
+    @Override
+    public String toString() {
+        return "Table [ id = " + getId() + ", etat = " + getEtat() + " ]";
+    }
+
 }

@@ -64,7 +64,7 @@ public class Fonctionnalite {
 
         List<Fonctionnalite> fonctionnalitesAssistantService = new ArrayList<Fonctionnalite>(
                 Arrays.asList(new Fonctionnalite("Lister les tables à préparer", AccueilControleur::consulter), //TODO à modifier
-                              new Fonctionnalite("Valider la préparation d'une table", AccueilControleur::consulter))); //TODO à modifier
+                              new Fonctionnalite("Valider la préparation d'une table", PlaceControleur::validerPreparation)));
 
         fonctionnalitesDirecteur.addAll(0, fonctionnalitesServeur);
         //fonctionnalitesDirecteur.addAll(fonctionnalitesMaitreHotel);
