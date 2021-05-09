@@ -15,8 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class IngredientTest {
     private static ORM orm;
@@ -56,5 +55,33 @@ public class IngredientTest {
         Ingredient ingredientApres = (Ingredient) orm.chercherNUpletAvecPredicat("WHERE ID = 1",Ingredient.class);
         assertNotEquals(ingredientsAvant.getLibelle(), ingredientApres.getLibelle());
     }
+
+    @Test
+    @Order(6)
+    @DisplayName("Test - modifier un ingrédient - cas 1 : n-uplet ingrédient non trouvé")
+    void testModifierIngredientCasNonTrouve() {
+        Unite unite = new Unite();
+        unite.setLibelle("kg");
+        orm.persisterNUplet(unite);
+
+        Ingredient ingredientsAvant = new Ingredient();
+        ingredientsAvant.setLibelle("libellé ingredient");
+        ingredientsAvant.setStock(1.4);
+        ingredientsAvant.setIdUnite(1);
+        orm.persisterNUplet(ingredientsAvant);
+        orm.supprimerNUplet(ingredientsAvant);
+
+        //On simule les saisies de l' dans ce fichier.
+        System.setIn(IngredientTest.class.getResourceAsStream("./saisies/ingredient_test/modifier_cas_2.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de modification.
+        IngredientControleur.modifier();
+
+        //Un ingrédient a du être inséré.
+        Ingredient ingredientApres = (Ingredient) orm.chercherNUpletAvecPredicat("WHERE ID = " + null, Ingredient.class);
+        assertNull(ingredientApres);
+    }
+
 
 }
