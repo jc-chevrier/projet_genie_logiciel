@@ -5,6 +5,9 @@ import fr.ul.miage.m1.projet_genie_logiciel.entites.Entite;
 import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Scanner;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -161,20 +164,40 @@ public class UI {
      * pour une liste de n-uplets, et obtenir l'id de
      * du n-uplet sélectionné.
      *
+     * On peut préciser un formateur pour formater les
+     * n-uplets en chaines de caractère.
+     *
      * @param nUplets
+     * @param formateur
      * @return
      */
-    public int poserQuestionListeNUplets(@NotNull List<Entite> nUplets) {
+    public int poserQuestionListeNUplets(@NotNull List<Entite> nUplets, Function<Entite, String> formateur) {
         String question = "Sélectionner :";
         String reponsesPossiblesRegex = "";
         int nbNUplets = nUplets.size();
         for(int index = 0; index < nbNUplets; index++) {
             Entite nUplet = nUplets.get(index);
-            question += "\n" + nUplet + " (saisir " + (nUplet.getId()) + ")";
+            question += "\n" + (formateur == null ? nUplet : formateur.apply(nUplet)) +
+                        " (saisir " + (nUplet.getId()) + ")";
             reponsesPossiblesRegex += (nUplet.getId()) + "{1}" + ((index < (nbNUplets - 1)) ? "|" : "");
         }
         int id = poserQuestionEntier(question, reponsesPossiblesRegex);
         return id;
+    }
+
+    /**
+     * Poser une question en proposant une liste d'options
+     * pour une liste de n-uplets, et obtenir l'id de
+     * du n-uplet sélectionné.
+     *
+     * On utilise toString comme formateur des n-uplets en
+     * chaines de caractère.
+     *
+     * @param nUplets
+     * @return
+     */
+    public int poserQuestionListeNUplets(@NotNull List<Entite> nUplets) {
+        return  poserQuestionListeNUplets(nUplets, null);
     }
 
     /**
@@ -197,10 +220,31 @@ public class UI {
      * Afficher une liste de n-uplets,
      * sans selection par la suite.
      *
+     * On peut préciser un formateur pour formater les 
+     * n-uplets en chaines de caractère.
+     *
      * @param nUplets
+     * @param formateur
+     */
+    public void listerNUplets(@NotNull List<Entite> nUplets, Function<Entite, String> formateur) {
+        lister(nUplets
+              .stream()
+              .map(nUplet -> formateur == null ? nUplet.toString() : formateur.apply(nUplet))
+              .collect(Collectors.toList()));
+    }
+
+    /**
+     * Afficher une liste de n-uplets,
+     * sans selection par la suite.
+     *
+     * On utilise toString comme formateur des n-uplets en
+     * chaines de caractère.
+     *
+     * @param nUplets
+     * @return
      */
     public void listerNUplets(@NotNull List<Entite> nUplets) {
-        lister(nUplets.stream().map(nUplet -> nUplet.toString()).collect(Collectors.toList()));
+        listerNUplets(nUplets, null);
     }
 
     /**
