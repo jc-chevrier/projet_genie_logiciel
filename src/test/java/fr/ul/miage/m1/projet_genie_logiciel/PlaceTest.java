@@ -20,13 +20,15 @@ public class PlaceTest {
         orm = ORM.getInstance();
 
         ui = UI.getInstance();
-        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
     }
 
     @Test
     @Order(1)
     @DisplayName("Test : lister toutes les tables - cas 1 : tables trouvées")
     void testListerCas1Trouvees() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
         //On ajoute une table à lister.
         Place place = new Place();
         place.setEtat("libre");
@@ -44,6 +46,9 @@ public class PlaceTest {
     @Order(2)
     @DisplayName("Test : lister toutes les tables - cas 2 : aucune table trouvée")
     void testListerCas2PasTrouvees() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
         //On vide la table place.
         orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
 
@@ -59,6 +64,9 @@ public class PlaceTest {
     @Order(3)
     @DisplayName("Test : ajouter une table - cas 1 : table bien ajoutée")
     void testAjouterCas1BienAjoutee() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
         //On simule les saisies d'ajout dans ce fichier.
         System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/ajouter_cas_1.txt"));
         ui.reinitialiserScanner();
@@ -77,6 +85,9 @@ public class PlaceTest {
     @Order(4)
     @DisplayName("Test : ajouter une table - cas 1 : table bien ajoutée avec bon attributs")
     void testAjouterCas2BonsAttributs() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
         //On simule les saisies d'ajout dans ce fichier.
         System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/ajouter_cas_2.txt"));
         ui.reinitialiserScanner();
@@ -97,6 +108,9 @@ public class PlaceTest {
     @Order(5)
     @DisplayName("Test : supprimer une table - cas 1 : table bien supprimée")
     void testSupprimerCas1BienSupprimee() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
         //On ajoute une table à supprimer.
         Place place = new Place();
         place.setEtat("libre");
@@ -120,6 +134,9 @@ public class PlaceTest {
     @Order(6)
     @DisplayName("Test : supprimer une table - cas 2 : table supprimée correcte")
     void testSupprimerCas2Correcte() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
         //On ajoute une table à supprimer.
         Place place = new Place();
         place.setEtat("libre");
@@ -145,6 +162,9 @@ public class PlaceTest {
     @Order(7)
     @DisplayName("Test : supprimer une table - cas 3 : aucune table trouvée")
     void testSupprimerCas3PasTrouvees() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
         //On vide la table place.
         orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
 
@@ -160,6 +180,11 @@ public class PlaceTest {
     @Order(8)
     @DisplayName("Test : lister les tables disponibles - cas 1 : tables trouvées")
     void testListerDisponiblesCas1Trouvees() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
+        //On vide la table place.
+        orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
         //On ajoute une table à lister.
         Place place = new Place();
         place.setEtat("libre");
@@ -177,6 +202,11 @@ public class PlaceTest {
     @Order(9)
     @DisplayName("Test : lister les tables disponibles - cas 2 : aucune table disponible trouvée")
     void testListerDisponiblesCas2PasDisponiblesTrouvees() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
+        //On vide la table place.
+        orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
         //On ajoute une table.
         Place place = new Place();
         place.setEtat("sale");
@@ -194,6 +224,9 @@ public class PlaceTest {
     @Order(10)
     @DisplayName("Test : lister les tables disponibles - cas 3 : aucune table trouvée")
     void testListerDisponiblesCas3PasTrouvees() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
         //On vide la table place.
         orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
 
@@ -203,5 +236,67 @@ public class PlaceTest {
 
         //On simule le scénario de listing.
         PlaceControleur.listerDisponibles();
+    }
+
+    @Test
+    @Order(11)
+    @DisplayName("Test : lister les tables à préparer - cas 1 : tables trouvées")
+    void testListerAPreparerCas1Trouvees() {
+        //On se connecte.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 5", Compte.class));
+
+        //On vide la table place.
+        orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
+        //On ajoute une table à lister.
+        Place place = new Place();
+        place.setEtat("sale");
+        orm.persisterNUplet(place);
+
+        //On simule les saisies de listing dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/lister_a_preparer_cas_1.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de listing.
+        PlaceControleur.listerAPreparer();
+    }
+
+    @Test
+    @Order(12)
+    @DisplayName("Test : lister les tables à préparer - cas 2 : aucune table à préparer trouvée")
+    void testListerAPreparerCas2PasAPreparerTrouvees() {
+        //On se connecte.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 5", Compte.class));
+
+        //On vide la table place.
+        orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
+        //On ajoute une table.
+        Place place = new Place();
+        place.setEtat("libre");
+        orm.persisterNUplet(place);
+
+        //On simule les saisies de listing dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/lister_a_preparer_cas_2.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de listing.
+        PlaceControleur.listerAPreparer();
+    }
+
+    @Test
+    @Order(13)
+    @DisplayName("Test : lister les tables à préparer - cas 3 : aucune table trouvée")
+    void testListerAPreparerCas3PasTrouvees() {
+        //On se connecte.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 5", Compte.class));
+
+        //On vide la table place.
+        orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
+
+        //On simule les saisies de listing dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/lister_a_preparer_cas_3.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de listing.
+        PlaceControleur.listerAPreparer();
     }
 }

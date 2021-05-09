@@ -22,6 +22,7 @@ public class UniteTest {
         orm = ORM.getInstance();
 
         ui = UI.getInstance();
+        //On se connecte en tant que cuisinier.
         ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 3", Compte.class));
     }
 
