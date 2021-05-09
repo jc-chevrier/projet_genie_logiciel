@@ -57,4 +57,42 @@ public class PlaceTest {
         //On simule le scénario de listing.
         PlaceControleur.lister();
     }
+
+    @Test
+    @Order(3)
+    @DisplayName("Test : ajouter une table - cas 1 : table bien ajoutée")
+    void testAjouterCas1BienAjoutee() {
+        //On simule les saisies d'ajout dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/ajouter_cas_1.txt"));
+        ui.reinitialiserScanner();
+
+        int nbPlacesAvant = orm.compterTousLesNUplets(Place.class);
+
+        //On simule le scénario d'ajout.
+        PlaceControleur.ajouter();
+
+        //Une table a due être insérée.
+        int nbPlacesApres = orm.compterTousLesNUplets(Place.class);
+        assertEquals(nbPlacesAvant + 1, nbPlacesApres);
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("Test : ajouter une table - cas 1 : table bien ajoutée avec bon attributs")
+    void testAjouterCas2BonsAttributs() {
+        //On simule les saisies d'ajout dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/ajouter_cas_2.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario d'ajout.
+        PlaceControleur.ajouter();
+
+        //Les attributs doivent avoir ces valeurs.
+        Place place = (Place) orm.chercherNUpletAvecPredicat("WHERE ID = 3", Place.class);
+        assertEquals("libre", place.getEtat());
+        assertNull(place.getIdCompteServeur());
+        assertNull(place.getDatetimeReservation());
+        assertNull(place.getNomReservation());
+        assertNull(place.getPrenomReservation());
+    }
 }
