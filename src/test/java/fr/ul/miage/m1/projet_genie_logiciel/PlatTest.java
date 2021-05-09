@@ -29,7 +29,7 @@ public class PlatTest {
 
     @Test
     @Order(1)
-    @DisplayName("Test - lister les plats - cas plat non trouvé")
+    @DisplayName("Test - lister les plats - cas 1 plat non trouvé")
     void testListerPlatCasNonTrouve() {
         //On simule les saisies de lister dans ce fichier.
         System.setIn(PlatTest.class.getResourceAsStream("./saisies/plat_test/lister.txt"));
@@ -47,7 +47,7 @@ public class PlatTest {
 
     @Test
     @Order(2)
-    @DisplayName("Test - lister les plats - cas plat non trouvé")
+    @DisplayName("Test - lister les plats - cas 2 plat non trouvé")
     void testListerPlatCasTrouve() {
         Categorie categorie = new Categorie();
         categorie.setLibelle("cat 1");
