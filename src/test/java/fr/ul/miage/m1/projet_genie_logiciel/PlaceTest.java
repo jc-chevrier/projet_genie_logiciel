@@ -1,14 +1,11 @@
 package fr.ul.miage.m1.projet_genie_logiciel;
 
 import fr.ul.miage.m1.projet_genie_logiciel.controleurs.PlaceControleur;
-import fr.ul.miage.m1.projet_genie_logiciel.controleurs.UniteControleur;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Compte;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Place;
-import fr.ul.miage.m1.projet_genie_logiciel.entites.Unite;
 import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
 import org.junit.jupiter.api.*;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Table")
@@ -94,5 +91,68 @@ public class PlaceTest {
         assertNull(place.getDatetimeReservation());
         assertNull(place.getNomReservation());
         assertNull(place.getPrenomReservation());
+    }
+
+    @Test
+    @Order(5)
+    @DisplayName("Test : supprimer une table - cas 1 : table bien supprimée")
+    void testSupprimerCas1BienSupprimee() {
+        //On ajoute une table à supprimer.
+        Place place = new Place();
+        place.setEtat("libre");
+        orm.persisterNUplet(place);
+
+        //On simule les saisies de la suppression dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/supprimer_cas_1.txt"));
+        ui.reinitialiserScanner();
+
+        int nbPlacesAvant = orm.compterTousLesNUplets(Place.class);
+
+        //On simule le scénario de suppression.
+        PlaceControleur.supprimer();
+
+        //Une table a due être supprimée.
+        int nbPlacesApres = orm.compterTousLesNUplets(Place.class);
+        assertEquals(nbPlacesAvant - 1, nbPlacesApres);
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("Test : supprimer une table - cas 2 : table supprimée correcte")
+    void testSupprimerCas2Correcte() {
+        //On ajoute une table à supprimer.
+        Place place = new Place();
+        place.setEtat("libre");
+        orm.persisterNUplet(place);
+
+        //On simule les saisies de la suppression dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/supprimer_cas_2.txt"));
+        ui.reinitialiserScanner();
+
+        //Table existante avant.
+        Place placeAvant = (Place) orm.chercherNUpletAvecPredicat("WHERE ID = 5", Place.class);
+        assertNotNull(placeAvant);
+
+        //On simule le scénario de suppression.
+        PlaceControleur.supprimer();
+
+        //Table suppirmée après.
+        Place placeApres = (Place) orm.chercherNUpletAvecPredicat("WHERE ID = 5", Place.class);
+        assertNull(placeApres);
+    }
+
+    @Test
+    @Order(7)
+    @DisplayName("Test : supprimer une table - cas 3 : aucune table trouvée")
+    void testSupprimerCas3PasTrouvees() {
+        //On vide la table place.
+        orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
+
+        //On simule les saisies de la suppression dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/supprimer_cas_3.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de suppression.
+        PlaceControleur.supprimer();
     }
 }
