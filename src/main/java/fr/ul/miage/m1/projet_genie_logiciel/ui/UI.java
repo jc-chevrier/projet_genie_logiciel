@@ -178,8 +178,8 @@ public class UI {
         for(int index = 0; index < nbNUplets; index++) {
             Entite nUplet = nUplets.get(index);
             question += "\n" + (formateur == null ? nUplet : formateur.apply(nUplet)) +
-                        " (saisir " + (nUplet.getId()) + ")";
-            reponsesPossiblesRegex += (nUplet.getId()) + "{1}" + ((index < (nbNUplets - 1)) ? "|" : "");
+                        " (saisir " + nUplet.getId() + ")";
+            reponsesPossiblesRegex += nUplet.getId() + "{1}" + ((index < (nbNUplets - 1)) ? "|" : "");
         }
         int id = poserQuestionEntier(question, reponsesPossiblesRegex);
         return id;
