@@ -1,5 +1,6 @@
 package fr.ul.miage.m1.projet_genie_logiciel.entites;
 
+import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;
@@ -28,9 +29,7 @@ public class Place extends Entite {
         STRUCTURE.put("ID_COMPTE_SERVEUR", Integer.class);
     }
 
-    public Place() {
-        super();
-    }
+    public Place() { super(); }
 
     public Place(@NotNull Map<String, Object> attributs) {
         super(attributs);
@@ -66,6 +65,29 @@ public class Place extends Entite {
 
     public Integer getIdCompteServeur(){return (Integer) get("ID_COMPTE_SERVEUR");}
 
-    public void setIdCompteServeur(@NotNull Integer idCompteServeur) { set("ID_COMPTE_SERVEUR", idCompteServeur);}
+    public void setIdCompteServeur(Integer idCompteServeur) { set("ID_COMPTE_SERVEUR", idCompteServeur);}
 
+    public String toEtatString() {
+        return "Table [ id = " + getId() + ", état = " + getEtat() + " ]";
+    }
+
+    public String toEtatServeurString() {
+        Compte serveur = (Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = " + getIdCompteServeur(), Compte.class);
+        return "Table [ id = " + getId() +
+                ", état = " + getEtat() +
+                (serveur == null ?
+                ", pas de serveur associée" : (", serveur = " + serveur.getNom() + " " + serveur.getPrenom())) + " ]";
+    }
+
+    @Override
+    public String toString() {
+        Compte serveur = (Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = " + getIdCompteServeur(), Compte.class);
+        return "Table [ id = " + getId() +
+                ", état = " + getEtat() +
+                (serveur == null ?
+                ", pas de serveur associée" : (", serveur = " + serveur.getNom() + " " + serveur.getPrenom())) +
+                (getDatetimeReservation() == null ?
+                 ", pas de réservation associée" : (", réservation  = " + getNomReservation() + " " + getPrenomReservation() +
+                 ", date de réservation = " + getDatetimeReservation().toString())) + " ]";
+    }
 }

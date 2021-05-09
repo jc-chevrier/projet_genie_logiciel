@@ -57,6 +57,17 @@ public class Ingredient extends Entite {
         set("ID_UNITE", idUnite);
     }
 
+    /**
+     * Savoir si un ingrédient est utilisé par un plat.
+     *
+     * @return
+     */
+    public boolean estUtiliseParPlat() {
+        return ORM.getInstance().compterNUpletsAvecPredicat(
+                "INNER JOIN PLAT_INGREDIENTS AS PI " +
+                        "ON PI.ID_INGREDIENT = " + getId(), Ingredient.class) > 0;
+    }
+
     @Override
     public String toString() {
         Integer idUnite = getIdUnite();
