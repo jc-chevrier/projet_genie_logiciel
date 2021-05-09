@@ -29,9 +29,7 @@ public class Place extends Entite {
         STRUCTURE.put("ID_COMPTE_SERVEUR", Integer.class);
     }
 
-    public Place() {
-        super();
-    }
+    public Place() { super(); }
 
     public Place(@NotNull Map<String, Object> attributs) {
         super(attributs);

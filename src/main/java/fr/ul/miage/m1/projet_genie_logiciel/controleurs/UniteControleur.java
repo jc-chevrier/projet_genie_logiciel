@@ -1,7 +1,6 @@
 package fr.ul.miage.m1.projet_genie_logiciel.controleurs;
 
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Entite;
-import fr.ul.miage.m1.projet_genie_logiciel.entites.Ingredient;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Unite;
 import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
@@ -32,6 +31,7 @@ public class UniteControleur extends Controleur{
         if(unites.isEmpty()) {
             //Message d'erreur.
             ui.afficher("Aucune unité trouvée dans le cataloque !");
+        //Sinon.
         } else {
             //Litsing.
             ui.listerNUplets(unites);
@@ -88,10 +88,10 @@ public class UniteControleur extends Controleur{
             ui.afficher("Aucune unité trouvée dans le cataloque !");
         //Sinon.
         } else {
-            //Questions et entrées.
+            //Questions et saisies.
             int idUnite = ui.poserQuestionListeNUplets(unites);
             String libelle = ui.poserQuestion("Saisir un nouveau libellé : ", UI.REGEX_CHAINE_DE_CARACTERES);
-            Unite unite = (Unite) filterListeNUpletsAvecId(unites, idUnite);;
+            Unite unite = (Unite) filtrerListeNUpletsAvecId(unites, idUnite);;
 
             //Sauvegarde : suppression de l'unité.
             unite.setLibelle(libelle);
@@ -126,9 +126,9 @@ public class UniteControleur extends Controleur{
             ui.afficher("Aucune unité trouvée dans le cataloque !");
         //Sinon.
         } else {
-            //Questions et entrées.
+            //Questions et saisies.
             int idUnite = ui.poserQuestionListeNUplets(unites);
-            Unite unite = (Unite) filterListeNUpletsAvecId(unites, idUnite);
+            Unite unite = (Unite) filtrerListeNUpletsAvecId(unites, idUnite);
             //Si l'unité a été utilisé par des ingrédinents.
             if(unite.estUtiliseParIngredient()) {
                 //Message d'erreur.
@@ -139,7 +139,7 @@ public class UniteControleur extends Controleur{
                 orm.supprimerNUplet(unite);
 
                 //Message de résultat.
-                ui.afficher("Unité supprimé !");
+                ui.afficher("Unité supprimée !");
             }
         }
 

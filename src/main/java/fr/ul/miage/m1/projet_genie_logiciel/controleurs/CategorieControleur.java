@@ -7,7 +7,7 @@ import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
 import java.util.List;
 
 /**
- * Controleur pour les catégories.
+ * Controleur pour les catégories des plats.
  *
  * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */
@@ -83,13 +83,13 @@ public class CategorieControleur extends Controleur {
         //Si pas de catégories trouvées.
         if (categories.isEmpty()) {
             //Message d'erreur.
-            ui.afficher("Aucune catégorie trouvée !");
+            ui.afficher("Aucune catégorie trouvée dans le catalogue !");
         //Sinon.
         } else {
             //Questions et entrées.
             int idCategorie = ui.poserQuestionListeNUplets(categories);
             String libelle = ui.poserQuestion("Saisir un nouveau libellé : ", UI.REGEX_CHAINE_DE_CARACTERES);
-            Categorie categorie = (Categorie) filterListeNUpletsAvecId(categories, idCategorie);
+            Categorie categorie = (Categorie) filtrerListeNUpletsAvecId(categories, idCategorie);
 
             //Sauvegarde : modification de la catégorie.
             categorie.setLibelle(libelle);
@@ -120,19 +120,19 @@ public class CategorieControleur extends Controleur {
 
         //Si pas de catégories trouvées.
         if(categories.isEmpty()) {
-            //Message d'erreu
+            //Message d'erreur.
             ui.afficher("Aucune catégorie trouvée dans le cataloque !");
         //Sinon.
         } else {
             //Questions et entrées.
             int idCategorie = ui.poserQuestionListeNUplets(categories);
-            Categorie categorie = (Categorie) filterListeNUpletsAvecId(categories, idCategorie);
+            Categorie categorie = (Categorie) filtrerListeNUpletsAvecId(categories, idCategorie);
 
-            //Si la catégorie contient des plats disponibles.
+            //Si la catégorie est utilisée par des plats.
             if (categorie.estUtiliseParPlat()) {
                 //Message d'erreur.
                 ui.afficher("Cette catégorie est utilisée par des plats, elle ne peut pas être supprimée !");
-                //Sinon.
+            //Sinon.
             } else {
                 //Sauvegarde : suppression de l'unité.
                 orm.supprimerNUplet(categorie);

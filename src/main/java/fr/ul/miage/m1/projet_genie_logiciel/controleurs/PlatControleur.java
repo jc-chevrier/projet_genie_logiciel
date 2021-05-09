@@ -254,7 +254,7 @@ public class PlatControleur extends Controleur {
         } else {
             //Saisie du plat à modofier.
             int idPlat = ui.poserQuestionListeNUplets(plats);
-            Plat plat = (Plat) filterListeNUpletsAvecId(plats, idPlat);
+            Plat plat = (Plat) filtrerListeNUpletsAvecId(plats, idPlat);
 
             //Suppression de l'ancienne composition du plat.
             orm.chercherNUpletsAvecPredicat("WHERE ID_PLAT = " + idPlat, PlatIngredients.class)
@@ -294,7 +294,7 @@ public class PlatControleur extends Controleur {
         } else {
             //Question et saisies.
             int idPlat = ui.poserQuestionListeNUplets(plats);
-            Plat plat = (Plat) filterListeNUpletsAvecId(plats, idPlat);
+            Plat plat = (Plat) filtrerListeNUpletsAvecId(plats, idPlat);
 
             //Sauvegarde : suppression du plat et de sa composition.
             List<Entite> platIngredients = orm.chercherNUpletsAvecPredicat("WHERE ID_PLAT = " + plat.getId(),
@@ -322,7 +322,6 @@ public class PlatControleur extends Controleur {
         ui.afficherAvecDelimiteurEtUtilisateur("Ajout d'un plat à la carte du jour :");
 
         //Récupération des plats qui ne font pas partie de la carte.
-        ui.afficher("Nous listons uniquement les plats qui ne font pas partie de la carte du jour.");
         List<Entite> plats = orm.chercherNUpletsAvecPredicat("WHERE CARTE = 0", Plat.class);
 
         //Si pas de plats dans le cataloque.
@@ -333,9 +332,9 @@ public class PlatControleur extends Controleur {
         } else {
             //Question et saisies.
             int idPlat = ui.poserQuestionListeNUplets(plats);
-            Plat plat = (Plat) filterListeNUpletsAvecId(plats, idPlat);
+            Plat plat = (Plat) filtrerListeNUpletsAvecId(plats, idPlat);
 
-            //Sauvegarde : Ajout du plat à la carte du jour
+            //Sauvegarde : modification du plat.
             plat.setCarte(1);
             orm.persisterNUplet(plat);
 
@@ -357,10 +356,9 @@ public class PlatControleur extends Controleur {
         ORM orm = getORM();
 
         //Message de titre.
-        ui.afficherAvecDelimiteurEtUtilisateur("Ajout d'un plat à la carte du jour :");
+        ui.afficherAvecDelimiteurEtUtilisateur("Suppression d'un plat de la carte du jour :");
 
         //Récupération des plats qui font partie de la carte.
-        ui.afficher("Nous listons uniquement les plats qui font partie de la carte du jour.");
         List<Entite> plats = orm.chercherNUpletsAvecPredicat("WHERE CARTE = 1", Plat.class);
 
         //Si pas de plats dans le cataloque.
@@ -371,9 +369,9 @@ public class PlatControleur extends Controleur {
         } else {
             //Question et saisies.
             int idPlat = ui.poserQuestionListeNUplets(plats);
-            Plat plat = (Plat) filterListeNUpletsAvecId(plats, idPlat);
+            Plat plat = (Plat) filtrerListeNUpletsAvecId(plats, idPlat);
 
-            //Sauvegarde : Suppresion du plat de la carte du jour
+            //Sauvegarde : modification du plat.
             plat.setCarte(0);
             orm.persisterNUplet(plat);
 

@@ -21,17 +21,17 @@ public class Fonctionnalite {
 
     static {
         List<Fonctionnalite> fonctionnalitesDirecteur = new ArrayList<Fonctionnalite>(
-                Arrays.asList(new Fonctionnalite("Ajouter un plat à la carte du jour", PlatControleur::ajouterACarte),//TODO à modifier
+                Arrays.asList(new Fonctionnalite("Ajouter un plat à la carte du jour", PlatControleur::ajouterACarte),
                               new Fonctionnalite("Supprimer un plat de la carte du jour", PlatControleur::supprimerDeCarte)));
 
         List<Fonctionnalite> fonctionnalitesMaitreHotel = new ArrayList<Fonctionnalite>(
                 Arrays.asList(new Fonctionnalite("Lister toutes les tables", PlaceControleur::lister),
-                              new Fonctionnalite("Lister toutes les tables disponibles", AccueilControleur::consulter),//TODO à modifier
+                              new Fonctionnalite("Lister toutes les tables disponibles", PlaceControleur::listerDisponibles),
                               new Fonctionnalite("Ajouter une table", PlaceControleur::ajouter),
                               new Fonctionnalite("Supprimer une table", PlaceControleur::supprimer),
-                              new Fonctionnalite("Allouer une table à un client", PlaceControleur::allouerPourClient),//TODO à modifier
+                              new Fonctionnalite("Allouer une table à un client", PlaceControleur::allouerPourClient),
                               new Fonctionnalite("Désallouer une table à un client", PlaceControleur::desallouerPourClient),
-                              new Fonctionnalite("Allouer une table à un serveur", PlaceControleur::allouerPourServeur),//TODO à modifier
+                              new Fonctionnalite("Allouer une table à un serveur", PlaceControleur::allouerPourServeur),
                               new Fonctionnalite("Désallouer une table à un serveur", PlaceControleur::desallouerPourServeur)));
 
         List<Fonctionnalite> fonctionnalitesCuisinier = new ArrayList<Fonctionnalite>(
@@ -47,10 +47,10 @@ public class Fonctionnalite {
                               new Fonctionnalite("Ajouter une catégorie", CategorieControleur::ajouter),
                               new Fonctionnalite("Modifier une catégorie", CategorieControleur::modifier),
                               new Fonctionnalite("Supprimer une catégorie", CategorieControleur::supprimer),
-                              new Fonctionnalite("Incrémenter le stock d'un ingrédient", AccueilControleur::consulter), //TODO à modifier
+                              new Fonctionnalite("Incrémenter le stock d'un ingrédient", IngredientControleur::incrementerStock),
                               new Fonctionnalite("Lister les plats du catalogue des plats", PlatControleur::lister),
                               new Fonctionnalite("Ajouter un plat au catalogue des plats", PlatControleur::ajouter),
-                              new Fonctionnalite("Modifier un plat", PlatControleur::modifier), //TODO à modifier
+                              new Fonctionnalite("Modifier un plat", PlatControleur::modifier),
                               new Fonctionnalite("Supprimer un plat du catalogue des plats", PlatControleur::supprimer)));
 
         List<Fonctionnalite> fonctionnalitesServeur = new ArrayList<Fonctionnalite>(
@@ -60,7 +60,7 @@ public class Fonctionnalite {
                               new Fonctionnalite("Lister les catégories de plats disponibles de la carte", AccueilControleur::consulter))); //TODO à modifier
 
         List<Fonctionnalite> fonctionnalitesAssistantService = new ArrayList<Fonctionnalite>(
-                Arrays.asList(new Fonctionnalite("Lister les tables à préparer", AccueilControleur::consulter), //TODO à modifier
+                Arrays.asList(new Fonctionnalite("Lister les tables à préparer", PlaceControleur::listerAPreparer),
                               new Fonctionnalite("Valider la préparation d'une table", PlaceControleur::validerPreparation)));
 
         fonctionnalitesDirecteur.addAll(0, fonctionnalitesServeur);
