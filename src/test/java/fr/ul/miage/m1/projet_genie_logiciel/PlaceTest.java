@@ -155,4 +155,53 @@ public class PlaceTest {
         //On simule le scénario de suppression.
         PlaceControleur.supprimer();
     }
+
+    @Test
+    @Order(8)
+    @DisplayName("Test : lister les tables disponibles - cas 1 : tables trouvées")
+    void testListerDisponiblesCas1Trouvees() {
+        //On ajoute une table à lister.
+        Place place = new Place();
+        place.setEtat("libre");
+        orm.persisterNUplet(place);
+
+        //On simule les saisies de listing dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/lister_disponibles_cas_1.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de listing.
+        PlaceControleur.listerDisponibles();
+    }
+
+    @Test
+    @Order(9)
+    @DisplayName("Test : lister les tables disponibles - cas 2 : aucune table disponible trouvée")
+    void testListerDisponiblesCas2PasDisponiblesTrouvees() {
+        //On ajoute une table.
+        Place place = new Place();
+        place.setEtat("sale");
+        orm.persisterNUplet(place);
+
+        //On simule les saisies de listing dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/lister_disponibles_cas_2.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de listing.
+        PlaceControleur.listerDisponibles();
+    }
+
+    @Test
+    @Order(10)
+    @DisplayName("Test : lister les tables disponibles - cas 3 : aucune table trouvée")
+    void testListerDisponiblesCas3PasTrouvees() {
+        //On vide la table place.
+        orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
+
+        //On simule les saisies de listing dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/lister_disponibles_cas_3.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de listing.
+        PlaceControleur.listerDisponibles();
+    }
 }
