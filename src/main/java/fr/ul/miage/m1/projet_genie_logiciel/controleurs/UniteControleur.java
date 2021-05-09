@@ -121,20 +121,26 @@ public class UniteControleur extends Controleur{
         List<Entite> unites = orm.chercherTousLesNUplets(Unite.class);
 
         //Si pas d'unités trouvées.
-        if(unites.isEmpty()){
+        if(unites.isEmpty()) {
             //Message d'erreur.
             ui.afficher("Aucune unité trouvée dans le cataloque !");
         //Sinon.
         } else {
             //Questions et entrées.
             int idUnite = ui.poserQuestionListeNUplets(unites);
-            Unite unite = (Unite) filterListeNUpletsAvecId(unites, idUnite);;
+            Unite unite = (Unite) filterListeNUpletsAvecId(unites, idUnite);
+            //Si l'unité a été utilisé par des ingrédinents.
+            if(unite.estUtiliseParIngredient()) {
+                //Message d'erreur.
+                ui.afficher("Cette unité est utilisée par des ingrédients, elle ne peut pas être supprimée !");
+            //Sinon.
+            } else {
+                //Sauvegarde : suppression de l'unité.
+                orm.supprimerNUplet(unite);
 
-            //Sauvegarde : suppression de l'unité.
-            orm.supprimerNUplet(unite);
-
-            //Message de résultat.
-            ui.afficher("Unité supprimé !");
+                //Message de résultat.
+                ui.afficher("Unité supprimé !");
+            }
         }
 
         //Retour vers l'accueil.

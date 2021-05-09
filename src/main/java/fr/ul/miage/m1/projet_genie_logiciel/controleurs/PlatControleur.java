@@ -43,6 +43,34 @@ public class PlatControleur extends Controleur {
     }
 
     /**
+     * Lister tous les plats de la carte.
+     */
+    public static void listerPlatCarte() {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Lister tous les plats de la carte :");
+
+        //Récupération des plats de la carte.
+        List<Entite> plats = orm.chercherNUpletsAvecPredicat("WHERE CARTE = 1", Plat.class);
+
+        //Si pas de plats de la carte.
+        if(plats.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucun plat de la carte trouvé !");
+            //Sinon.
+        } else {
+            //Listing.
+            ui.listerNUplets(plats);
+        }
+
+        //Retour vers l'accueil.
+        AccueilControleur.consulter();
+    }
+
+    /**
      * Choisir un ingrédient pour un plat,
      * et saisir la quantité associée pour le plat.
      *
@@ -123,6 +151,45 @@ public class PlatControleur extends Controleur {
     }
 
     /**
+     * Méthode permettant d'éditer, et de sauvegarder un plat,
+     * qu'il soit déjà ajouté ou non.
+     *
+     * @param plat
+     */
+    private static void editerEtPersister(Plat plat) {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Récupération des catégories.
+        List<Entite> categories = orm.chercherTousLesNUplets(Categorie.class);
+
+        //Plat.
+        //Questions et saisies.
+        //Choix de la catégorie.
+        int idCategorie = ui.poserQuestionListeNUplets(categories);
+        //Caractéristiques du plat.
+        String libelle = ui.poserQuestion("Saisir un libellé :", UI.REGEX_CHAINE_DE_CARACTERES);
+        Double prix = ui.poserQuestionDecimal("Saisir un prix : ", UI.REGEX_DECIMAL_POSITIF);
+
+        //Composition du plat.
+        List<PlatIngredients> platIngredients = composer();
+
+        //Sauvegarde : insertion du plat et de sa composition.
+        //Plat.
+        plat.setIdCategorie(idCategorie);
+        plat.setLibelle(libelle);
+        plat.setPrix(prix);
+        plat.setCarte(0);
+        orm.persisterNUplet(plat);
+        //Composition.
+        platIngredients.forEach((platIngredient) -> {
+            platIngredient.setIdPlat(plat.getId());
+            orm.persisterNUplet(platIngredient);
+        });
+    }
+
+    /**
      * Ajouter un plat.
      */
     public static void ajouter() {
@@ -133,38 +200,71 @@ public class PlatControleur extends Controleur {
         //Message de titre.
         ui.afficherAvecDelimiteurEtUtilisateur("Ajout d'un plat au catalogue :");
 
+        //Récupération des catégories et des ingrédients.
+        List<Entite> categories = orm.chercherTousLesNUplets(Categorie.class);
         List<Entite> ingredients = orm.chercherTousLesNUplets(Ingredient.class);
 
-        //Si pas d'ingrdéient dans le catalogue.
-        if(ingredients.isEmpty()) {
+        //Si pas de catégories trouvées.
+        if(categories.isEmpty()) {
             //Message d'erreur.
-            ui.afficher("Aucun ingrédient trouvé dans le cataloque pour composer le plat !");
-            ui.afficher("Ajoutez d'abord des ingrédients avant d'ajouter un plat !");
+            ui.afficher("Aucune catégorie trouvée pour les plats !");
+            ui.afficher("Ajoutez d'abord des catégories avant d'ajouter un plat !");
         //Sinon.
+        }else {
+            //Si pas d'ingrdéient dans le catalogue.
+            if(ingredients.isEmpty()) {
+                //Message d'erreur.
+                ui.afficher("Aucun ingrédient trouvé dans le cataloque pour composer le plat !");
+                ui.afficher("Ajoutez d'abord des ingrédients avant d'ajouter un plat !");
+            //Sinon.
+            } else {
+                //Saisie et sauvegarde.
+                Plat plat = new Plat();
+                editerEtPersister(plat);
+
+                //Message de résultat.
+                ui.afficher("Plat ajouté !");
+                ui.afficher(plat.toString());
+            }
+        }
+
+        //Retour vers l'accueil.
+        AccueilControleur.consulter();
+    }
+
+    /**
+     * Modifier une plat.
+     */
+    public static void modifier() {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Modification d'un plat :");
+
+        //Récupération des plats existantes.
+        List<Entite> plats = orm.chercherTousLesNUplets(Plat.class);
+
+        //Si pas d'unités trouvées.
+        if(plats.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucune plat trouvé dans le cataloque !");
+            //Sinon.
         } else {
-            //Plat.
-            //Questions et saisies.
-            String libelle = ui.poserQuestion("Saisir un libellé :", UI.REGEX_CHAINE_DE_CARACTERES);
-            Double prix = ui.poserQuestionDecimal("Saisir un prix : ", UI.REGEX_DECIMAL_POSITIF);
+            //Saisie du plat à modofier.
+            int idPlat = ui.poserQuestionListeNUplets(plats);
+            Plat plat = (Plat) filterListeNUpletsAvecId(plats, idPlat);
 
-            //Composition du plat.
-            List<PlatIngredients> platIngredients = composer();
+            //Suppression de l'ancienne composition du plat.
+            orm.chercherNUpletsAvecPredicat("WHERE ID_PLAT = " + idPlat, PlatIngredients.class)
+               .forEach(orm::supprimerNUplet);
 
-            //Sauvegarde : insertion du plat et de sa composition.
-            //Plat.
-            Plat plat = new Plat();
-            plat.setLibelle(libelle);
-            plat.setPrix(prix);
-            plat.setCarte(0);
-            orm.persisterNUplet(plat);
-            //Composition.
-            platIngredients.forEach((platIngredient) -> {
-                platIngredient.setIdPlat(plat.getId());
-                orm.persisterNUplet(platIngredient);
-            });
+            //Saisie et sauvegarde.
+            editerEtPersister(plat);
 
             //Message de résultat.
-            ui.afficher("Plat ajouté !");
+            ui.afficher("Plat modifié !");
             ui.afficher(plat.toString());
         }
 
@@ -209,8 +309,47 @@ public class PlatControleur extends Controleur {
         //Retour vers l'accueil.
         AccueilControleur.consulter();
     }
+
     /**
-     * Supprimer d'un plat à la carte du jour.
+     * Ajouter d'un plat à la carte du jour.
+     */
+    public static void ajouterACarte() {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Ajout d'un plat à la carte du jour :");
+
+        //Récupération des plats qui ne font pas partie de la carte.
+        ui.afficher("Nous listons uniquement les plats qui ne font pas partie de la carte du jour.");
+        List<Entite> plats = orm.chercherNUpletsAvecPredicat("WHERE CARTE = 0", Plat.class);
+
+        //Si pas de plats dans le cataloque.
+        if(plats.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucun plat trouvé dans le cataloque !");
+        //Sinon.
+        } else {
+            //Question et saisies.
+            int idPlat = ui.poserQuestionListeNUplets(plats);
+            Plat plat = (Plat) filterListeNUpletsAvecId(plats, idPlat);
+
+            //Sauvegarde : Ajout du plat à la carte du jour
+            plat.setCarte(1);
+            orm.persisterNUplet(plat);
+
+            //Message de résultat.
+            ui.afficher("Plat ajouté à la carte du jour !");
+            ui.afficher(plat.toString());
+        }
+
+        //Retour à l'accueil.
+        AccueilControleur.consulter();
+    }
+
+    /**
+     * Supprimer un plat de la carte du jour.
      */
     public static void supprimerDeCarte() {
         //UI et ORM.
@@ -219,14 +358,16 @@ public class PlatControleur extends Controleur {
 
         //Message de titre.
         ui.afficherAvecDelimiteurEtUtilisateur("Ajout d'un plat à la carte du jour :");
-        //Récupération des plats qui ne font pas partie de la carte.
-        System.out.println("Nous listons uniquement les plats qui font partie de la carte du jour.");
-        List<Entite> plats = orm.chercherNUpletsAvecPredicat("WHERE CARTE = 1",Plat.class);
+
+        //Récupération des plats qui font partie de la carte.
+        ui.afficher("Nous listons uniquement les plats qui font partie de la carte du jour.");
+        List<Entite> plats = orm.chercherNUpletsAvecPredicat("WHERE CARTE = 1", Plat.class);
+
         //Si pas de plats dans le cataloque.
         if(plats.isEmpty()) {
             //Message d'erreur.
             ui.afficher("Aucun plat trouvé dans le carte du jour !");
-            //Sinon.
+        //Sinon.
         } else {
             //Question et saisies.
             int idPlat = ui.poserQuestionListeNUplets(plats);
@@ -235,6 +376,7 @@ public class PlatControleur extends Controleur {
             //Sauvegarde : Suppresion du plat de la carte du jour
             plat.setCarte(0);
             orm.persisterNUplet(plat);
+
             //Message de résultat.
             ui.afficher("Plat supprimé de la carte du jour !");
             ui.afficher(plat.toString());
@@ -242,6 +384,5 @@ public class PlatControleur extends Controleur {
 
         //Retour à l'accueil.
         AccueilControleur.consulter();
-
     }
 }
