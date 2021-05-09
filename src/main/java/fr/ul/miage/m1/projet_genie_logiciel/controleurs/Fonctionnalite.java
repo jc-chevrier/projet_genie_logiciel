@@ -1,11 +1,7 @@
 package fr.ul.miage.m1.projet_genie_logiciel.controleurs;
 
-import fr.ul.miage.m1.projet_genie_logiciel.entites.Ingredient;
-import fr.ul.miage.m1.projet_genie_logiciel.entites.Plat;
-import fr.ul.miage.m1.projet_genie_logiciel.entites.PlatIngredients;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Role;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -25,18 +21,18 @@ public class Fonctionnalite {
 
     static {
         List<Fonctionnalite> fonctionnalitesDirecteur = new ArrayList<Fonctionnalite>(
-                Arrays.asList(new Fonctionnalite("Ajouter un plat à la carte du jour", AccueilControleur::consulter),//TODO à modifier
-                              new Fonctionnalite("Supprimer un plat de la carte du jour", AccueilControleur::consulter)));//TODO à modifier
+                Arrays.asList(new Fonctionnalite("Ajouter un plat à la carte du jour", PlatControleur::ajouterACarte),
+                              new Fonctionnalite("Supprimer un plat de la carte du jour", PlatControleur::supprimerDeCarte)));
 
         List<Fonctionnalite> fonctionnalitesMaitreHotel = new ArrayList<Fonctionnalite>(
-                Arrays.asList(new Fonctionnalite("Lister toutes les tables", AccueilControleur::consulter),//TODO à modifier
-                              new Fonctionnalite("Lister toutes les tables disponibles", AccueilControleur::consulter),//TODO à modifier
-                              new Fonctionnalite("Ajouter une table", AccueilControleur::consulter),//TODO à modifier
-                              new Fonctionnalite("Supprimer une table", AccueilControleur::consulter),//TODO à modifier
-                              new Fonctionnalite("Allouer une table à un client", AccueilControleur::consulter),//TODO à modifier
-                              new Fonctionnalite("Désallouer une table à un client", AccueilControleur::consulter), //TODO à modifier
-                              new Fonctionnalite("Allouer une table à un serveur", AccueilControleur::consulter),//TODO à modifier
-                              new Fonctionnalite("Désallouer une table à un serveur", AccueilControleur::consulter)));//TODO à modifier
+                Arrays.asList(new Fonctionnalite("Lister toutes les tables", PlaceControleur::lister),
+                              new Fonctionnalite("Lister toutes les tables disponibles", PlaceControleur::listerDisponibles),
+                              new Fonctionnalite("Ajouter une table", PlaceControleur::ajouter),
+                              new Fonctionnalite("Supprimer une table", PlaceControleur::supprimer),
+                              new Fonctionnalite("Allouer une table à un client", PlaceControleur::allouerPourClient),
+                              new Fonctionnalite("Désallouer une table à un client", PlaceControleur::desallouerPourClient),
+                              new Fonctionnalite("Allouer une table à un serveur", PlaceControleur::allouerPourServeur),
+                              new Fonctionnalite("Désallouer une table à un serveur", PlaceControleur::desallouerPourServeur)));
 
         List<Fonctionnalite> fonctionnalitesCuisinier = new ArrayList<Fonctionnalite>(
                 Arrays.asList(new Fonctionnalite("Lister les unités", UniteControleur::lister),
@@ -47,32 +43,32 @@ public class Fonctionnalite {
                               new Fonctionnalite("Ajouter un ingrédient au catalogue des ingrédients", IngredientControleur::ajouter),
                               new Fonctionnalite("Modifier un ingrédient", IngredientControleur::modifier),
                               new Fonctionnalite("Supprimer un ingrédient au catalogue des ingrédients", IngredientControleur::supprimer),
-                              new Fonctionnalite("Lister les catégories", AccueilControleur::consulter),//TODO à modifier
-                              new Fonctionnalite("Ajouter une catégorie", AccueilControleur::consulter),//TODO à modifier
-                              new Fonctionnalite("Modifier une catégorie", AccueilControleur::consulter),//TODO à modifier
-                              new Fonctionnalite("Supprimer une catégorie", AccueilControleur::consulter),//TODO à modifier
-                              new Fonctionnalite("Incrémenter le stock d'un ingrédient", AccueilControleur::consulter), //TODO à modifier
+                              new Fonctionnalite("Lister les catégories", CategorieControleur::lister),
+                              new Fonctionnalite("Ajouter une catégorie", CategorieControleur::ajouter),
+                              new Fonctionnalite("Modifier une catégorie", CategorieControleur::modifier),
+                              new Fonctionnalite("Supprimer une catégorie", CategorieControleur::supprimer),
+                              new Fonctionnalite("Incrémenter le stock d'un ingrédient", IngredientControleur::incrementerStock),
                               new Fonctionnalite("Lister les plats du catalogue des plats", PlatControleur::lister),
                               new Fonctionnalite("Ajouter un plat au catalogue des plats", PlatControleur::ajouter),
-                              new Fonctionnalite("Modifier un plat", AccueilControleur::consulter), //TODO à modifier
+                              new Fonctionnalite("Modifier un plat", PlatControleur::modifier),
                               new Fonctionnalite("Supprimer un plat du catalogue des plats", PlatControleur::supprimer)));
 
         List<Fonctionnalite> fonctionnalitesServeur = new ArrayList<Fonctionnalite>(
                 Arrays.asList(new Fonctionnalite("Lister tous les plats de la carte", PlatControleur::listerPlatCarte),
                               new Fonctionnalite("Lister tous les plats disponibles de la carte", AccueilControleur::consulter), //TODO à modifier
                               new Fonctionnalite("Lister les plats disponibles de la carte pour une catégorie", AccueilControleur::consulter), //TODO à modifier
-                             new Fonctionnalite("Lister les catégories de plats disponibles de la carte", AccueilControleur::consulter))); //TODO à modifier
+                              new Fonctionnalite("Lister les catégories de plats disponibles de la carte", AccueilControleur::consulter))); //TODO à modifier
 
         List<Fonctionnalite> fonctionnalitesAssistantService = new ArrayList<Fonctionnalite>(
-                Arrays.asList(new Fonctionnalite("Lister les tables à préparer", AccueilControleur::consulter), //TODO à modifier
-                              new Fonctionnalite("Valider la préparation d'une table", AccueilControleur::consulter))); //TODO à modifier
+                Arrays.asList(new Fonctionnalite("Lister les tables à préparer", PlaceControleur::listerAPreparer),
+                              new Fonctionnalite("Valider la préparation d'une table", PlaceControleur::validerPreparation)));
 
         fonctionnalitesDirecteur.addAll(0, fonctionnalitesServeur);
         //fonctionnalitesDirecteur.addAll(fonctionnalitesMaitreHotel);
         //fonctionnalitesDirecteur.addAll(fonctionnalitesCuisinier);
         //fonctionnalitesDirecteur.addAll(fonctionnalitesAssistantService);
 
-        fonctionnalitesServeur.add(0, new Fonctionnalite("Lister mes tables", AccueilControleur::consulter));
+        fonctionnalitesServeur.add(0, new Fonctionnalite("Lister mes tables", PlaceControleur::listerAlloueesPourServeur));
 
         List<Fonctionnalite> fonctionnalitesUtilisateur = new ArrayList<Fonctionnalite>(
                 Arrays.asList(new Fonctionnalite("Se déconnecter", AuthControleur::seDeconnecter),
