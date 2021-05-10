@@ -178,68 +178,6 @@ public class PlaceTest {
 
     @Test
     @Order(8)
-    @DisplayName("Test : lister les tables disponibles - cas 1 : tables trouvées")
-    void testListerDisponiblesCas1Trouvees() {
-        //On se connecte en tant que maitre d'hotel.
-        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
-
-        //On vide la table place.
-        orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
-        //On ajoute une table disponible à lister.
-        Place place = new Place();
-        place.setEtat("libre");
-        orm.persisterNUplet(place);
-
-        //On simule les saisies de listing dans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/lister_disponibles_cas_1.txt"));
-        ui.reinitialiserScanner();
-
-        //On simule le scénario de listing.
-        PlaceControleur.listerDisponibles();
-    }
-
-    @Test
-    @Order(9)
-    @DisplayName("Test : lister les tables disponibles - cas 2 : aucune table disponible trouvée")
-    void testListerDisponiblesCas2PasDisponiblesTrouvees() {
-        //On se connecte en tant que maitre d'hotel.
-        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
-
-        //On vide la table place.
-        orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
-        //On ajoute une table non disponible.
-        Place place = new Place();
-        place.setEtat("sale");
-        orm.persisterNUplet(place);
-
-        //On simule les saisies de listing dans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/lister_disponibles_cas_2.txt"));
-        ui.reinitialiserScanner();
-
-        //On simule le scénario de listing.
-        PlaceControleur.listerDisponibles();
-    }
-
-    @Test
-    @Order(10)
-    @DisplayName("Test : lister les tables disponibles - cas 3 : aucune table trouvée")
-    void testListerDisponiblesCas3PasTrouvees() {
-        //On se connecte en tant que maitre d'hotel.
-        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
-
-        //On vide la table place.
-        orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
-
-        //On simule les saisies de listing dans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/lister_disponibles_cas_3.txt"));
-        ui.reinitialiserScanner();
-
-        //On simule le scénario de listing.
-        PlaceControleur.listerDisponibles();
-    }
-
-    @Test
-    @Order(11)
     @DisplayName("Test : lister les tables à préparer - cas 1 : tables trouvées")
     void testListerAPreparerCas1Trouvees() {
         //On se connecte en tant qu'assistant de service.
@@ -261,7 +199,7 @@ public class PlaceTest {
     }
 
     @Test
-    @Order(12)
+    @Order(9)
     @DisplayName("Test : lister les tables à préparer - cas 2 : aucune table à préparer trouvée")
     void testListerAPreparerCas2PasAPreparerTrouvees() {
         //On se connecte en tant qu'assistant de service.
@@ -283,7 +221,7 @@ public class PlaceTest {
     }
 
     @Test
-    @Order(13)
+    @Order(10)
     @DisplayName("Test : lister les tables à préparer - cas 3 : aucune table trouvée")
     void testListerAPreparerCas3PasTrouvees() {
         //On se connecte en tant qu'assistant de service.
@@ -297,11 +235,11 @@ public class PlaceTest {
         ui.reinitialiserScanner();
 
         //On simule le scénario de listing.
-        PlaceControleur.validerPreparation();
+        PlaceControleur.listerAPreparer();
     }
 
     @Test
-    @Order(14)
+    @Order(11)
     @DisplayName("Test : valider la préparation d'une table - cas 1 : table bien validée")
     void testValiderPreparationCas1BienValidee() {
         //On se connecte en tant qu'assistant de service.
@@ -330,7 +268,7 @@ public class PlaceTest {
     }
 
     @Test
-    @Order(15)
+    @Order(12)
     @DisplayName("Test : valider la préparation d'une table - cas 2 : table validée correcte")
     void testValiderPreparationCas2Correcte() {
         //On se connecte en tant qu'assistant de service.
@@ -345,18 +283,18 @@ public class PlaceTest {
         System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/valider_preparation_cas_2.txt"));
         ui.reinitialiserScanner();
 
-        Place placeAvant = (Place) orm.chercherNUpletAvecPredicat("WHERE ID = 11", Place.class);
+        Place placeAvant = (Place) orm.chercherNUpletAvecPredicat("WHERE ID = 9", Place.class);
         assertEquals("sale", placeAvant.getEtat());
 
         //On simule le scénario de validation.
         PlaceControleur.validerPreparation();
 
-        Place placeApres = (Place) orm.chercherNUpletAvecPredicat("WHERE ID = 11", Place.class);
+        Place placeApres = (Place) orm.chercherNUpletAvecPredicat("WHERE ID = 9", Place.class);
         assertEquals("libre", placeApres.getEtat());
     }
 
     @Test
-    @Order(16)
+    @Order(13)
     @DisplayName("Test : valider la préparation d'une table - cas 3 : aucune table à préparer trouvée")
     void testValiderPreparationCas3PasAPreparerTrouvees() {
         //On se connecte en tant qu'assistant de service.
@@ -378,7 +316,7 @@ public class PlaceTest {
     }
 
     @Test
-    @Order(17)
+    @Order(14)
     @DisplayName("Test : valider la préparation d'une table - cas 4 : aucune table trouvée")
     void testValiderPreparationCas4PasTrouvees() {
         //On se connecte en tant qu'assistant de service.
@@ -393,5 +331,187 @@ public class PlaceTest {
 
         //On simule le scénario de validation.
         PlaceControleur.validerPreparation();
+    }
+
+    @Test
+    @Order(15)
+    @DisplayName("Test : lister les tables disponibles - cas 1 : tables trouvées")
+    void testListerDisponiblesCas1Trouvees() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
+        //On vide la table place.
+        orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
+        //On ajoute une table disponible à lister.
+        Place place = new Place();
+        place.setEtat("libre");
+        orm.persisterNUplet(place);
+
+        //On simule les saisies de listing dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/lister_disponibles_cas_1.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de listing.
+        PlaceControleur.listerDisponibles();
+    }
+
+    @Test
+    @Order(16)
+    @DisplayName("Test : lister les tables disponibles - cas 2 : aucune table disponible trouvée")
+    void testListerDisponiblesCas2PasDisponiblesTrouvees() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
+        //On vide la table place.
+        orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
+        //On ajoute une table non disponible.
+        Place place = new Place();
+        place.setEtat("sale");
+        orm.persisterNUplet(place);
+
+        //On simule les saisies de listing dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/lister_disponibles_cas_2.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de listing.
+        PlaceControleur.listerDisponibles();
+    }
+
+    @Test
+    @Order(17)
+    @DisplayName("Test : lister les tables disponibles - cas 3 : aucune table trouvée")
+    void testListerDisponiblesCas3PasTrouvees() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
+        //On vide la table place.
+        orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
+
+        //On simule les saisies de listing dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/lister_disponibles_cas_3.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de listing.
+        PlaceControleur.listerDisponibles();
+    }
+
+    @Test
+    @Order(18)
+    @DisplayName("Test : allouer une table à un client - cas 1 : allocation bien faite")
+    void testAllouerPourClientCas1BienFaite() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
+        //On simule les saisies d'allocation dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/allouer_pour_client_cas_1.txt"));
+        ui.reinitialiserScanner();
+
+        //On ajoute une table à allouer.
+        Place place = new Place();
+        place.setEtat("libre");
+        orm.persisterNUplet(place);
+
+        int nbPlacesOccupeesAvant = orm.compterNUpletsAvecPredicat("WHERE ETAT = 'occupé'", Place.class);
+        int nbPlacesLibresAvant = orm.compterNUpletsAvecPredicat("WHERE ETAT = 'libre'", Place.class);
+
+        //On simule le scénario d'allocation.
+        PlaceControleur.allouerPourClient();
+
+        int nbPlacesOccupeesApres = orm.compterNUpletsAvecPredicat("WHERE ETAT = 'occupé'", Place.class);
+        int nbPlacesLibresApres = orm.compterNUpletsAvecPredicat("WHERE ETAT = 'libre'", Place.class);
+        assertEquals(nbPlacesLibresAvant - 1, nbPlacesLibresApres);
+        assertEquals(nbPlacesOccupeesAvant + 1, nbPlacesOccupeesApres);
+    }
+
+    @Test
+    @Order(19)
+    @DisplayName("Test : allouer une table à un client - cas 2 : allocation bien faite correcte")
+    void testAllouerPourClientCas2Correcte() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
+        //On simule les saisies d'allocation dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/allouer_pour_client_cas_2.txt"));
+        ui.reinitialiserScanner();
+
+        //On ajoute une table à allouer.
+        Place place = new Place();
+        place.setEtat("libre");
+        orm.persisterNUplet(place);
+
+        Place placeAvant = (Place) orm.chercherNUpletAvecPredicat("WHERE ID = 14", Place.class);
+        assertEquals("libre", placeAvant.getEtat());
+
+        //On simule le scénario d'allocation.
+        PlaceControleur.allouerPourClient();
+
+        Place placeApres = (Place) orm.chercherNUpletAvecPredicat("WHERE ID = 14", Place.class);
+        assertEquals("occupé", placeApres.getEtat());
+    }
+
+    @Test
+    @Order(20)
+    @DisplayName("Test : allouer une table à un client - cas 3 : allocation d'une table réservée correcte")
+    void testAllouerPourClientCas3Reservee() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
+        //On simule les saisies de validation dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/allouer_pour_client_cas_3.txt"));
+        ui.reinitialiserScanner();
+
+        //On ajoute une table disponible à allouer.
+        Place place = new Place();
+        place.setEtat("réservé");
+        orm.persisterNUplet(place);
+
+        Place placeAvant = (Place) orm.chercherNUpletAvecPredicat("WHERE ID = 15", Place.class);
+        assertEquals("réservé", placeAvant.getEtat());
+
+        //On simule le scénario d'allocation.
+        PlaceControleur.allouerPourClient();
+
+        Place placeApres = (Place) orm.chercherNUpletAvecPredicat("WHERE ID = 15", Place.class);
+        assertEquals("occupé", placeApres.getEtat());
+    }
+
+    @Test
+    @Order(21)
+    @DisplayName("Test : allouer une table à un client - cas 4 : aucune table à allouer trouvée")
+    void testAllouerPourClientCas4PasAAllouerTrouvees() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
+        //On vide la table place.
+        orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
+        //On ajoute une table pas à allouer.
+        Place place = new Place();
+        place.setEtat("occupé");
+        orm.persisterNUplet(place);
+
+        //On simule les saisies d'allocation ans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/allouer_pour_client_cas_4.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario d'allocation.
+        PlaceControleur.allouerPourClient();
+    }
+
+    @Test
+    @Order(22)
+    @DisplayName("Test : allouer une table à un client - cas 5 : aucune table trouvée")
+    void testAllouerPourClientCas5PasTrouvees() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
+        //On vide la table place.
+        orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
+
+        //On simule les saisies d'allocation dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/allouer_pour_client_cas_5.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario d'allocation.
+        PlaceControleur.allouerPourClient();
     }
 }
