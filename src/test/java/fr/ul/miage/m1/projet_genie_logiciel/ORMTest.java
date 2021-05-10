@@ -19,56 +19,56 @@ public class ORMTest {
     }
 
     @Test
-    @DisplayName("Test - chercher tous les n-uplets - cas n-uplets trouvés")
+    @DisplayName("Test : chercher tous les n-uplets - cas n-uplets trouvés")
     void testChercherTousLesNUpletsTrouves() {
         List<Entite> list = orm.chercherTousLesNUplets(Role.class);
         assertEquals(false, list.isEmpty());
     }
 
     @Test
-    @DisplayName("Test - chercher tous les n-uplets - cas n-uplets non trouvés")
+    @DisplayName("Test : chercher tous les n-uplets - cas n-uplets non trouvés")
     void testChercherTousLesNUpletsNonTrouves() {
         List<Entite> list = orm.chercherTousLesNUplets(Unite.class);
         assertEquals(true, list.isEmpty());
     }
 
     @Test
-    @DisplayName("Test - chercher le n-uplet avec un predicat - cas n-uplet trouvé")
+    @DisplayName("Test : chercher le n-uplet avec un predicat - cas n-uplet trouvé")
     void testChercherNUpletAvecPredicatCasTrouve(){
         Entite nUplet = orm.chercherNUpletAvecPredicat("WHERE ID=2",Role.class);
         assertNotNull(nUplet);
     }
 
     @Test
-    @DisplayName("Test - chercher un n-uplet avec un predicat - cas n-uplet non trouvé")
+    @DisplayName("Test : chercher un n-uplet avec un predicat - cas n-uplet non trouvé")
     void testChercherNUpletAvecPredicatCasNonTrouve(){
         Entite nUplet = orm.chercherNUpletAvecPredicat("WHERE ID=-7",Role.class);
         assertEquals(null, nUplet);
     }
 
     @Test
-    @DisplayName("Test - chercher un n-uplet avec un predicat - cas  n-uplet trouvé ")
+    @DisplayName("Test : chercher un n-uplet avec un predicat - cas  n-uplet trouvé ")
     void testChercherNUpletAvecPredicatCasCorrect(){
         Entite nUplet = orm.chercherNUpletAvecPredicat("WHERE ID=2",Role.class);
         assertEquals(2, nUplet.getId());
     }
 
     @Test
-    @DisplayName("Test - chercher des n-uplets avec un predicat - cas n-uplets trouvés")
+    @DisplayName("Test : chercher des n-uplets avec un predicat - cas n-uplets trouvés")
     void testChercherNUpletsAvecPredicatCasTrouve() {
         List<Entite> list = orm.chercherNUpletsAvecPredicat("WHERE ID IN (2,3)", Role.class);
         assertEquals(2,list.size());
     }
 
     @Test
-    @DisplayName("Test - chercher des n-uplets avec un predicat - cas n-uplets non trouvés")
+    @DisplayName("Test : chercher des n-uplets avec un predicat - cas n-uplets non trouvés")
     void testChercherNUpletsAvecPredicatCasNonTrouve() {
         List<Entite> list = orm.chercherNUpletsAvecPredicat("WHERE ID IN (-2,-3)", Role.class);
         assertEquals(true,list.isEmpty());
     }
 
     @Test
-    @DisplayName("Test - chercher des n-uplets avec un predicat - cas n-uplets corrects")
+    @DisplayName("Test : chercher des n-uplets avec un predicat - cas n-uplets corrects")
     void testChercherNUpletsAvecPredicatCasCorrects() {
         List<Entite> list = orm.chercherNUpletsAvecPredicat("WHERE ID IN (2,3) ORDER BY ID", Role.class);
         assertEquals(2,list.get(0).getId());
@@ -76,7 +76,7 @@ public class ORMTest {
     }
 
     @Test
-    @DisplayName("Test - faire persister un n-uplet - cas insérer un n-uplet")
+    @DisplayName("Test : faire persister un n-uplet - cas insérer un n-uplet")
     void testPersisterNUpletCasInsertion() {
         Role nUpletAInserer = new Role();
         nUpletAInserer.setLibelle("Test");
@@ -86,7 +86,7 @@ public class ORMTest {
     }
 
     @Test
-    @DisplayName("Test - faire persister un n-uplet - cas insérer un n-uplet")
+    @DisplayName("Test : faire persister un n-uplet - cas insérer un n-uplet")
     void testPersisterNUpletCasMiseAJour() {
         Role nUpletAMettreAJour = (Role) orm.chercherNUpletAvecPredicat("WHERE ID = 4", Role.class);
         nUpletAMettreAJour.setLibelle("Maitre Hotel MAJ");
@@ -96,7 +96,7 @@ public class ORMTest {
     }
 
     @Test
-    @DisplayName("Test - supprimer un n-uplet - cas supprimer un n-uplet")
+    @DisplayName("Test : supprimer un n-uplet - cas supprimer un n-uplet")
     void testSupprimerNUplet() {
         Role nUpletASupprimer = (Role) orm.chercherNUpletAvecPredicat("WHERE ID = 5", Role.class);
         orm.supprimerNUplet(nUpletASupprimer);
