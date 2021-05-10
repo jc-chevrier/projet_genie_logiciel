@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.*;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 /**
  * ORM, pour la sélection, et la manipulation
@@ -84,11 +85,15 @@ public class ORM {
     public List<Entite> chercherNUpletsAvecPredicat(@NotNull String predicat, @NotNull Class entiteClasse) {
         //Récupération des métadonnées de la table.
         String nomTable = EntiteMetadonnee.getEntiteNomTable(entiteClasse);
-        Map<String, Class> structure = EntiteMetadonnee.getEntiteStructure(entiteClasse);
+        Map<String, Class> structure = new TreeMap<>(EntiteMetadonnee.getEntiteStructure(entiteClasse));
 
-        //Construction de la reuqête.
+        //Construction de la requête.
         Statement requete = null;
-        String requeteString = "SELECT FROM_TABLE.* FROM " + nomTable + " AS FROM_TABLE " + predicat + ";";
+        String requeteString = "SELECT " +
+                                structure.keySet()
+                                        .stream()
+                                        .collect(Collectors.joining(", FROM_TABLE.", "FROM_TABLE.", "")) +
+                                " FROM " + nomTable + " AS FROM_TABLE " + predicat + ";";
 
         List<Entite> listeNUplets = new ArrayList<Entite>();
         try {
@@ -103,13 +108,19 @@ public class ORM {
                     Object valeur = null;
                     Class type = structure.get(attribut);
                     if (type.equals(Integer.class)) {
-                       valeur = resultatLignes.getInt(attribut);
+                        valeur = resultatLignes.getInt(attribut);
+                        if(resultatLignes.wasNull()) {
+                            valeur = null;
+                        }
                     } else if (type.equals(Double.class)) {
-                       valeur = resultatLignes.getDouble(attribut);
+                        valeur = resultatLignes.getDouble(attribut);
+                        if(resultatLignes.wasNull()) {
+                            valeur = null;
+                        }
                     } else if (type.equals(String.class)) {
-                       valeur = resultatLignes.getString(attribut);
+                        valeur = resultatLignes.getString(attribut);
                     } else if (type.equals(Date.class)) {
-                       valeur = resultatLignes.getDate(attribut);
+                        valeur = resultatLignes.getDate(attribut);
                     }
                     nUpletAttributs.put(attribut, valeur);
                 }
@@ -148,6 +159,57 @@ public class ORM {
      */
     public List<Entite> chercherTousLesNUplets(@NotNull Class entiteClasse) {
         return chercherNUpletsAvecPredicat("", entiteClasse);
+    }
+
+    /**
+     * Compter le nombre de n-uplets
+     * d'une table avec un prédicat.
+     *
+     * @param predicat
+     * @param entiteClasse
+     * @return
+     */
+    public Integer compterNUpletsAvecPredicat(@NotNull String predicat, @NotNull Class entiteClasse) {
+        //Récupération des métadonnées de la table.
+        String nomTable = EntiteMetadonnee.getEntiteNomTable(entiteClasse);
+
+        //Construction de la requête.
+        Statement requete = null;
+        String requeteString = "SELECT COUNT(FROM_TABLE.*) AS NOMBRE_NUPLETS FROM " + nomTable + " AS FROM_TABLE " + predicat + ";";
+
+        Integer nombreNUplets = 0;
+        try {
+            //Execution de la requête.
+            requete = connexion.createStatement();
+            ResultSet resultatLignes = requete.executeQuery(requeteString);
+
+            //Lecture du résultat de la requête.
+            while(resultatLignes.next()) {
+                nombreNUplets = resultatLignes.getInt("NOMBRE_NUPLETS");
+            }
+
+            //Fin de la lecture du résultat de la requête.
+            resultatLignes.close();
+            //Fin de la requête.
+            requete.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Erreur ! Une requête se sélection a échouée : \"" + requeteString + "\" !");
+            System.exit(1);
+        }
+
+        return nombreNUplets;
+    }
+
+    /**
+     * Compter le nombre total de
+     * n-uplets d'une table.
+     *
+     * @param entiteClasse
+     * @return
+     */
+    public Integer compterTousLesNUplets(@NotNull Class entiteClasse) {
+        return compterNUpletsAvecPredicat("", entiteClasse);
     }
 
     /**
@@ -212,7 +274,7 @@ public class ORM {
             requete.executeUpdate();
             //Validation de la transaction.
             connexion.commit();
-            //Si insertion, on fournit l'id généré à l'ibjet.
+            //Si insertion, on fournit l'id généré à l'objet.
             if(modeInsertion) {
                 ResultSet clesGenerees = requete.getGeneratedKeys();
                 clesGenerees.next();
