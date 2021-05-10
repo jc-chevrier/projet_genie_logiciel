@@ -1,19 +1,13 @@
 package fr.ul.miage.m1.projet_genie_logiciel;
 
 import fr.ul.miage.m1.projet_genie_logiciel.controleurs.PlatControleur;
-import fr.ul.miage.m1.projet_genie_logiciel.entites.Categorie;
-import fr.ul.miage.m1.projet_genie_logiciel.entites.Compte;
-import fr.ul.miage.m1.projet_genie_logiciel.entites.Entite;
-import fr.ul.miage.m1.projet_genie_logiciel.entites.Plat;
+import fr.ul.miage.m1.projet_genie_logiciel.entites.*;
 import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-import java.util.List;
+import org.junit.jupiter.api.*;
 
+@DisplayName("Plat")
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class PlatTest {
     private static ORM orm;
     private static UI ui;
@@ -28,31 +22,33 @@ public class PlatTest {
     }
 
     @Test
-    @Order(1)
-    @DisplayName("Test - lister les plats - cas 1 plat non trouvé")
+    @Order(2)
+    @DisplayName("Test : lister les plats - cas 2 : plats non trouvés")
     void testListerPlatCasNonTrouve() {
+        //On vide la table plat.
+        orm.chercherTousLesNUplets(Plat.class).forEach(orm::supprimerNUplet);
+
         //On simule les saisies de lister dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/plat_test/lister.txt"));
+        System.setIn(PlatTest.class.getResourceAsStream("./saisies/plat_test/lister_cas_2.txt"));
         ui.reinitialiserScanner();
 
-        List<Entite> platsAvant = orm.chercherTousLesNUplets(Plat.class);
-
-        //On simule le scénario de lister.
+        //On simule le scénario de listing.
         PlatControleur.lister();
-
-        //Un ingrédient a du être inséré.
-        List<Entite> platssApres = orm.chercherTousLesNUplets(Plat.class);
-        assertEquals(platsAvant, platssApres);
     }
 
     @Test
-    @Order(2)
-    @DisplayName("Test - lister les plats - cas 2 plat non trouvé")
+    @Order(1)
+    @DisplayName("Test : lister les plats - cas 1 : plats trouvés")
     void testListerPlatCasTrouve() {
+        //On vide la table place.
+        orm.chercherTousLesNUplets(Plat.class).forEach(orm::supprimerNUplet);
+
+        //On ajoute une catégorie.
         Categorie categorie = new Categorie();
         categorie.setLibelle("cat 1");
         orm.persisterNUplet(categorie);
 
+        //On ajoute un plat à lister.
         Plat plat = new Plat();
         plat.setLibelle("plat jour");
         plat.setCarte(1);
@@ -61,17 +57,12 @@ public class PlatTest {
         orm.persisterNUplet(plat);
 
         //On simule les saisies de lister dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/plat_test/lister.txt"));
+        System.setIn(PlatTest.class.getResourceAsStream("./saisies/plat_test/lister_cas_1.txt"));
         ui.reinitialiserScanner();
-
-        List<Entite> platsAvant = orm.chercherTousLesNUplets(Plat.class);
 
         //On simule le scénario de lister.
         PlatControleur.lister();
 
-        //Un ingrédient a du être inséré.
-        List<Entite> platssApres = orm.chercherTousLesNUplets(Plat.class);
-        assertEquals(platsAvant, platssApres);
     }
 
 }
