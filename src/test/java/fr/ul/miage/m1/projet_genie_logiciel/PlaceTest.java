@@ -425,7 +425,7 @@ public class PlaceTest {
 
     @Test
     @Order(19)
-    @DisplayName("Test : allouer une table à un client - cas 2 : allocation bien faite correcte")
+    @DisplayName("Test : allouer une table à un client - cas 2 : allocation faite correcte")
     void testAllouerPourClientCas2Correcte() {
         //On se connecte en tant que maitre d'hotel.
         ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
@@ -513,5 +513,99 @@ public class PlaceTest {
 
         //On simule le scénario d'allocation.
         PlaceControleur.allouerPourClient();
+    }
+
+    @Test
+    @Order(23)
+    @DisplayName("Test : désallouer une table à un client - cas 1 : désallocation bien faite")
+    void testDesallouerPourClientCas1BienFaite() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
+        //On simule les saisies de désallocation dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/desallouer_pour_client_cas_1.txt"));
+        ui.reinitialiserScanner();
+
+        //On ajoute une table à désallouer.
+        Place place = new Place();
+        place.setEtat("occupé");
+        orm.persisterNUplet(place);
+
+        int nbPlacesOccupeesAvant = orm.compterNUpletsAvecPredicat("WHERE ETAT = 'occupé'", Place.class);
+        int nbPlacesSalesAvant = orm.compterNUpletsAvecPredicat("WHERE ETAT = 'sale'", Place.class);
+
+        //On simule le scénario de désallocation.
+        PlaceControleur.desallouerPourClient();
+
+        int nbPlacesOccupeesApres = orm.compterNUpletsAvecPredicat("WHERE ETAT = 'occupé'", Place.class);
+        int nbPlacesSalesApres = orm.compterNUpletsAvecPredicat("WHERE ETAT = 'sale'", Place.class);
+        assertEquals(nbPlacesOccupeesAvant - 1, nbPlacesOccupeesApres);
+        assertEquals(nbPlacesSalesAvant + 1, nbPlacesSalesApres);
+    }
+
+    @Test
+    @Order(24)
+    @DisplayName("Test : désallouer une table à un client - cas 2 : désallocation faite correcte")
+    void testDesallouerPourClientCas2Correcte() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
+        //On simule les saisies de désallocation dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/desallouer_pour_client_cas_2.txt"));
+        ui.reinitialiserScanner();
+
+        //On ajoute une table à désallouer.
+        Place place = new Place();
+        place.setEtat("occupé");
+        orm.persisterNUplet(place);
+
+        Place placeAvant = (Place) orm.chercherNUpletAvecPredicat("WHERE ID = 18", Place.class);
+        assertEquals("occupé", placeAvant.getEtat());
+
+        //On simule le scénario de désallocation.
+        PlaceControleur.desallouerPourClient();
+
+        Place placeApres = (Place) orm.chercherNUpletAvecPredicat("WHERE ID = 18", Place.class);
+        assertEquals("sale", placeApres.getEtat());
+    }
+
+    @Test
+    @Order(25)
+    @DisplayName("Test : désallouer une table à un client - cas 3 : aucune table à désallouer trouvée")
+    void testDesallouerPourClientCas3PasADesallouerTrouvees() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
+        //On vide la table place.
+        orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
+        //On ajoute une table pas à désallouer.
+        Place place = new Place();
+        place.setEtat("sale");
+        orm.persisterNUplet(place);
+
+        //On simule les saisies de désallocation dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/desallouer_pour_client_cas_3.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de désallocation.
+        PlaceControleur.desallouerPourClient();
+    }
+
+    @Test
+    @Order(26)
+    @DisplayName("Test : désallouer une table à un client - cas 4 : aucune table trouvée")
+    void testDesallouerPourClientCas4PasTrouvees() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
+        //On vide la table place.
+        orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
+
+        //On simule les saisies de désallocation dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/desallouer_pour_client_cas_4.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de désallocation.
+        PlaceControleur.desallouerPourClient();
     }
 }
