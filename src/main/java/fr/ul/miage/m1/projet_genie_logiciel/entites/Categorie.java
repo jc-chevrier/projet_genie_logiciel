@@ -6,13 +6,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Entité Unité.
+ * Entité catégorie.
  *
  * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */
-public class Unite extends Entite {
+public class Categorie extends Entite {
+
     //Nom de la table correspondant à l'entité.
-    public static String NOM_TABLE = "UNITE";
+    public static String NOM_TABLE = "CATEGORIE";
     //Structure de l'entité [attribut -> type].
     public static Map<String, Class> STRUCTURE;
 
@@ -23,11 +24,11 @@ public class Unite extends Entite {
         STRUCTURE.put("LIBELLE", String.class);
     }
 
-    public Unite() {
+    public Categorie() {
         super();
     }
 
-    public Unite(@NotNull Map<String, Object> attributs) {
+    public Categorie(@NotNull Map<String, Object> attributs) {
         super(attributs);
     }
 
@@ -39,19 +40,14 @@ public class Unite extends Entite {
         set("LIBELLE", libelle);
     }
 
-    @Override
-    public String toString() {
-        return "Unité [ id = " + getId() + ", libellé = " + getLibelle() + " ]";
+    public boolean estUtiliseParPlat() {
+        return ORM.getInstance().compterNUpletsAvecPredicat(
+                "INNER JOIN PLAT AS P " +
+                "ON P.ID_CATEGORIE = " + getId(), Categorie.class) > 0;
     }
 
-    /**
-     * Savoir si une unité est utilisé par des ingrédients.
-     *
-     * @return
-     */
-    public boolean estUtiliseParIngredient() {
-        return ORM.getInstance().compterNUpletsAvecPredicat(
-                                "INNER JOIN INGREDIENT AS I " +
-                                "ON I.ID_UNITE = " + getId(), Unite.class) > 0;
+    @Override
+    public String toString() {
+        return "Catégorie [ id = " + getId() + ", libellé = " + getLibelle() + " ]";
     }
 }
