@@ -1,9 +1,7 @@
 package fr.ul.miage.m1.projet_genie_logiciel;
 
 import fr.ul.miage.m1.projet_genie_logiciel.controleurs.IngredientControleur;
-import fr.ul.miage.m1.projet_genie_logiciel.controleurs.UniteControleur;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Compte;
-import fr.ul.miage.m1.projet_genie_logiciel.entites.Entite;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Ingredient;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Unite;
 import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
@@ -12,9 +10,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class IngredientTest {
@@ -31,20 +26,22 @@ public class IngredientTest {
     }
 
     @Test
-    @Order(6)
-    @DisplayName("Test - modifier un ingrédient - cas 1 : n-uplet ingrédient bien trouvé")
+    @Order(5)
+    @DisplayName("Test : modifier un ingrédient - cas 1 : n-uplet ingrédient bien trouvé")
     void testModifierIngredientCasBienTrouve() {
+        //On ajoute une unité.
         Unite unite = new Unite();
         unite.setLibelle("kg");
         orm.persisterNUplet(unite);
 
+        //On ajoute un ingrédient.
         Ingredient ingredientsAvant = new Ingredient();
         ingredientsAvant.setLibelle("libellé ingredient");
         ingredientsAvant.setStock(2.4);
         ingredientsAvant.setIdUnite(1);
         orm.persisterNUplet(ingredientsAvant);
 
-        //On simule les saisies de l' dans ce fichier.
+        //On simule les saisies de modification dans ce fichier.
         System.setIn(IngredientTest.class.getResourceAsStream("./saisies/ingredient_test/modifier_cas_1.txt"));
         ui.reinitialiserScanner();
 
@@ -58,12 +55,14 @@ public class IngredientTest {
 
     @Test
     @Order(6)
-    @DisplayName("Test - modifier un ingrédient - cas 1 : n-uplet ingrédient non trouvé")
+    @DisplayName("Test : modifier un ingrédient - cas 1 : n-uplet ingrédient non trouvé")
     void testModifierIngredientCasNonTrouve() {
+        //on ajoute une unité.
         Unite unite = new Unite();
         unite.setLibelle("kg");
         orm.persisterNUplet(unite);
 
+        //On crée et on ajoute un ingrédient.
         Ingredient ingredientsAvant = new Ingredient();
         ingredientsAvant.setLibelle("libellé ingredient");
         ingredientsAvant.setStock(1.4);
@@ -71,7 +70,7 @@ public class IngredientTest {
         orm.persisterNUplet(ingredientsAvant);
         orm.supprimerNUplet(ingredientsAvant);
 
-        //On simule les saisies de l' dans ce fichier.
+        //On simule les saisies de modification dans ce fichier.
         System.setIn(IngredientTest.class.getResourceAsStream("./saisies/ingredient_test/modifier_cas_2.txt"));
         ui.reinitialiserScanner();
 
@@ -82,6 +81,5 @@ public class IngredientTest {
         Ingredient ingredientApres = (Ingredient) orm.chercherNUpletAvecPredicat("WHERE ID = " + null, Ingredient.class);
         assertNull(ingredientApres);
     }
-
 
 }
