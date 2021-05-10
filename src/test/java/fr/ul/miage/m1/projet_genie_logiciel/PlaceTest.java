@@ -185,7 +185,7 @@ public class PlaceTest {
 
         //On vide la table place.
         orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
-        //On ajoute une table à lister.
+        //On ajoute une table disponible à lister.
         Place place = new Place();
         place.setEtat("libre");
         orm.persisterNUplet(place);
@@ -207,7 +207,7 @@ public class PlaceTest {
 
         //On vide la table place.
         orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
-        //On ajoute une table.
+        //On ajoute une table non disponible.
         Place place = new Place();
         place.setEtat("sale");
         orm.persisterNUplet(place);
@@ -242,12 +242,12 @@ public class PlaceTest {
     @Order(11)
     @DisplayName("Test : lister les tables à préparer - cas 1 : tables trouvées")
     void testListerAPreparerCas1Trouvees() {
-        //On se connecte.
+        //On se connecte en tant qu'assistant de service.
         ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 5", Compte.class));
 
         //On vide la table place.
         orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
-        //On ajoute une table à lister.
+        //On ajoute une table à préparer à lister.
         Place place = new Place();
         place.setEtat("sale");
         orm.persisterNUplet(place);
@@ -264,12 +264,12 @@ public class PlaceTest {
     @Order(12)
     @DisplayName("Test : lister les tables à préparer - cas 2 : aucune table à préparer trouvée")
     void testListerAPreparerCas2PasAPreparerTrouvees() {
-        //On se connecte.
+        //On se connecte en tant qu'assistant de service.
         ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 5", Compte.class));
 
         //On vide la table place.
         orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
-        //On ajoute une table.
+        //On ajoute une table pas à préparer.
         Place place = new Place();
         place.setEtat("libre");
         orm.persisterNUplet(place);
@@ -286,7 +286,7 @@ public class PlaceTest {
     @Order(13)
     @DisplayName("Test : lister les tables à préparer - cas 3 : aucune table trouvée")
     void testListerAPreparerCas3PasTrouvees() {
-        //On se connecte.
+        //On se connecte en tant qu'assistant de service.
         ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 5", Compte.class));
 
         //On vide la table place.
@@ -297,6 +297,101 @@ public class PlaceTest {
         ui.reinitialiserScanner();
 
         //On simule le scénario de listing.
-        PlaceControleur.listerAPreparer();
+        PlaceControleur.validerPreparation();
+    }
+
+    @Test
+    @Order(14)
+    @DisplayName("Test : valider la préparation d'une table - cas 1 : table bien validée")
+    void testValiderPreparationCas1BienValidee() {
+        //On se connecte en tant qu'assistant de service.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 5", Compte.class));
+
+        //On ajoute une table à préparer.
+        Place place = new Place();
+        place.setEtat("sale");
+        orm.persisterNUplet(place);
+
+        //On simule les saisies de validation dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/valider_preparation_cas_1.txt"));
+        ui.reinitialiserScanner();
+
+        int nbPlacesSalesAvant = orm.compterNUpletsAvecPredicat("WHERE ETAT = 'sale'", Place.class);
+        int nbPlacesLibresAvant = orm.compterNUpletsAvecPredicat("WHERE ETAT = 'libre'", Place.class);
+
+        //On simule le scénario de validation.
+        PlaceControleur.validerPreparation();
+
+        //Une table a due être supprimée.
+        int nbPlacesSalesApres = orm.compterNUpletsAvecPredicat("WHERE ETAT = 'sale'", Place.class);
+        int nbPlacesLibresApres = orm.compterNUpletsAvecPredicat("WHERE ETAT = 'libre'", Place.class);
+        assertEquals(nbPlacesSalesAvant - 1, nbPlacesSalesApres);
+        assertEquals(nbPlacesLibresAvant + 1, nbPlacesLibresApres);
+    }
+
+    @Test
+    @Order(15)
+    @DisplayName("Test : valider la préparation d'une table - cas 2 : table validée correcte")
+    void testValiderPreparationCas2Correcte() {
+        //On se connecte en tant qu'assistant de service.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 5", Compte.class));
+
+        //On ajoute une table à préparer.
+        Place place = new Place();
+        place.setEtat("sale");
+        orm.persisterNUplet(place);
+
+        //On simule les saisies de validation dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/valider_preparation_cas_2.txt"));
+        ui.reinitialiserScanner();
+
+        Place placeAvant = (Place) orm.chercherNUpletAvecPredicat("WHERE ID = 11", Place.class);
+        assertEquals("sale", placeAvant.getEtat());
+
+        //On simule le scénario de validation.
+        PlaceControleur.validerPreparation();
+
+        Place placeApres = (Place) orm.chercherNUpletAvecPredicat("WHERE ID = 11", Place.class);
+        assertEquals("libre", placeApres.getEtat());
+    }
+
+    @Test
+    @Order(16)
+    @DisplayName("Test : valider la préparation d'une table - cas 3 : aucune table à préparer trouvée")
+    void testValiderPreparationCas3PasAPreparerTrouvees() {
+        //On se connecte en tant qu'assistant de service.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 5", Compte.class));
+
+        //On vide la table place.
+        orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
+        //On ajoute une table pas à préparer.
+        Place place = new Place();
+        place.setEtat("libre");
+        orm.persisterNUplet(place);
+
+        //On simule les saisies de validation dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/valider_preparation_cas_3.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de validation.
+        PlaceControleur.validerPreparation();
+    }
+
+    @Test
+    @Order(17)
+    @DisplayName("Test : valider la préparation d'une table - cas 4 : aucune table trouvée")
+    void testValiderPreparationCas4PasTrouvees() {
+        //On se connecte en tant qu'assistant de service.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 5", Compte.class));
+
+        //On vide la table place.
+        orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
+
+        //On simule les saisies de validation dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/valider_preparation_cas_4.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de validation.
+        PlaceControleur.validerPreparation();
     }
 }
