@@ -63,7 +63,7 @@ public class Plat extends Entite {
         return (Integer) get("ID_CATEGORIE");
     }
 
-    public void setIdCategorie(@NotNull Integer idCategorie) {
+    public void setIdCategorie(Integer idCategorie) {
         set("ID_CATEGORIE", idCategorie);
     }
 
