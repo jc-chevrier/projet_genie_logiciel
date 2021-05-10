@@ -57,14 +57,6 @@ public class Ingredient extends Entite {
         set("ID_UNITE", idUnite);
     }
 
-    @Override
-    public String toString() {
-        Integer idUnite = getIdUnite();
-        Unite unite = (Unite) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = " + idUnite, Unite.class);
-        return "Ingrédient [ id = " + getId() + ", libellé = " + getLibelle() + ", unité = " + unite.getLibelle() +
-                ", stock = " + getStock() + " " + unite.getLibelle() + " ]";
-    }
-
     /**
      * Savoir si un ingrédient est utilisé par un plat.
      *
@@ -73,6 +65,14 @@ public class Ingredient extends Entite {
     public boolean estUtiliseParPlat() {
         return ORM.getInstance().compterNUpletsAvecPredicat(
                 "INNER JOIN PLAT_INGREDIENTS AS PI " +
-                "ON PI.ID_INGREDIENT = " + getId(), Ingredient.class) > 0;
+                        "ON PI.ID_INGREDIENT = " + getId(), Ingredient.class) > 0;
+    }
+
+    @Override
+    public String toString() {
+        Integer idUnite = getIdUnite();
+        Unite unite = (Unite) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = " + idUnite, Unite.class);
+        return "Ingrédient [ id = " + getId() + ", libellé = " + getLibelle() + ", unité = " + unite.getLibelle() +
+                ", stock = " + getStock() + " " + unite.getLibelle() + " ]";
     }
 }

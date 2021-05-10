@@ -208,7 +208,7 @@ public class ORM {
      * @param entiteClasse
      * @return
      */
-    public Integer compterTousLesNUpletsAvecPredicat(@NotNull Class entiteClasse) {
+    public Integer compterTousLesNUplets(@NotNull Class entiteClasse) {
         return compterNUpletsAvecPredicat("", entiteClasse);
     }
 
