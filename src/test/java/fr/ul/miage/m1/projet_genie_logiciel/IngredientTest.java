@@ -74,7 +74,10 @@ public class IngredientTest {
     @Order(3)
     @DisplayName("Test - ajouter un ingrédient - cas 3 : n-uplet ingrédient non ajouté ")
     void testAjouterIngredientCasPasDUnite() {
-        //On vide la table unités.
+        //On vide la table ingrédient.
+        orm.chercherTousLesNUplets(Ingredient.class).forEach(orm::supprimerNUplet);
+
+        //On vide la table unité.
         orm.chercherTousLesNUplets(Unite.class).forEach(orm::supprimerNUplet);
 
         //On simule les saisies de l'ajout dans ce fichier.
