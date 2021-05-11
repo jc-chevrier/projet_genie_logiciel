@@ -58,4 +58,36 @@ public class CategorieTest {
         //On simule le scénario de listing.
         UniteControleur.lister();
     }
+    @Test
+    @Order(3)
+    @DisplayName("Test : ajouter une catégorie - cas 1 : catégorie bien ajoutée")
+    void testAjouterCas1BienAjoutee() {
+        //On simule les saisies d'ajout dans ce fichier.
+        System.setIn(UniteTest.class.getResourceAsStream("./saisies/categorie_test/ajouter_cas_1.txt"));
+        ui.reinitialiserScanner();
+
+        int nbCategoriesAvant = orm.compterTousLesNUplets(Categorie.class);
+
+        //On simule le scénario d'ajout.
+        CategorieControleur.ajouter();
+
+        //Une unité a due être insérée.
+        int nbCategoriesApres = orm.compterTousLesNUplets(Categorie.class);
+        assertEquals(nbCategoriesAvant + 1, nbCategoriesApres);
+    }
+    @Test
+    @Order(4)
+    @DisplayName("Test : ajouter une catégorie - cas 2 : catégorie bien ajoutée avec bon libellé")
+    void testAjouterCas2BonLibelle() {
+        //On simule les saisies de l'ajout dans ce fichier.
+        System.setIn(CategorieTest.class.getResourceAsStream("./saisies/categorie_test/ajouter_cas_2.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario d'ajout.
+        CategorieControleur.ajouter();
+
+        //La catégorie insérée doit avoir ce libellé : "libellé test ajouter".
+        Categorie categorieInseree = (Categorie) orm.chercherNUpletAvecPredicat("WHERE ID = 3", Categorie.class);
+        assertEquals("libellé test ajouter", categorieInseree.getLibelle());
+    }
 }
