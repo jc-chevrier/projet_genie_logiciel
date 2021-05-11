@@ -125,4 +125,66 @@ public class CategorieTest {
         //On simule le scénario de modification.
         CategorieControleur.modifier();
     }
+    @Test
+    @Order(7)
+    @DisplayName("Test : supprimer une catégorie - cas 1 : catégorie bien supprimée")
+    void testSupprimerCas1BienSupprimee() {
+        //On ajoute une catégorie à supprimer.
+        Categorie categorie = new Categorie();
+        categorie.setLibelle("libellé");
+        orm.persisterNUplet(categorie);
+
+        //On simule les saisies de la suppression dans ce fichier.
+        System.setIn(CategorieTest.class.getResourceAsStream("./saisies/categorie_test/supprimer_cas_1.txt"));
+        ui.reinitialiserScanner();
+
+        int nbCategoriesAvant = orm.compterTousLesNUplets(Categorie.class);
+
+        //On simule le scénario de suppression.
+        CategorieControleur.supprimer();
+
+        //Une catégorie a due être supprimée.
+        int nbCategoriesApres = orm.compterTousLesNUplets(Categorie.class);
+        assertEquals(nbCategoriesAvant - 1, nbCategoriesApres);
+    }
+
+    @Test
+    @Order(8)
+    @DisplayName("Test : supprimer une catégorie - cas 2 : catégorie supprimée correcte")
+    void testSupprimerCas2Correcte() {
+        //On ajoute une catégorie à supprimer.
+        Categorie categorie = new Categorie();
+        categorie.setLibelle("libellé");
+        orm.persisterNUplet(categorie);
+
+        //On simule les saisies de la suppression dans ce fichier.
+        System.setIn(CategorieTest.class.getResourceAsStream("./saisies/categorie_test/supprimer_cas_2.txt"));
+        ui.reinitialiserScanner();
+
+        //Catégorie existante avant.
+        Categorie categorieAvant = (Categorie) orm.chercherNUpletAvecPredicat("WHERE ID = 6", Categorie.class);
+        assertNotNull(categorieAvant);
+
+        //On simule le scénario de suppression.
+        CategorieControleur.supprimer();
+
+        //Catégorie suppirmée après.
+        Categorie categorieApres = (Categorie) orm.chercherNUpletAvecPredicat("WHERE ID = 6", Categorie.class);
+        assertNull(categorieApres);
+    }
+
+    @Test
+    @Order(9)
+    @DisplayName("Test : supprimer une catégorie - cas 3 : aucune catégorie trouvée")
+    void testSupprimerCas3PasTrouvees() {
+        //On vide la table catégorie.
+        orm.chercherTousLesNUplets(Categorie.class).forEach(orm::supprimerNUplet);
+
+        //On simule les saisies de la suppression dans ce fichier.
+        System.setIn(UniteTest.class.getResourceAsStream("./saisies/categorie_test/supprimer_cas_3.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de suppression.
+        CategorieControleur.supprimer();
+    }
 }
