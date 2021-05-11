@@ -620,4 +620,67 @@ public class PlatTest {
 
     }
 
+    @Test
+    @Order(21)
+    @DisplayName("Test : lister les plats de la carte - cas 1 : aucun plat dans la carte")
+    void testListerCarteCas2AucunDansCarte() {
+        //On se connecte en tant que cuisinier.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 4", Compte.class));
+
+        //On vide la table PlatIngredients.
+        orm.chercherTousLesNUplets(PlatIngredients.class).forEach(orm::supprimerNUplet);
+        //On vide la table plat.
+        orm.chercherTousLesNUplets(Plat.class).forEach(orm::supprimerNUplet);
+        //On vide la table Catégorie.
+        orm.chercherTousLesNUplets(Categorie.class).forEach(orm::supprimerNUplet);
+        //On vide la table ingredient.
+        orm.chercherTousLesNUplets(Ingredient.class).forEach(orm::supprimerNUplet);
+
+        //On ajoute une catégorie.
+        Categorie categorie = new Categorie();
+        categorie.setLibelle("cat 2");
+        orm.persisterNUplet(categorie);
+
+        //On ajoute un plat à lister.
+        Plat plat = new Plat();
+        plat.setLibelle("plat jour");
+        plat.setCarte(0);
+        plat.setIdCategorie(categorie.getId());
+        plat.setPrix(1.5);
+        orm.persisterNUplet(plat);
+
+        //On simule les saisies de lister dans ce fichier.
+        System.setIn(PlatTest.class.getResourceAsStream("./saisies/plat_test/lister_carte_cas_2.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de lister.
+        PlatControleur.listerCarte();
+
+    }
+    @Test
+    @Order(22)
+    @DisplayName("Test : lister les plats de la carte - cas 1 : aucun plat trouvé")
+    void testListerCarteCas3AucunPlatTrouve() {
+        //On se connecte en tant que cuisinier.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 4", Compte.class));
+
+        //On vide la table PlatIngredients.
+        orm.chercherTousLesNUplets(PlatIngredients.class).forEach(orm::supprimerNUplet);
+        //On vide la table plat.
+        orm.chercherTousLesNUplets(Plat.class).forEach(orm::supprimerNUplet);
+        //On vide la table Catégorie.
+        orm.chercherTousLesNUplets(Categorie.class).forEach(orm::supprimerNUplet);
+        //On vide la table ingredient.
+        orm.chercherTousLesNUplets(Ingredient.class).forEach(orm::supprimerNUplet);
+
+
+        //On simule les saisies de lister dans ce fichier.
+        System.setIn(PlatTest.class.getResourceAsStream("./saisies/plat_test/lister_carte_cas_3.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de lister.
+        PlatControleur.listerCarte();
+
+    }
+
 }

@@ -59,7 +59,7 @@ public class PlatControleur extends Controleur {
         //Si pas de plats de la carte.
         if(plats.isEmpty()) {
             //Message d'erreur.
-            ui.afficher("Aucun plat de la carte trouvé !");
+            ui.afficher("Aucun plat trouvé dans la carte du jour !");
             //Sinon.
         } else {
             //Listing.
