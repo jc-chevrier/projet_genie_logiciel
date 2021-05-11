@@ -688,40 +688,8 @@ public class PlaceTest {
 
     @Test
     @Order(30)
-    @DisplayName("Test : allouer une table à un serveur - cas 2 : aucune table non allouée trouvée")
-    void testAllouerPourServeurCas2PPasPlaceNonAlloueeTrouvee() {
-        //On se connecte en tant que maitre d'hotel.
-        ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
-
-        //On vide la table place.
-        orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
-        //On supprime les serveurs existants.
-        orm.chercherNUpletsAvecPredicat("WHERE ID_ROLE = 4", Compte.class).forEach(orm::supprimerNUplet);
-        //On ajoute un serveur.
-        Compte compte = new Compte();
-        compte.setNom("NOM");
-        compte.setPrenom("prenom");
-        compte.setActif(1);
-        compte.setIdRole(4);
-        orm.persisterNUplet(compte);
-        //On ajoute une table allouée.
-        Place place = new Place();
-        place.setEtat("libre");
-        place.setIdCompteServeur(7);
-        orm.persisterNUplet(place);
-
-        //On simule les saisies d'allocation ans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/allouer_pour_serveur_cas_2.txt"));
-        ui.reinitialiserScanner();
-
-        //On simule le scénario d'allocation.
-        PlaceControleur.allouerPourServeur();
-    }
-
-    @Test
-    @Order(31)
-    @DisplayName("Test : allouer une table à un serveur - cas 3 : aucun serveur actif trouvé")
-    void testAllouerPourServeurCas3PasServeurActifTrouve() {
+    @DisplayName("Test : allouer une table à un serveur - cas 2 : aucun serveur actif trouvé")
+    void testAllouerPourServeurCas2PasServeurActifTrouve() {
         //On se connecte en tant que maitre d'hotel.
         ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
 
@@ -742,7 +710,7 @@ public class PlaceTest {
         orm.persisterNUplet(compte);
 
         //On simule les saisies d'allocation ans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/allouer_pour_serveur_cas_3.txt"));
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/allouer_pour_serveur_cas_2.txt"));
         ui.reinitialiserScanner();
 
         //On simule le scénario d'allocation.
@@ -750,9 +718,9 @@ public class PlaceTest {
     }
 
     @Test
-    @Order(32)
-    @DisplayName("Test : allouer une table à un serveur - cas 4 : aucune table trouvée")
-    void testAllouerPourServeurCas4PasServeursTrouves() {
+    @Order(31)
+    @DisplayName("Test : allouer une table à un serveur - cas 3 : aucune table non allouée trouvée")
+    void testAllouerPourServeurCas3PPasPlaceNonAlloueeTrouvee() {
         //On se connecte en tant que maitre d'hotel.
         ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
 
@@ -767,9 +735,14 @@ public class PlaceTest {
         compte.setActif(1);
         compte.setIdRole(4);
         orm.persisterNUplet(compte);
+        //On ajoute une table allouée.
+        Place place = new Place();
+        place.setEtat("libre");
+        place.setIdCompteServeur(8);
+        orm.persisterNUplet(place);
 
         //On simule les saisies d'allocation ans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/allouer_pour_serveur_cas_4.txt"));
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/allouer_pour_serveur_cas_3.txt"));
         ui.reinitialiserScanner();
 
         //On simule le scénario d'allocation.
@@ -777,9 +750,9 @@ public class PlaceTest {
     }
 
     @Test
-    @Order(33)
-    @DisplayName("Test : allouer une table à un serveur - cas 5 : aucun serveur trouvé")
-    void testAllouerPourServeurCas5PasPlacesTrouvees() {
+    @Order(32)
+    @DisplayName("Test : allouer une table à un serveur - cas 4 : aucun serveur trouvé")
+    void testAllouerPourServeurCas4PasPlacesTrouvees() {
         //On se connecte en tant que maitre d'hotel.
         ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
 
@@ -791,6 +764,33 @@ public class PlaceTest {
         Place place = new Place();
         place.setEtat("libre");
         orm.persisterNUplet(place);
+
+        //On simule les saisies d'allocation ans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/allouer_pour_serveur_cas_4.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario d'allocation.
+        PlaceControleur.allouerPourServeur();
+    }
+
+    @Test
+    @Order(33)
+    @DisplayName("Test : allouer une table à un serveur - cas 5 : aucune table trouvée")
+    void testAllouerPourServeurCas5PasServeursTrouves() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
+        //On vide la table place.
+        orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
+        //On supprime les serveurs existants.
+        orm.chercherNUpletsAvecPredicat("WHERE ID_ROLE = 4", Compte.class).forEach(orm::supprimerNUplet);
+        //On ajoute un serveur.
+        Compte compte = new Compte();
+        compte.setNom("NOM");
+        compte.setPrenom("prenom");
+        compte.setActif(1);
+        compte.setIdRole(4);
+        orm.persisterNUplet(compte);
 
         //On simule les saisies d'allocation ans ce fichier.
         System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/allouer_pour_serveur_cas_5.txt"));
@@ -818,5 +818,91 @@ public class PlaceTest {
 
         //On simule le scénario d'allocation.
         PlaceControleur.allouerPourServeur();
+    }
+
+
+    @Test
+    @Order(35)
+    @DisplayName("Test : désallouer une table à un serveur - cas 1 : désallocation bien faite")
+    void testDesallouerPourServeurCas1Trouves() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
+        //On vide la table place.
+        orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
+        //On supprime les serveurs existants.
+        orm.chercherNUpletsAvecPredicat("WHERE ID_ROLE = 4", Compte.class).forEach(orm::supprimerNUplet);
+        //On ajoute un serveur.
+        Compte compte = new Compte();
+        compte.setNom("NOM");
+        compte.setPrenom("prenom");
+        compte.setActif(1);
+        compte.setIdRole(4);
+        orm.persisterNUplet(compte);
+        //On ajoute une table allouée.
+        Place place = new Place();
+        place.setEtat("libre");
+        place.setIdCompteServeur(10);
+        orm.persisterNUplet(place);
+
+        //On simule les saisies d'allocation ans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/desallouer_pour_serveur_cas_1.txt"));
+        ui.reinitialiserScanner();
+
+        Place placeAvant = (Place) orm.chercherNUpletAvecPredicat("WHERE ID = 25", Place.class);
+        assertNotNull(placeAvant.getIdCompteServeur());
+
+        //On simule le scénario d'allocation.
+        PlaceControleur.desallouerPourServeur();
+
+        Place placeApres = (Place) orm.chercherNUpletAvecPredicat("WHERE ID = 25", Place.class);
+        assertNull(placeApres.getIdCompteServeur());
+    }
+
+    @Test
+    @Order(36)
+    @DisplayName("Test : désallouer une table à un serveur - cas 2 : aucun serveur actif trouvé")
+    void testDesallouerPourServeurCas2PasServeurActifTrouve() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
+        //On vide la table place.
+        orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
+        //On supprime les serveurs existants.
+        orm.chercherNUpletsAvecPredicat("WHERE ID_ROLE = 4", Compte.class).forEach(orm::supprimerNUplet);
+
+        //On simule les saisies de désallocation ans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/desallouer_pour_serveur_cas_2.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de désallocation.
+        PlaceControleur.desallouerPourServeur();
+    }
+
+    @Test
+    @Order(37)
+    @DisplayName("Test : désallouer une table à un serveur - cas 3 : aucune table allouée trouvée")
+    void testDesallouerPourServeurCas3PPasPlaceAlloueeTrouvee() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
+        //On vide la table place.
+        orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
+        //On supprime les serveurs existants.
+        orm.chercherNUpletsAvecPredicat("WHERE ID_ROLE = 4", Compte.class).forEach(orm::supprimerNUplet);
+        //On ajoute un serveur.
+        Compte compte = new Compte();
+        compte.setNom("NOM");
+        compte.setPrenom("prenom");
+        compte.setActif(1);
+        compte.setIdRole(4);
+        orm.persisterNUplet(compte);
+
+        //On simule les saisies désallocation ans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/desallouer_pour_serveur_cas_3.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario désallocation.
+        PlaceControleur.desallouerPourServeur();
     }
 }
