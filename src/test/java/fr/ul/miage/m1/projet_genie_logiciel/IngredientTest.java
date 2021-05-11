@@ -77,7 +77,7 @@ public class IngredientTest {
     }
 
     @Test
-    @Order(8)
+    @Order(10)
     @DisplayName("Test - ajouter un ingrédient - cas 3 : n-uplet ingrédient non ajouté ")
     void testAjouterIngredientCasPasDUnite() {
         //On vide la table ingrédient.
@@ -214,4 +214,52 @@ public class IngredientTest {
         IngredientControleur.supprimer();
     }
 
+    @Test
+    @Order(9)
+    @DisplayName("Test : modifier stock d'un ingrédient - cas 1 : n-uplet ingrédient non trouvé")
+    void testModifierStockIngredientCasNontrouve(){
+        //on ajoute une unité.
+        Unite unite = new Unite();
+        unite.setLibelle("kg");
+        orm.persisterNUplet(unite);
+
+        //On crée et on ajoute un ingrédient.
+        Ingredient ingredientsAvant = new Ingredient();
+        ingredientsAvant.setLibelle("libellé ingredient de stock à modifier");
+        ingredientsAvant.setStock(2.4);
+        ingredientsAvant.setIdUnite(1);
+        orm.persisterNUplet(ingredientsAvant);
+        orm.supprimerNUplet(ingredientsAvant);
+
+        //On simule les saisies de modification de stock d'ingrédient dans ce fichier.
+        System.setIn(IngredientTest.class.getResourceAsStream("./saisies/ingredient_test/modifier_stock_cas_1.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario d'incrémentation.
+        IngredientControleur.incrementerStock();
+    }
+
+    @Test
+    @Order(8)
+    @DisplayName("Test : modifier stock d'un ingrédient - cas 2 : n-uplet ingrédient trouvé")
+    void testModifierStockIngredientCastrouve(){
+        //on ajoute une unité.
+        Unite unite = new Unite();
+        unite.setLibelle("kg");
+        orm.persisterNUplet(unite);
+
+        //On ajoute un ingrédient.
+        Ingredient ingredientsAvant = new Ingredient();
+        ingredientsAvant.setLibelle("libellé ingredient de stock à modifier");
+        ingredientsAvant.setStock(2.4);
+        ingredientsAvant.setIdUnite(1);
+        orm.persisterNUplet(ingredientsAvant);
+
+        //On simule les saisies de modification de stock d'ingrédient dans ce fichier.
+        System.setIn(IngredientTest.class.getResourceAsStream("./saisies/ingredient_test/modifier_stock_cas_2.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario d'incrémentation.
+        IngredientControleur.incrementerStock();
+    }
 }
