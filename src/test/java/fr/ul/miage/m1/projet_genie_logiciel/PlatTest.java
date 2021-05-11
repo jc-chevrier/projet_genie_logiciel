@@ -105,7 +105,7 @@ public class PlatTest {
     @Test
     @Order(4)
     @DisplayName("Test : supprimer un plat - cas 2 : plat supprimé correct")
-    void testSupprimerCas2Correcte() {
+    void testSupprimerCas2Correct() {
         //On se connecte en tant que cuisinier.
         ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 3", Compte.class));
 
@@ -140,7 +140,7 @@ public class PlatTest {
     @Test
     @Order(5)
     @DisplayName("Test : supprimer un plat - cas 3 : aucun plat trouvé")
-    void testSupprimerCas3PasTrouvees() {
+    void testSupprimerCas3PasTrouves() {
         //On se connecte en tant que cuisinier.
         ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 3", Compte.class));
 
@@ -386,5 +386,127 @@ public class PlatTest {
         //On simule le scénario de validation.
         PlatControleur.supprimerDeCarte();
     }
+    @Test
+    @Order(14)
+    @DisplayName("Test : ajouter un plat - cas 1 : plat bien ajouté")
+    void testAjouterCas1BienAjoute() {
+        //On se connecte en tant que cuisinier.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 3", Compte.class));
+
+        //On ajoute une catégorie pour pouvoir ajouter un plat.
+        Categorie categorie = new Categorie();
+        categorie.setLibelle("libellé1");
+        orm.persisterNUplet(categorie);
+        //On ajoute une unité pour pouvoir ajouter un ingredient.
+        Unite unite = new Unite();
+        unite.setLibelle("libellé1");
+        orm.persisterNUplet(unite);
+        //On ajoute un ingrédient pour pouvoir composer un plat.
+        Ingredient ingredient1 = new Ingredient();
+        ingredient1.setLibelle("ingredient1");
+        ingredient1.setIdUnite(1);
+        ingredient1.setStock(5.0);
+        orm.persisterNUplet(ingredient1);
+        Ingredient ingredient2 = new Ingredient();
+        ingredient2.setLibelle("ingredient2");
+        ingredient2.setStock(5.0);
+        ingredient2.setIdUnite(1);
+        orm.persisterNUplet(ingredient2);
+
+
+        //On simule les saisies d'ajout dans ce fichier.
+        System.setIn(PlatTest.class.getResourceAsStream("./saisies/plat_test/ajouter_cas_1.txt"));
+        ui.reinitialiserScanner();
+
+        int nbPlatsAvant = orm.compterTousLesNUplets(Plat.class);
+
+        //On simule le scénario d'ajout.
+        PlatControleur.ajouter();
+
+        //Un plat a du être inséré.
+        int nbPlatsApres = orm.compterTousLesNUplets(Plat.class);
+        assertEquals(nbPlatsAvant + 1, nbPlatsApres);
+    }
+    @Test
+    @Order(15)
+    @DisplayName("Test : ajouter un plat - cas 2 : plat bien ajouté avec bon libellé")
+    void testAjouterCas2BonLibelle() {
+        //On se connecte en tant que cuisinier.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 3", Compte.class));
+
+        //On ajoute une catégorie pour pouvoir ajouter un plat.
+        Categorie categorie = new Categorie();
+        categorie.setLibelle("libellé1");
+        orm.persisterNUplet(categorie);
+        //On ajoute une unité pour pouvoir ajouter un ingredient.
+        Unite unite = new Unite();
+        unite.setLibelle("libellé1");
+        orm.persisterNUplet(unite);
+        //On ajoute un ingrédient pour pouvoir composer un plat.
+        Ingredient ingredient1 = new Ingredient();
+        ingredient1.setLibelle("ingredient1");
+        ingredient1.setIdUnite(1);
+        ingredient1.setStock(5.0);
+        orm.persisterNUplet(ingredient1);
+        Ingredient ingredient2 = new Ingredient();
+        ingredient2.setLibelle("ingredient2");
+        ingredient2.setStock(5.0);
+        ingredient2.setIdUnite(1);
+        orm.persisterNUplet(ingredient2);
+
+
+        //On simule les saisies d'ajout dans ce fichier.
+        System.setIn(PlatTest.class.getResourceAsStream("./saisies/plat_test/ajouter_cas_2.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario d'ajout.
+        PlatControleur.ajouter();
+
+        //Le plat inséré doit avoir ce libellé : "libellé test ajouter".
+        Plat platInsere = (Plat) orm.chercherNUpletAvecPredicat("WHERE ID = 11", Plat.class);
+        assertEquals("libellé test ajouter", platInsere.getlibelle());
+    }
+    @Test
+    @Order(16)
+    @DisplayName("Test : ajouter un plat - cas 3 : pas d'ingrédient")
+    void testAjouterCas3() {
+        //On se connecte en tant que cuisinier.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 3", Compte.class));
+
+        //On ajoute une catégorie pour pouvoir ajouter un plat.
+        Categorie categorie = new Categorie();
+        categorie.setLibelle("libellé1");
+        orm.persisterNUplet(categorie);
+        //On vide la table PlatIngredients.
+        orm.chercherTousLesNUplets(PlatIngredients.class).forEach(orm::supprimerNUplet);
+        //On vide la table ingredient.
+        orm.chercherTousLesNUplets(Ingredient.class).forEach(orm::supprimerNUplet);
+
+        //On simule les saisies d'ajout dans ce fichier.
+        System.setIn(PlatTest.class.getResourceAsStream("./saisies/plat_test/ajouter_cas_3.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario d'ajout.
+        PlatControleur.ajouter();
+    }
+    @Test
+    @Order(17)
+    @DisplayName("Test : ajouter un plat - cas 3 : pas de catégorie")
+    void testAjouterCas4() {
+        //On se connecte en tant que cuisinier.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 3", Compte.class));
+        //On vide la table plat.
+        orm.chercherTousLesNUplets(Plat.class).forEach(orm::supprimerNUplet);
+        //On vide la table Catégorie.
+        orm.chercherTousLesNUplets(Categorie.class).forEach(orm::supprimerNUplet);
+
+        //On simule les saisies d'ajout dans ce fichier.
+        System.setIn(PlatTest.class.getResourceAsStream("./saisies/plat_test/ajouter_cas_4.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario d'ajout.
+        PlatControleur.ajouter();
+    }
+    
 
 }

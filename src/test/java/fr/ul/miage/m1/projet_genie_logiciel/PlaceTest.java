@@ -394,4 +394,5 @@ public class PlaceTest {
         //On simule le scénario de validation.
         PlaceControleur.validerPreparation();
     }
+
 }
