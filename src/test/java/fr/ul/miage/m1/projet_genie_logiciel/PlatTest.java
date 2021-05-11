@@ -507,6 +507,81 @@ public class PlatTest {
         //On simule le scénario d'ajout.
         PlatControleur.ajouter();
     }
+    @Test
+    @Order(18)
+    @DisplayName("Test : modifier un plat - cas 1 : plat bien modifié")
+    void testAjouterCas1() {
+        //On se connecte en tant que cuisinier.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 3", Compte.class));
+        //On vide la table plat.
+        orm.chercherTousLesNUplets(Plat.class).forEach(orm::supprimerNUplet);
+        //On vide la table Catégorie.
+        orm.chercherTousLesNUplets(Categorie.class).forEach(orm::supprimerNUplet);
+        //On vide la table PlatIngredients.
+        orm.chercherTousLesNUplets(PlatIngredients.class).forEach(orm::supprimerNUplet);
+        //On vide la table ingredient.
+        orm.chercherTousLesNUplets(Ingredient.class).forEach(orm::supprimerNUplet);
+
+        //On ajoute une catégorie pour pouvoir ajouter un plat.
+        Categorie categorie = new Categorie();
+        categorie.setLibelle("libellé1");
+        orm.persisterNUplet(categorie);
+        //On ajoute une unité pour pouvoir ajouter un ingredient.
+        Unite unite = new Unite();
+        unite.setLibelle("libellé1");
+        orm.persisterNUplet(unite);
+        //On ajoute un ingrédient pour pouvoir composer un plat.
+        Ingredient ingredient1 = new Ingredient();
+        ingredient1.setLibelle("ingredient1");
+        ingredient1.setIdUnite(1);
+        ingredient1.setStock(5.0);
+        orm.persisterNUplet(ingredient1);
+        //On ajoute un plat
+        Plat plat = new Plat();
+        plat.setLibelle("libellé");
+        plat.setPrix(3.0);
+        plat.setCarte(1);
+        plat.setIdCategorie(categorie.getId());
+        orm.persisterNUplet(plat);
+        PlatIngredients platIngredients = new PlatIngredients();
+        platIngredients.setIdIngredient(ingredient1.getId());
+        platIngredients.setIdPlat(plat.getId());
+        platIngredients.setQuantite(2.0);
+        orm.persisterNUplet(platIngredients);
+
+        //On simule les saisies d'ajout dans ce fichier.
+        System.setIn(PlatTest.class.getResourceAsStream("./saisies/plat_test/modifier_cas_1.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de modification.
+        PlatControleur.modifier();
+
+        //Le plat modifié doit avoir ce libellé : "libellé modifié".
+        Plat platModifie = (Plat) orm.chercherNUpletAvecPredicat("WHERE ID = 12", Plat.class);
+        assertEquals("libellé modifié", platModifie.getlibelle());
+    }
+    @Test
+    @Order(19)
+    @DisplayName("Test : modifier un plat - cas 2 : pas de plat trouvé")
+    void testAjouterCas2() {
+        //On se connecte en tant que cuisinier.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 3", Compte.class));
+        //On vide la table PlatIngredients.
+        orm.chercherTousLesNUplets(PlatIngredients.class).forEach(orm::supprimerNUplet);
+        //On vide la table plat.
+        orm.chercherTousLesNUplets(Plat.class).forEach(orm::supprimerNUplet);
+        //On vide la table Catégorie.
+        orm.chercherTousLesNUplets(Categorie.class).forEach(orm::supprimerNUplet);
+        //On vide la table ingredient.
+        orm.chercherTousLesNUplets(Ingredient.class).forEach(orm::supprimerNUplet);
+
+        //On simule les saisies de modification dans ce fichier.
+        System.setIn(PlatTest.class.getResourceAsStream("./saisies/plat_test/modifier_cas_2.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de modification.
+        PlatControleur.modifier();
+    }
     
 
 }
