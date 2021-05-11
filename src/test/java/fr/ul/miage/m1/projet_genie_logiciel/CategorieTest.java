@@ -90,4 +90,39 @@ public class CategorieTest {
         Categorie categorieInseree = (Categorie) orm.chercherNUpletAvecPredicat("WHERE ID = 3", Categorie.class);
         assertEquals("libellé test ajouter", categorieInseree.getLibelle());
     }
+    @Test
+    @Order(5)
+    @DisplayName("Test : modifier une catégorie - cas 1 : catégorie bien modifiée")
+    void testModifierCas1BienModifiee() {
+        //On ajoute une catégorie à modifier.
+        Categorie categorie = new Categorie();
+        categorie.setLibelle("libellé");
+        orm.persisterNUplet(categorie);
+
+        //On simule les saisies de modification dans ce fichier.
+        System.setIn(CategorieTest.class.getResourceAsStream("./saisies/categorie_test/modifier_cas_1.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de modification.
+        CategorieControleur.modifier();
+
+        //La catégorie modifiée doit avoir ce libellé : "libellé modifié".
+        Categorie categorieModifie = (Categorie) orm.chercherNUpletAvecPredicat("WHERE ID = 4", Categorie.class);
+        assertEquals("libellé modifié", categorieModifie.getLibelle());
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("Test : modifier une catégorie - cas 2 : aucune catégorie trouvée")
+    void testModifierCa2PasTrouvees() {
+        //On vide la table catégorie.
+        orm.chercherTousLesNUplets(Categorie.class).forEach(orm::supprimerNUplet);
+
+        //On simule les saisies de modification dans ce fichier.
+        System.setIn(CategorieTest.class.getResourceAsStream("./saisies/categorie_test/modifier_cas_1.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de modification.
+        CategorieControleur.modifier();
+    }
 }
