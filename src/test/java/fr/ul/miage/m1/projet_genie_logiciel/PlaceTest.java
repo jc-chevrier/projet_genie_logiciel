@@ -608,4 +608,44 @@ public class PlaceTest {
         //On simule le scénario de désallocation.
         PlaceControleur.desallouerPourClient();
     }
+
+    @Test
+    @Order(27)
+    @DisplayName("Test : lister les tables allouées à un serveur - cas 1 : tables trouvées")
+    void testListerAlloueesPourServeurCas1Trouvees() {
+        //On se connecte en tant que serveur.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 4", Compte.class));
+
+        //On vide la table place.
+        orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
+        Place place = new Place();
+        place.setEtat("libre");
+        place.setIdCompteServeur(4);
+        orm.persisterNUplet(place);
+
+        //On simule les saisies de listing dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/lister_allouees_pour_serveur_cas_1.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de listing.
+        PlaceControleur.listerAlloueesPourServeur();
+    }
+
+    @Test
+    @Order(28)
+    @DisplayName("Test : lister les tables allouées à un serveur - cas 2 : aucune table trouvée")
+    void testListerAlloueesPourServeurCas2PasTrouvees() {
+        //On se connecte en tant que serveur.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 4", Compte.class));
+
+        //On vide la table place.
+        orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
+
+        //On simule les saisies de listing dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/lister_allouees_pour_serveur_cas_2.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de listing.
+        PlaceControleur.listerAlloueesPourServeur();
+    }
 }
