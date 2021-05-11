@@ -1,14 +1,13 @@
 package fr.ul.miage.m1.projet_genie_logiciel;
 
-import fr.ul.miage.m1.projet_genie_logiciel.controleurs.PlaceControleur;
+
 import fr.ul.miage.m1.projet_genie_logiciel.controleurs.PlatControleur;
-import fr.ul.miage.m1.projet_genie_logiciel.controleurs.UniteControleur;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.*;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
 import org.junit.jupiter.api.*;
 import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
-import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
+
 
 @DisplayName("Plat")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -22,7 +21,6 @@ public class PlatTest {
         orm = ORM.getInstance();
 
         ui = UI.getInstance();
-
     }
 
     @Test
@@ -69,6 +67,7 @@ public class PlatTest {
         //On simule le scénario de listing.
         PlatControleur.lister();
     }
+
     @Test
     @Order(3)
     @DisplayName("Test : supprimer un plat - cas 1 : plat bien supprimé")
@@ -582,6 +581,43 @@ public class PlatTest {
         //On simule le scénario de modification.
         PlatControleur.modifier();
     }
-    
+
+    @Test
+    @Order(20)
+    @DisplayName("Test : lister les plats de la carte - cas 1 : plats trouvés")
+    void testListerCarteCasTrouve() {
+        //On se connecte en tant que cuisinier.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 4", Compte.class));
+
+        //On vide la table PlatIngredients.
+        orm.chercherTousLesNUplets(PlatIngredients.class).forEach(orm::supprimerNUplet);
+        //On vide la table plat.
+        orm.chercherTousLesNUplets(Plat.class).forEach(orm::supprimerNUplet);
+        //On vide la table Catégorie.
+        orm.chercherTousLesNUplets(Categorie.class).forEach(orm::supprimerNUplet);
+        //On vide la table ingredient.
+        orm.chercherTousLesNUplets(Ingredient.class).forEach(orm::supprimerNUplet);
+
+        //On ajoute une catégorie.
+        Categorie categorie = new Categorie();
+        categorie.setLibelle("cat 1");
+        orm.persisterNUplet(categorie);
+
+        //On ajoute un plat à lister.
+        Plat plat = new Plat();
+        plat.setLibelle("plat jour");
+        plat.setCarte(1);
+        plat.setIdCategorie(categorie.getId());
+        plat.setPrix(1.5);
+        orm.persisterNUplet(plat);
+
+        //On simule les saisies de lister dans ce fichier.
+        System.setIn(PlatTest.class.getResourceAsStream("./saisies/plat_test/lister_carte_cas_1.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de lister.
+        PlatControleur.listerCarte();
+
+    }
 
 }

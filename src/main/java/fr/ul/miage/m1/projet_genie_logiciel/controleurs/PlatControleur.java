@@ -45,13 +45,13 @@ public class PlatControleur extends Controleur {
     /**
      * Lister tous les plats de la carte.
      */
-    public static void listerPlatCarte() {
+    public static void listerCarte() {
         //UI et ORM.
         UI ui = getUI();
         ORM orm = getORM();
 
         //Message de titre.
-        ui.afficherAvecDelimiteurEtUtilisateur("Lister tous les plats de la carte :");
+        ui.afficherAvecDelimiteurEtUtilisateur("Listing de tous les plats de la carte :");
 
         //Récupération des plats de la carte.
         List<Entite> plats = orm.chercherNUpletsAvecPredicat("WHERE CARTE = 1", Plat.class);
