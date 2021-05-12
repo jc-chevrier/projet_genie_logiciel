@@ -1,6 +1,5 @@
 package fr.ul.miage.m1.projet_genie_logiciel.controleurs;
 
-import fr.ul.miage.m1.projet_genie_logiciel.entites.Compte;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class AccueilControleur extends Controleur {
         //Question et saisie fonctionnalités.
         int idRole = getUtilisateurConnecte().getIdRole();
         List<String> fonctionnalitesLibelles = Fonctionnalite.getRoleFonctionnalitesLibelles(idRole);
-        int indexFonctionnalite = ui.poserQuestionListeOptions(fonctionnalitesLibelles);
+        int indexFonctionnalite = ui.poserQuestionListeOptions("Sélectionner une action :", fonctionnalitesLibelles);
 
         //Exécution de la fonctionnalité sélectionnée.
         Fonctionnalite fonctionnalite = Fonctionnalite.getFonctionnalite(idRole, indexFonctionnalite);
