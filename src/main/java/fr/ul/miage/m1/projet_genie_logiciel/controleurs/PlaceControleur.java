@@ -396,4 +396,31 @@ public class PlaceControleur extends Controleur {
         //Retour vers l'accueil.
         AccueilControleur.consulter();
     }
+
+    /**
+     * Lister les tables réservées
+     */
+    public static void listerReserver() {
+        //UI et ORM
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Listing des tables réservées :");
+
+        //Récupération des tables réservées dans le restaurant.
+        List<Entite> places = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'réservé' ", Place.class);
+
+        //Si pas de tables réservées.
+        if (places.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucune table n'est réservées dans le restaurant !");
+            //Sinon
+        } else {
+            //Listing.
+            ui.listerNUplets(places, (place) -> ((Place) place).toEtatString());
+        }
+        //Retour vers l'accueil.
+        AccueilControleur.consulter();
+    }
 }
