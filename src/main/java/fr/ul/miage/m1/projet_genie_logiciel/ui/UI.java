@@ -199,7 +199,7 @@ public class UI {
      * @return
      */
     public int poserQuestionListeNUplets(@NotNull String question, @NotNull List<Entite> nUplets) {
-        return  poserQuestionListeNUplets(question, nUplets, null);
+        return poserQuestionListeNUplets(question, nUplets, null);
     }
 
     /**

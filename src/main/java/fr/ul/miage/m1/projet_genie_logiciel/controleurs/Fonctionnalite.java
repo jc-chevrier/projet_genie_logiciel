@@ -32,7 +32,11 @@ public class Fonctionnalite {
                               new Fonctionnalite("Allouer une table à un client", PlaceControleur::allouerPourClient),
                               new Fonctionnalite("Désallouer une table à un client", PlaceControleur::desallouerPourClient),
                               new Fonctionnalite("Allouer une table à un serveur", PlaceControleur::allouerPourServeur),
-                              new Fonctionnalite("Désallouer une table à un serveur", PlaceControleur::desallouerPourServeur)));
+                              new Fonctionnalite("Désallouer une table à un serveur", PlaceControleur::desallouerPourServeur),
+                              new Fonctionnalite("Lister les tables réservées", AccueilControleur::consulter),//TODO à modifier
+                              new Fonctionnalite("Réserver une table", AccueilControleur::consulter),//TODO à modifier
+                              new Fonctionnalite("Annuler la réservation d'une table", AccueilControleur::consulter),//TODO à modifier
+                              new Fonctionnalite("Valider le paiement d'une commande", AccueilControleur::consulter)));//TODO à modifier
 
         List<Fonctionnalite> fonctionnalitesCuisinier = new ArrayList<Fonctionnalite>(
                 Arrays.asList(new Fonctionnalite("Lister les unités", UniteControleur::lister),
@@ -51,13 +55,19 @@ public class Fonctionnalite {
                               new Fonctionnalite("Lister les plats du catalogue des plats", PlatControleur::lister),
                               new Fonctionnalite("Ajouter un plat au catalogue des plats", PlatControleur::ajouter),
                               new Fonctionnalite("Modifier un plat", PlatControleur::modifier),
-                              new Fonctionnalite("Supprimer un plat du catalogue des plats", PlatControleur::supprimer)));
+                              new Fonctionnalite("Supprimer un plat du catalogue des plats", PlatControleur::supprimer),
+                              new Fonctionnalite("Lister les plats à préparer des commandes", AccueilControleur::consulter),//TODO à modifier
+                              new Fonctionnalite("Valider la préparation d'un plat d'une commande", AccueilControleur::consulter)));//TODO à modifier
 
         List<Fonctionnalite> fonctionnalitesServeur = new ArrayList<Fonctionnalite>(
                 Arrays.asList(new Fonctionnalite("Lister tous les plats de la carte", PlatControleur::listerCarte),
                               new Fonctionnalite("Lister tous les plats disponibles de la carte", AccueilControleur::consulter), //TODO à modifier
                               new Fonctionnalite("Lister les plats disponibles de la carte pour une catégorie", AccueilControleur::consulter), //TODO à modifier
-                              new Fonctionnalite("Lister les catégories de plats disponibles de la carte", AccueilControleur::consulter))); //TODO à modifier
+                              new Fonctionnalite("Lister les catégories de plats disponibles de la carte", AccueilControleur::consulter), //TODO à modifier
+                              new Fonctionnalite("Ajouter une commande", AccueilControleur::consulter),//TODO à modifier
+                              new Fonctionnalite("Ajouter un plat à une commande", AccueilControleur::consulter),//TODO à modifier
+                              new Fonctionnalite("Supprimer un plat d'une commande ", AccueilControleur::consulter),//TODO à modifier
+                              new Fonctionnalite("Lister les plats prêts d'une commande ", AccueilControleur::consulter))); //TODO à modifier
 
         List<Fonctionnalite> fonctionnalitesAssistantService = new ArrayList<Fonctionnalite>(
                 Arrays.asList(new Fonctionnalite("Lister les tables à préparer", PlaceControleur::listerAPreparer),

@@ -376,4 +376,15 @@ public class ORM {
     public void reinitialiserSequenceIdA1(@NotNull Class entiteClasse) {
         reinitialiserSequenceId(1, entiteClasse);
     }
+
+    /**
+     * Supprimer tous les n-uplets d'une table,
+     * et réinitialiser la séquence de ses ids à 1.
+     *
+     * @param entiteClasse
+     */
+    public void reinitialiserTable(@NotNull Class entiteClasse) {
+        supprimerTousLesNUplets(entiteClasse);
+        reinitialiserSequenceIdA1(entiteClasse);
+    }
 }
