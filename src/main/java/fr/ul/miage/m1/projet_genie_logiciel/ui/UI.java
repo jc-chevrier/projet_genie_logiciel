@@ -143,11 +143,11 @@ public class UI {
      * Poser une question en proposant une liste d'options,
      * et obtenir l'indice de l'option sélectionnée.
      *
+     * @param question
      * @param options
      * @return
      */
-    public int poserQuestionListeOptions(@NotNull List<String> options) {
-        String question = "Sélectionner :";
+    public int poserQuestionListeOptions(@NotNull String question, @NotNull List<String> options) {
         String reponsesPossiblesRegex = "";
         int nbOptions = options.size();
         for(int index = 0; index < nbOptions; index++) {
@@ -167,12 +167,13 @@ public class UI {
      * On peut préciser un formateur pour formater les
      * n-uplets en chaines de caractère.
      *
+     * @param question
      * @param nUplets
      * @param formateur
      * @return
      */
-    public int poserQuestionListeNUplets(@NotNull List<Entite> nUplets, Function<Entite, String> formateur) {
-        String question = "Sélectionner :";
+    public int poserQuestionListeNUplets(@NotNull String question, @NotNull List<Entite> nUplets,
+                                         Function<Entite, String> formateur) {
         String reponsesPossiblesRegex = "";
         int nbNUplets = nUplets.size();
         for(int index = 0; index < nbNUplets; index++) {
@@ -193,11 +194,12 @@ public class UI {
      * On utilise toString comme formateur des n-uplets en
      * chaines de caractère.
      *
+     * @param question
      * @param nUplets
      * @return
      */
-    public int poserQuestionListeNUplets(@NotNull List<Entite> nUplets) {
-        return  poserQuestionListeNUplets(nUplets, null);
+    public int poserQuestionListeNUplets(@NotNull String question, @NotNull List<Entite> nUplets) {
+        return  poserQuestionListeNUplets(question, nUplets, null);
     }
 
     /**

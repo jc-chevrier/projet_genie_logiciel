@@ -292,33 +292,88 @@ public class ORM {
     }
 
     /**
-     * Supprimer un n-uplet.
+     * Supprimer des n-uplets d'une table
+     * avec un pédicat.
      *
-     * @param nUplet
+     * @param predicat
+     * @param entiteClasse
      */
-    public void supprimerNUplet(@NotNull Entite nUplet) {
+    public void supprimerNUpletsAvecPredicat(@NotNull String predicat, @NotNull Class entiteClasse) {
         String requeteString = null;
         try {
             //Récupération des métadonnées de la table.
-            Class entiteClasse = nUplet.getClass();
             String nomTable = EntiteMetadonnee.getEntiteNomTable(entiteClasse);
 
             //Requête.
-            if(nUplet.getId() != null) {
-                //Construction de la requête.
-                requeteString = "DELETE FROM " + nomTable + " WHERE ID = " + nUplet.getId()  + ";";
-                Statement requete = connexion.createStatement();
-                //Execution de la requête.
-                requete.executeUpdate(requeteString);
-                //Validation de la transaction.
-                connexion.commit();
-                //Fin de la requête.
-                requete.close();
-            }
+            //Construction de la requête.
+            requeteString = "DELETE FROM " + nomTable + " " + predicat + " ;";
+            Statement requete = connexion.createStatement();
+            //Execution de la requête.
+            requete.executeUpdate(requeteString);
+            //Validation de la transaction.
+            connexion.commit();
+            //Fin de la requête.
+            requete.close();
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Erreur ! Une requête de suppression a échouée : \"" + requeteString + "\" !");
             System.exit(1);
         }
+    }
+
+    /**
+     * Supprimer un n-uplet.
+     *
+     * @param nUplet
+     */
+    public void supprimerNUplet(@NotNull Entite nUplet) {
+        supprimerNUpletsAvecPredicat("WHERE ID = " + nUplet.getId(), nUplet.getClass());
+    }
+
+    /**
+     * Supprimer tous les n-uplets d'une
+     * table.
+     *
+     * @param entiteClasse
+     */
+    public void supprimerTousLesNUplets(@NotNull Class entiteClasse) {
+        supprimerNUpletsAvecPredicat("", entiteClasse);
+    }
+
+    /**
+     * Réinitialiser une séuence d'id
+     * à une valur de départ.
+     *
+     * @param entiteClasse
+     */
+    public void reinitialiserSequenceId(int idDebut, @NotNull Class entiteClasse) {
+        String requeteString = null;
+        try {
+            //Récupération des métadonnées de la table.
+            String nomTable = EntiteMetadonnee.getEntiteNomTable(entiteClasse);
+
+            requeteString = "ALTER SEQUENCE " + nomTable.toLowerCase() + "_id_seq RESTART WITH " + idDebut + " ;";
+            Statement requete = connexion.createStatement();
+            //Execution de la requête.
+            requete.executeUpdate(requeteString);
+            //Validation de la transaction.
+            connexion.commit();
+            //Fin de la requête.
+            requete.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Erreur ! Une requête de réinitialisation de séquence d'id a échouée : \"" + requeteString + "\" !");
+            System.exit(1);
+        }
+    }
+
+    /**
+     * Réinitialiser une séuence d'id
+     * à une valur de départ.
+     *
+     * @param entiteClasse
+     */
+    public void reinitialiserSequenceIdA1(@NotNull Class entiteClasse) {
+        reinitialiserSequenceId(1, entiteClasse);
     }
 }

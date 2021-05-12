@@ -65,8 +65,7 @@ public class IngredientControleur extends Controleur {
         } else {
             //Questions et saisies.
             String libelle = ui.poserQuestion("Saisir un libellé : ", UI.REGEX_CHAINE_DE_CARACTERES);
-            ui.afficher("Saisir une unité :");
-            int idUnite = ui.poserQuestionListeNUplets(unites);
+            int idUnite = ui.poserQuestionListeNUplets("Sélectionner une unité :", unites);
 
             //Sauvegarde : insertion de l'ingrédient.
             Ingredient ingredient = new Ingredient();
@@ -105,12 +104,11 @@ public class IngredientControleur extends Controleur {
         //Sinon.
         } else {
             //Questions et saisies.
-            int idIngredient = ui.poserQuestionListeNUplets(ingredients);
+            int idIngredient = ui.poserQuestionListeNUplets("Sélectionner un ingrédient :", ingredients);
             Ingredient ingredient = (Ingredient) filtrerListeNUpletsAvecId(ingredients, idIngredient);
             String libelle = ui.poserQuestion("Saisir le nouveau libellé : ", UI.REGEX_CHAINE_DE_CARACTERES);
-            ui.afficher("Saisier une nouvelle unité :");
             List<Entite> unites = orm.chercherTousLesNUplets(Unite.class);
-            int idUnite = ui.poserQuestionListeNUplets(unites);
+            int idUnite = ui.poserQuestionListeNUplets("Sélectionner une nouvelle unité :", unites);
 
             //Sauvegarde : modification de l'ingrédient.
             ingredient.setLibelle(libelle);
@@ -146,7 +144,7 @@ public class IngredientControleur extends Controleur {
             ui.afficher("Aucun ingrédient trouvé dans le catalogue !");
         } else {
             //Questions et saisies.
-            int idIngredient = ui.poserQuestionListeNUplets(ingredients);
+            int idIngredient = ui.poserQuestionListeNUplets("Sélectionner un ingrédient :", ingredients);
             Ingredient ingredient = (Ingredient) filtrerListeNUpletsAvecId(ingredients, idIngredient);
 
             //Si l'ingrédient a été utilisé par des plats.
@@ -185,12 +183,12 @@ public class IngredientControleur extends Controleur {
         if (ingredients.isEmpty()) {
             //Message d'erreur.
             ui.afficher("Aucun ingrédient trouvé dans le cataloque !");
-            //Sinon.
+        //Sinon.
         } else {
             //Questions et saisies.
-            int idIngredient = ui.poserQuestionListeNUplets(ingredients);
+            int idIngredient = ui.poserQuestionListeNUplets("Sélectionner un ingrédient :", ingredients);
             Ingredient ingredient = (Ingredient) filtrerListeNUpletsAvecId(ingredients, idIngredient);
-            Double stock = ui.poserQuestionDecimal("Saisir le stock que vous voulez ajouter :" , UI.REGEX_GRAND_DECIMAL_POSITIF);
+            double stock = ui.poserQuestionDecimal("Saisir le stock que vous voulez ajouter :" , UI.REGEX_GRAND_DECIMAL_POSITIF);
 
             //Sauvegarde : incrémentation du stock de l'ingrédient.
             ingredient.setStock(ingredient.getStock()+stock);

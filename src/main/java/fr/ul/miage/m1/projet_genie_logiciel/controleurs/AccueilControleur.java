@@ -27,7 +27,7 @@ public class AccueilControleur extends Controleur {
         //Question et saisie fonctionnalités.
         int idRole = getUtilisateurConnecte().getIdRole();
         List<String> fonctionnalitesLibelles = Fonctionnalite.getRoleFonctionnalitesLibelles(idRole);
-        int indexFonctionnalite = ui.poserQuestionListeOptions(fonctionnalitesLibelles);
+        int indexFonctionnalite = ui.poserQuestionListeOptions("Sélectionner une action :", fonctionnalitesLibelles);
 
         //Exécution de la fonctionnalité sélectionnée.
         Fonctionnalite fonctionnalite = Fonctionnalite.getFonctionnalite(idRole, indexFonctionnalite);

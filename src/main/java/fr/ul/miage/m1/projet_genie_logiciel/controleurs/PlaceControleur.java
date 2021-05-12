@@ -89,7 +89,7 @@ public class PlaceControleur extends Controleur {
             //Sinon.
         } else {
             //Question et saisies.
-            int idPlace = ui.poserQuestionListeNUplets(places);
+            int idPlace = ui.poserQuestionListeNUplets("Sélectionner une table :", places);
             Place place = (Place) filtrerListeNUpletsAvecId(places, idPlace);
 
             //Sauvegarde : suppression d'une table.
@@ -179,7 +179,7 @@ public class PlaceControleur extends Controleur {
             ui.afficher("Aucune table sale trouvée dans le cataloque !");
         } else {
             //Questions et entrées.
-            int idPlace = ui.poserQuestionListeNUplets(places, (place) -> ((Place) place).toEtatString());
+            int idPlace = ui.poserQuestionListeNUplets("Sélectionner une table :", places, (place) -> ((Place) place).toEtatString());
             Place place = (Place) filtrerListeNUpletsAvecId(places, idPlace);
 
             //Sauvegarde : modification de la table.
@@ -252,8 +252,8 @@ public class PlaceControleur extends Controleur {
             //Sinon
             } else {
                 //Questions et saisies.
-                int idPlace = ui.poserQuestionListeNUplets(places, (place) -> ((Place) place).toEtatServeurString());
-                int idCompteServeur = ui.poserQuestionListeNUplets(comptesServeurs);
+                int idCompteServeur = ui.poserQuestionListeNUplets("Sélectionner un serveur :", comptesServeurs);
+                int idPlace = ui.poserQuestionListeNUplets("Sélectionner une table :", places, (place) -> ((Place) place).toEtatServeurString());
 
                 //Sauvegarde : modification de la table.
                 Place place = (Place) filtrerListeNUpletsAvecId(places, idPlace);
@@ -291,7 +291,7 @@ public class PlaceControleur extends Controleur {
         //Sinon
         } else {
             //Questions et saisies.
-            int idCompteServeur = ui.poserQuestionListeNUplets(comptesServeurs);
+            int idCompteServeur = ui.poserQuestionListeNUplets("Sélectionner un serveur :", comptesServeurs);
             List<Entite> places = orm.chercherNUpletsAvecPredicat("WHERE ID_COMPTE_SERVEUR = " + idCompteServeur, Place.class);
 
             //Si pas de tables allouées au serveur.
@@ -301,7 +301,7 @@ public class PlaceControleur extends Controleur {
             //Sinon.
             } else {
                 //Questions et saisies.
-                int idPlace = ui.poserQuestionListeNUplets(places, (place) -> ((Place) place).toEtatServeurString());
+                int idPlace = ui.poserQuestionListeNUplets("Sélectionner une table :", places, (place) -> ((Place) place).toEtatServeurString());
 
                 //Sauvegarde : modification de la table.
                 Place place = (Place) filtrerListeNUpletsAvecId(places, idPlace);
@@ -339,7 +339,7 @@ public class PlaceControleur extends Controleur {
         //Sinon.
         } else {
             //Questions et saisies.
-            int idPlace = ui.poserQuestionListeNUplets(places);
+            int idPlace = ui.poserQuestionListeNUplets("Sélectionner une table :", places);
             Place place = (Place) filtrerListeNUpletsAvecId(places, idPlace);
 
             //Sauvegarde : modification de la table.
@@ -381,7 +381,7 @@ public class PlaceControleur extends Controleur {
             //Sinon
         } else {
             //Questions et saisies.
-            int idPlace = ui.poserQuestionListeNUplets(places, (place) -> ((Place) place).toEtatString());
+            int idPlace = ui.poserQuestionListeNUplets("Sélectionner une table :", places, (place) -> ((Place) place).toEtatString());
             Place place = (Place) filtrerListeNUpletsAvecId(places, idPlace);
 
             //Sauvegarde : modification de la table.

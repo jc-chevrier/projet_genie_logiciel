@@ -108,7 +108,7 @@ public class PlatControleur extends Controleur {
         } else {
             //Questions et saisies.
             ui.afficher("Ajout d'un ingrédient au plat :");
-            int idIngredient = ui.poserQuestionListeNUplets(ingredients);
+            int idIngredient = ui.poserQuestionListeNUplets("Sélectionner un ingrédient :", ingredients);
             double quantite = ui.poserQuestionDecimal("Saisir une quantité : ", UI.REGEX_GRAND_DECIMAL_POSITIF);
 
             //Création du n-uplet PlatIngredients.
@@ -167,7 +167,7 @@ public class PlatControleur extends Controleur {
         //Plat.
         //Questions et saisies.
         //Choix de la catégorie.
-        int idCategorie = ui.poserQuestionListeNUplets(categories);
+        int idCategorie = ui.poserQuestionListeNUplets("Sélectionner une catégorie :", categories);
         //Caractéristiques du plat.
         String libelle = ui.poserQuestion("Saisir un libellé :", UI.REGEX_CHAINE_DE_CARACTERES);
         Double prix = ui.poserQuestionDecimal("Saisir un prix : ", UI.REGEX_DECIMAL_POSITIF);
@@ -253,7 +253,7 @@ public class PlatControleur extends Controleur {
             //Sinon.
         } else {
             //Saisie du plat à modofier.
-            int idPlat = ui.poserQuestionListeNUplets(plats);
+            int idPlat = ui.poserQuestionListeNUplets("Sélectionner un plat :", plats);
             Plat plat = (Plat) filtrerListeNUpletsAvecId(plats, idPlat);
 
             //Suppression de l'ancienne composition du plat.
@@ -293,7 +293,7 @@ public class PlatControleur extends Controleur {
         //Sinon.
         } else {
             //Question et saisies.
-            int idPlat = ui.poserQuestionListeNUplets(plats);
+            int idPlat = ui.poserQuestionListeNUplets("Sélectionner un plat :", plats);
             Plat plat = (Plat) filtrerListeNUpletsAvecId(plats, idPlat);
 
             //Sauvegarde : suppression du plat et de sa composition.
@@ -331,7 +331,7 @@ public class PlatControleur extends Controleur {
         //Sinon.
         } else {
             //Question et saisies.
-            int idPlat = ui.poserQuestionListeNUplets(plats);
+            int idPlat = ui.poserQuestionListeNUplets("Sélectionner un plat :", plats);
             Plat plat = (Plat) filtrerListeNUpletsAvecId(plats, idPlat);
 
             //Sauvegarde : modification du plat.
@@ -368,7 +368,7 @@ public class PlatControleur extends Controleur {
         //Sinon.
         } else {
             //Question et saisies.
-            int idPlat = ui.poserQuestionListeNUplets(plats);
+            int idPlat = ui.poserQuestionListeNUplets("Sélectionner un plat :", plats);
             Plat plat = (Plat) filtrerListeNUpletsAvecId(plats, idPlat);
 
             //Sauvegarde : modification du plat.

@@ -87,8 +87,8 @@ public class CategorieControleur extends Controleur {
         //Sinon.
         } else {
             //Questions et entrées.
-            int idCategorie = ui.poserQuestionListeNUplets(categories);
-            String libelle = ui.poserQuestion("Saisir un nouveau libellé : ", UI.REGEX_CHAINE_DE_CARACTERES);
+            int idCategorie = ui.poserQuestionListeNUplets("Sélectionner une catégorie :", categories);
+            String libelle = ui.poserQuestion("Saisir un nouveau libellé :", UI.REGEX_CHAINE_DE_CARACTERES);
             Categorie categorie = (Categorie) filtrerListeNUpletsAvecId(categories, idCategorie);
 
             //Sauvegarde : modification de la catégorie.
@@ -125,7 +125,7 @@ public class CategorieControleur extends Controleur {
         //Sinon.
         } else {
             //Questions et entrées.
-            int idCategorie = ui.poserQuestionListeNUplets(categories);
+            int idCategorie = ui.poserQuestionListeNUplets("Sélectionner une catégorie :", categories);
             Categorie categorie = (Categorie) filtrerListeNUpletsAvecId(categories, idCategorie);
 
             //Si la catégorie est utilisée par des plats.

@@ -89,7 +89,7 @@ public class UniteControleur extends Controleur{
         //Sinon.
         } else {
             //Questions et saisies.
-            int idUnite = ui.poserQuestionListeNUplets(unites);
+            int idUnite = ui.poserQuestionListeNUplets("Sélectionner une unité :", unites);
             String libelle = ui.poserQuestion("Saisir un nouveau libellé : ", UI.REGEX_CHAINE_DE_CARACTERES);
             Unite unite = (Unite) filtrerListeNUpletsAvecId(unites, idUnite);;
 
@@ -127,7 +127,7 @@ public class UniteControleur extends Controleur{
         //Sinon.
         } else {
             //Questions et saisies.
-            int idUnite = ui.poserQuestionListeNUplets(unites);
+            int idUnite = ui.poserQuestionListeNUplets("Sélectionner une unité :", unites);
             Unite unite = (Unite) filtrerListeNUpletsAvecId(unites, idUnite);
             //Si l'unité a été utilisé par des ingrédinents.
             if(unite.estUtiliseParIngredient()) {
