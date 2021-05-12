@@ -418,7 +418,7 @@ public class PlaceControleur extends Controleur {
             //Sinon
         } else {
             //Listing.
-            ui.listerNUplets(places, (place) -> ((Place) place).toEtatString());
+            ui.listerNUplets(places);
         }
         //Retour vers l'accueil.
         AccueilControleur.consulter();
