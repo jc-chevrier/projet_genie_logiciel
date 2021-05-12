@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class Commande extends Entite {
     //Nom de la table correspondant à l'entité.
-    public static String NOM_TABLE = "LIGNE_COMMANDE";
+    public static String NOM_TABLE = "COMMANDE";
     //Structure de l'entité [attribut -> type].
     public static Map<String, Class> STRUCTURE;
 
