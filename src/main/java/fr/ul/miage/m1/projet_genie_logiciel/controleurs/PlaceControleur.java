@@ -409,17 +409,18 @@ public class PlaceControleur extends Controleur {
         ui.afficherAvecDelimiteurEtUtilisateur("Listing des tables réservées :");
 
         //Récupération des tables réservées dans le restaurant.
-        List<Entite> places = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'réservé' ", Place.class);
+        List<Entite> placesReservees = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'réservé' ", Place.class);
 
         //Si pas de tables réservées.
-        if (places.isEmpty()) {
+        if (placesReservees.isEmpty()) {
             //Message d'erreur.
             ui.afficher("Aucune table n'est réservées dans le restaurant !");
-            //Sinon
+        //Sinon
         } else {
             //Listing.
-            ui.listerNUplets(places, (place) -> ((Place) place).toEtatString());
+            ui.listerNUplets(placesReservees);
         }
+
         //Retour vers l'accueil.
         AccueilControleur.consulter();
     }

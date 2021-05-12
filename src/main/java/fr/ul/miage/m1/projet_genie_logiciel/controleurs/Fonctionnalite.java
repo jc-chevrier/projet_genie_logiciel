@@ -33,7 +33,7 @@ public class Fonctionnalite {
                               new Fonctionnalite("Désallouer une table à un client", PlaceControleur::desallouerPourClient),
                               new Fonctionnalite("Allouer une table à un serveur", PlaceControleur::allouerPourServeur),
                               new Fonctionnalite("Désallouer une table à un serveur", PlaceControleur::desallouerPourServeur),
-                              new Fonctionnalite("Lister les tables réservées", AccueilControleur::consulter),//TODO à modifier
+                              new Fonctionnalite("Lister les tables réservées", PlaceControleur::listerReserver),
                               new Fonctionnalite("Réserver une table", AccueilControleur::consulter),//TODO à modifier
                               new Fonctionnalite("Annuler la réservation d'une table", AccueilControleur::consulter),//TODO à modifier
                               new Fonctionnalite("Valider le paiement d'une commande", AccueilControleur::consulter)));//TODO à modifier
