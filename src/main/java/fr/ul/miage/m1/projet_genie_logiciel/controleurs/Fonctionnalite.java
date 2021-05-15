@@ -47,11 +47,11 @@ public class Fonctionnalite {
                               new Fonctionnalite("Ajouter un ingrédient au catalogue des ingrédients", IngredientControleur::ajouter),
                               new Fonctionnalite("Modifier un ingrédient", IngredientControleur::modifier),
                               new Fonctionnalite("Supprimer un ingrédient au catalogue des ingrédients", IngredientControleur::supprimer),
+                              new Fonctionnalite("Incrémenter le stock d'un ingrédient", IngredientControleur::incrementerStock),
                               new Fonctionnalite("Lister les catégories", CategorieControleur::lister),
                               new Fonctionnalite("Ajouter une catégorie", CategorieControleur::ajouter),
                               new Fonctionnalite("Modifier une catégorie", CategorieControleur::modifier),
                               new Fonctionnalite("Supprimer une catégorie", CategorieControleur::supprimer),
-                              new Fonctionnalite("Incrémenter le stock d'un ingrédient", IngredientControleur::incrementerStock),
                               new Fonctionnalite("Lister les plats du catalogue des plats", PlatControleur::lister),
                               new Fonctionnalite("Ajouter un plat au catalogue des plats", PlatControleur::ajouter),
                               new Fonctionnalite("Modifier un plat", PlatControleur::modifier),
@@ -64,9 +64,8 @@ public class Fonctionnalite {
                               new Fonctionnalite("Lister tous les plats disponibles de la carte", PlatControleur::ListerDisponibleCarte),
                               new Fonctionnalite("Lister les plats disponibles de la carte pour une catégorie", AccueilControleur::consulter), //TODO à modifier
                               new Fonctionnalite("Lister les catégories de plats disponibles de la carte", AccueilControleur::consulter), //TODO à modifier
-                              new Fonctionnalite("Ajouter une commande", AccueilControleur::consulter),//TODO à modifier
-                              new Fonctionnalite("Ajouter un plat à une commande", AccueilControleur::consulter),//TODO à modifier
-                              new Fonctionnalite("Supprimer un plat d'une commande ", AccueilControleur::consulter),//TODO à modifier
+                              new Fonctionnalite("Ajouter une commande", CommandeControleur::ajouter),//TODO à modifier
+                              new Fonctionnalite("Modifier une commande", AccueilControleur::consulter),//TODO à modifier
                               new Fonctionnalite("Lister les plats prêts d'une commande ", AccueilControleur::consulter))); //TODO à modifier
 
         List<Fonctionnalite> fonctionnalitesAssistantService = new ArrayList<Fonctionnalite>(

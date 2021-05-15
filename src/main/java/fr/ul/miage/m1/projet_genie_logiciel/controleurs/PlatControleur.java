@@ -171,7 +171,6 @@ public class PlatControleur extends Controleur {
         //Caractéristiques du plat.
         String libelle = ui.poserQuestion("Saisir un libellé :", UI.REGEX_CHAINE_DE_CARACTERES);
         Double prix = ui.poserQuestionDecimal("Saisir un prix : ", UI.REGEX_DECIMAL_POSITIF);
-
         //Composition du plat.
         List<PlatIngredients> platIngredients = composer();
 
@@ -250,7 +249,7 @@ public class PlatControleur extends Controleur {
         if(plats.isEmpty()) {
             //Message d'erreur.
             ui.afficher("Aucune plat trouvé dans le cataloque !");
-            //Sinon.
+        //Sinon.
         } else {
             //Saisie du plat à modofier.
             int idPlat = ui.poserQuestionListeNUplets("Sélectionner un plat :", plats);
