@@ -1,8 +1,10 @@
 package fr.ul.miage.m1.projet_genie_logiciel.entites;
 
+import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import org.jetbrains.annotations.NotNull;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -64,5 +66,27 @@ public class Commande extends Entite {
 
     public void setIdPlace(@NotNull Integer idPlace) {
         set("ID_PLACE", idPlace);
+    }
+    public String toString() {
+        ORM orm = ORM.getInstance();
+        Integer id = getId();
+        List<Entite> ligneCommandes = orm.chercherNUpletsAvecPredicat(
+                "WHERE ID_Commande = "  + id,
+                LigneCommande.class);
+        String contenu = "Commande [ id = " + id +
+                ", date de création = " + getDatetimeCreation().toLocaleString() +
+                ", coût total = " + getCoutTotal() + " €, état = " + getEtat() +
+                " ]\nComposition [ ";
+        int nbLignesCommandes = ligneCommandes.size();
+        for(int index = 0; index < nbLignesCommandes; index++) {
+            LigneCommande ligneCommande = (LigneCommande) ligneCommandes.get(index);
+            Plat plat = (Plat) orm.chercherNUpletAvecPredicat(
+                    "WHERE ID = " + ligneCommande.getIdPlat(),
+                     Plat.class);
+            contenu += "(" + plat.getlibelle()+ " : " +
+                    ligneCommande.getNbOccurences() + ")" +
+                    ((index < (nbLignesCommandes - 1)) ? ", " : " ]");
+        }
+        return contenu;
     }
 }

@@ -323,7 +323,6 @@ public class PlatControleur extends Controleur {
 
         //Récupération des plats qui ne font pas partie de la carte.
         List<Entite> plats = orm.chercherNUpletsAvecPredicat("WHERE CARTE = 0", Plat.class);
-
         //Si pas de plats dans le cataloque.
         if(plats.isEmpty()) {
             //Message d'erreur.
@@ -383,4 +382,37 @@ public class PlatControleur extends Controleur {
         //Retour à l'accueil.
         AccueilControleur.consulter();
     }
+    /**
+     * Lister les plats disponibles de la carte.
+     */
+    public static void ListerDisponibleCarte() {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Listing des plats disponibles de la carte du jour :");
+        //Récupération des plats disponibles de la carte.
+        List<Entite> platsDisponibles = orm.chercherNUpletsAvecPredicat("INNER JOIN PLAT_INGREDIENTS AS PI "+
+                                                                                 "ON PI.ID_PLAT = FROM_TABLE.ID "+
+                                                                                 "INNER JOIN INGREDIENT AS I "+
+                                                                                 "ON I.ID = PI.ID_INGREDIENT "+
+                                                                                 "WHERE PI.QUANTITE <= I.STOCK AND FROM_TABLE.CARTE = 1", Plat.class);
+
+        //Si pas de plats de la carte.
+        if(platsDisponibles.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucun plat disponible trouvé dans la carte du jour !");
+            //Sinon.
+        } else {
+            //Listing.
+            ui.listerNUplets(platsDisponibles);
+        }
+
+        //Retour vers l'accueil.
+        AccueilControleur.consulter();
+
+    }
+
 }
+
