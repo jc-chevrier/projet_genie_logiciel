@@ -57,7 +57,7 @@ public class Fonctionnalite {
                               new Fonctionnalite("Modifier un plat", PlatControleur::modifier),
                               new Fonctionnalite("Supprimer un plat du catalogue des plats", PlatControleur::supprimer),
                               new Fonctionnalite("Lister les plats à préparer des commandes", AccueilControleur::consulter),//TODO à modifier
-                              new Fonctionnalite("Valider la préparation d'un plat d'une commande", AccueilControleur::consulter)));//TODO à modifier
+                              new Fonctionnalite("Valider la préparation d'un plat d'une commande", PlatControleur::validerPreparation)));
 
         List<Fonctionnalite> fonctionnalitesServeur = new ArrayList<Fonctionnalite>(
                 Arrays.asList(new Fonctionnalite("Lister tous les plats de la carte", PlatControleur::listerCarte),
