@@ -2,6 +2,7 @@ package fr.ul.miage.m1.projet_genie_logiciel.controleurs;
 
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Categorie;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Entite;
+import fr.ul.miage.m1.projet_genie_logiciel.entites.Plat;
 import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
 import java.util.List;
@@ -145,4 +146,42 @@ public class CategorieControleur extends Controleur {
         //Retour vers l'accueil.
         AccueilControleur.consulter();
     }
+    /**
+     * Lister les catégories des plats disponibles dans la carte du jour.
+     */
+    public static void listerPlatsDisponibles() {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Listing des catégories des plats disponibles de la carte du jour :");
+
+        //Récupération des catégories existantes.
+        List<Entite> categories = orm.chercherNUpletsAvecPredicat(" WHERE FROM_TABLE.ID IN ( " +
+                                                                            "SELECT C.ID " +
+                                                                            "FROM CATEGORIE AS C " +
+                                                                            "INNER JOIN PLAT AS P " +
+                                                                            "ON P.ID_CATEGORIE = C.ID " +
+                                                                            "INNER JOIN PLAT_INGREDIENTS AS PI " +
+                                                                            "ON PI.ID_PLAT = P.ID " +
+                                                                            "INNER JOIN INGREDIENT AS I " +
+                                                                            "ON I.ID = PI.ID_INGREDIENT " +
+                                                                            "WHERE PI.QUANTITE <= I.STOCK AND P.CARTE = 1)", Categorie.class);
+
+
+        //Si pas de catégories trouvées.
+        if(categories.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucune catégorie trouvée dans le cataloque !");
+        } else {
+            //Litsing.
+            ui.listerNUplets(categories);
+        }
+
+        //Retour vers l'accueil.
+        AccueilControleur.consulter();
+    }
+
+
 }

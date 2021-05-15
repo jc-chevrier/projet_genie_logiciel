@@ -63,7 +63,7 @@ public class Fonctionnalite {
                 Arrays.asList(new Fonctionnalite("Lister tous les plats de la carte", PlatControleur::listerCarte),
                               new Fonctionnalite("Lister tous les plats disponibles de la carte", PlatControleur::ListerDisponibleCarte),
                               new Fonctionnalite("Lister les plats disponibles de la carte pour une catégorie", AccueilControleur::consulter), //TODO à modifier
-                              new Fonctionnalite("Lister les catégories de plats disponibles de la carte", AccueilControleur::consulter), //TODO à modifier
+                              new Fonctionnalite("Lister les catégories de plats disponibles de la carte", CategorieControleur::listerPlatsDisponibles),
                               new Fonctionnalite("Ajouter une commande", AccueilControleur::consulter),//TODO à modifier
                               new Fonctionnalite("Ajouter un plat à une commande", AccueilControleur::consulter),//TODO à modifier
                               new Fonctionnalite("Supprimer un plat d'une commande ", AccueilControleur::consulter),//TODO à modifier
