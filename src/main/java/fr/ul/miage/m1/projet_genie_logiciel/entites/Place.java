@@ -76,7 +76,7 @@ public class Place extends Entite {
         return "Table [ id = " + getId() +
                 ", état = " + getEtat() +
                 (serveur == null ?
-                ", pas de serveur associée" : (", serveur = " + serveur.getNom() + " " + serveur.getPrenom())) + " ]";
+                ", pas de serveur associé" : (", serveur = " + serveur.getNom() + " " + serveur.getPrenom())) + " ]";
     }
 
     @Override
@@ -85,9 +85,9 @@ public class Place extends Entite {
         return "Table [ id = " + getId() +
                 ", état = " + getEtat() +
                 (serveur == null ?
-                ", pas de serveur associée" : (", serveur = " + serveur.getNom() + " " + serveur.getPrenom())) +
+                ", pas de serveur associé" : (", serveur = " + serveur.getNom() + " " + serveur.getPrenom())) +
                 (getDatetimeReservation() == null ?
-                 ", pas de réservation associée" : (", réservation  = " + getNomReservation() + " " + getPrenomReservation() +
-                 ", date de réservation = " + getDatetimeReservation().toString())) + " ]";
+                 ", pas de réservation associée" : (", réservation = " + getNomReservation() + " " + getPrenomReservation() +
+                 ", date de réservation = " + getDatetimeReservation().toLocaleString())) + " ]";
     }
 }

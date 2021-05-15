@@ -5,6 +5,8 @@ import fr.ul.miage.m1.projet_genie_logiciel.entites.Entite;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Place;
 import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
+
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -421,6 +423,49 @@ public class PlaceControleur extends Controleur {
             ui.listerNUplets(places);
         }
         //Retour vers l'accueil.
+        AccueilControleur.consulter();
+    }
+
+    /**
+     * Réserver une table.
+     */
+    public static void reserverTable() {
+        //UI et ORM
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Réservation d'une table :");
+
+        //Récupération de la liste des tables libres.
+        List<Entite> places = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'libre'", Place.class);
+
+        //Si pas de tables à réserver.
+        if (places.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucune table n'est disponible pour la réservation dans le restaurant !");
+        //Sinon.
+        } else {
+            //Questions et saisies.
+            int idPlace = ui.poserQuestionListeNUplets("Sélectionner une table :", places);
+            Place place = (Place) filtrerListeNUpletsAvecId(places, idPlace);
+            //Saisie des informations pour la réservation d'une table.
+            String nom = ui.poserQuestion("Saisir le nom pour la réservation :", UI.REGEX_CHAINE_DE_CARACTERES);
+            String prenom = ui.poserQuestion("Saisir le prénom pour la réservation :", UI.REGEX_CHAINE_DE_CARACTERES);
+
+            //Sauvegarde : modification de la table.
+            place.setNomReservation(nom);
+            place.setPrenomReservation(prenom);
+            place.setDatetimeReservation(new Date());
+            place.setEtat("réservé");
+            orm.persisterNUplet(place);
+
+            //Message de résultat.
+            ui.afficher("Nouvelle réservation de la table réussie !");
+            ui.afficher(place.toString());
+        }
+
+        //Retour à l'accueil.
         AccueilControleur.consulter();
     }
 }
