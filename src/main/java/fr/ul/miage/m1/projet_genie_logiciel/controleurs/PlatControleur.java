@@ -471,4 +471,47 @@ public class PlatControleur extends Controleur {
         AccueilControleur.consulter();
 
     }
+    /**
+     * Lister les plats disponibles dans la carte du jour pour une catégorie.
+     */
+    public static void listerDisponiblesPourCategorie() {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Listing des plats disponibles dans la carte du jour pour une catégorie :");
+
+        //Récupération des catégories.
+        List<Entite> categories = orm.chercherTousLesNUplets(Categorie.class);
+
+        //Question et saisies.
+        int idCategorie = ui.poserQuestionListeNUplets("Sélectionner une catégorie :", categories);
+        Categorie categorie = (Categorie) filtrerListeNUpletsAvecId(categories, idCategorie);
+
+        //Récupération des plats disponibles pour une categorie.
+        List<Entite> plats = orm.chercherNUpletsAvecPredicat(" WHERE FROM_TABLE.ID IN ( " +
+                "SELECT P.ID " +
+                "FROM PLAT AS P " +
+                "INNER JOIN CATEGORIE AS C " +
+                "ON P.ID_CATEGORIE = C.ID " +
+                "INNER JOIN PLAT_INGREDIENTS AS PI " +
+                "ON PI.ID_PLAT = P.ID " +
+                "INNER JOIN INGREDIENT AS I " +
+                "ON I.ID = PI.ID_INGREDIENT " +
+                "WHERE PI.QUANTITE <= I.STOCK AND P.CARTE = 1 AND C.ID ="+idCategorie+")", Plat.class);
+
+
+        //Si pas de plat disponible.
+        if(plats.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucun plat trouvé !");
+        } else {
+            //Litsing.
+            ui.listerNUplets(plats);
+        }
+
+        //Retour vers l'accueil.
+        AccueilControleur.consulter();
+    }
 }
