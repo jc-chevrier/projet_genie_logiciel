@@ -150,7 +150,7 @@ public class CommandeControleur extends Controleur {
         }).reduce(Double::sum).getAsDouble());
         orm.persisterNUplet(commande);
 
-        //On réserve le stock pour cette commande.
+        //On alloue le stock pour cette commande.
         ligneCommandes.forEach(ligneCommande ->
                 orm.chercherNUpletsAvecPredicat( "WHERE ID_PLAT = " + ligneCommande.getIdPlat(), PlatIngredients.class)
                    .forEach(platIngredients -> {
@@ -193,7 +193,7 @@ public class CommandeControleur extends Controleur {
         //Si aucune table du serveur n'est occupée par des clients.
         if(placesOccupees.isEmpty()) {
             //Message d'erreur.
-            ui.afficher("Aucune table occupée parmi vos tables dans le restaurant !");
+            ui.afficher("Aucune table occupée parmi mes tables dans le restaurant !");
         //Sinon.
         } else {
             //Si pas de disponibles dans le restaurant.
@@ -213,7 +213,80 @@ public class CommandeControleur extends Controleur {
             }
         }
 
-        //Retour à l'accueil.
+        //Retour vers l'accueil.
+        AccueilControleur.consulter();
+    }
+
+    /**
+     * Suuprimer une commande.
+     */
+    public static void supprimer() {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Suppression d'une commande :");
+
+        //Récupération des tables occupées dans le restaurant.
+        List<Entite> placesOccupees = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'occupé'" +
+                                                                               "AND ID_COMPTE_SERVEUR = " +
+                                                                                getUtilisateurConnecte().getId(),
+                                                                                Place.class);
+
+        //Si pas de tables occupées trouvées dans le restaurant.
+        if (placesOccupees.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucune table occupée trouvée parmi mes tables dans le restaurant !");
+        //Sinon.
+        } else {
+            //Question et saisies.
+            int idPlace = ui.poserQuestionListeNUplets("Sélectionner une table :", placesOccupees);
+            //Récupération des commandes existantes en attente de préparation.
+            List<Entite> commandesEnAttente = orm.chercherNUpletsAvecPredicat("INNER JOIN LIGNE_COMMANDE AS LC " +
+                                                                                       "ON LC.ID_COMMANDE = FROM_TABLE.ID "+
+                                                                                       "WHERE LC.ETAT = 'en attente' " +
+                                                                                       "AND FROM_TABLE.ID_PLACE = " + idPlace,
+                                                                                        Commande.class);
+
+            //Si pas de commandes en attente de préparation trouvée.
+            if (commandesEnAttente.isEmpty()) {
+                //Message d'erreur.
+                ui.afficher("Aucune commande en attente de préparation trouvée pour cette table !");
+                //Sinon.
+            } else {
+                //Question et saisies.
+                int idPCommande = ui.poserQuestionListeNUplets("Sélectionner une commande :", commandesEnAttente);
+                Commande commande = (Commande) filtrerListeNUpletsAvecId(commandesEnAttente, idPCommande);
+
+                //Sauvegarde : suppression de la commande et de sa composition.
+                List<Entite> lignesCommande = orm.chercherNUpletsAvecPredicat("WHERE ID_COMMANDE = " +
+                                                                                        commande.getId(),
+                                                                                        LigneCommande.class);
+
+                //On désalloue le stock pour cette commande.
+                lignesCommande.forEach(ligneCommande -> {
+                    LigneCommande ligneCommande_ = ((LigneCommande) ligneCommande);
+                     orm.chercherNUpletsAvecPredicat( "WHERE ID_PLAT = " + ligneCommande_.getIdPlat(), PlatIngredients.class)
+                        .forEach(platIngredients -> {
+                            PlatIngredients platIngredients_ = (PlatIngredients) platIngredients;
+                            Ingredient ingredient = (Ingredient) orm.chercherNUpletAvecPredicat(
+                                    "WHERE ID = " + platIngredients_.getIdIngredient(),
+                                    Ingredient.class);
+                            ingredient.setStock(ingredient.getStock() + (ligneCommande_.getNbOccurences() * platIngredients_.getQuantite()));
+                            orm.persisterNUplet(ingredient);
+                        });
+                });
+
+                lignesCommande.forEach(orm::supprimerNUplet);
+                orm.supprimerNUplet(commande);
+
+                //Message de résultat.
+                ui.afficher("Commande supprimée !");
+            }
+        }
+
+        //Retour vers l'accueil.
         AccueilControleur.consulter();
     }
 
@@ -249,7 +322,7 @@ public class CommandeControleur extends Controleur {
             ui.afficher(commande.toString());
         }
 
-        //Retour à l'accueil.
+        //Retour vers l'accueil.
         AccueilControleur.consulter();
     }
 }
