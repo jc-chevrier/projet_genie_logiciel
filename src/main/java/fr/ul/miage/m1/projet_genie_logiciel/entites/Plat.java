@@ -27,6 +27,15 @@ public class Plat extends Entite {
         STRUCTURE.put("ID_CATEGORIE", Integer.class);
     }
 
+    public final static String PREDICAT_DISPONIBLE_EN_STOCK =  "FROM_TABLE.ID IN ( " +
+                                                                "SELECT P.ID " +
+                                                                "FROM PLAT AS P " +
+                                                                "INNER JOIN PLAT_INGREDIENTS AS PI " +
+                                                                "ON PI.ID_PLAT = P.ID " +
+                                                                "INNER JOIN INGREDIENT AS I " +
+                                                                "ON I.ID = PI.ID_INGREDIENT " +
+                                                                "WHERE PI.QUANTITE <= I.STOCK)";
+
     public Plat() {
         super();
     }
