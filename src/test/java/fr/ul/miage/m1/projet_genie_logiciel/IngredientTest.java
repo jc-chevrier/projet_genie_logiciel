@@ -1,10 +1,7 @@
 package fr.ul.miage.m1.projet_genie_logiciel;
 
 import fr.ul.miage.m1.projet_genie_logiciel.controleurs.IngredientControleur;
-import fr.ul.miage.m1.projet_genie_logiciel.entites.Compte;
-import fr.ul.miage.m1.projet_genie_logiciel.entites.Entite;
-import fr.ul.miage.m1.projet_genie_logiciel.entites.Ingredient;
-import fr.ul.miage.m1.projet_genie_logiciel.entites.Unite;
+import fr.ul.miage.m1.projet_genie_logiciel.entites.*;
 import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
 import org.junit.jupiter.api.*;
@@ -23,6 +20,13 @@ public class IngredientTest {
     private static ORM orm;
     private static UI ui;
 
+    static void reinitialiserTables(){
+        //On réinitialise la table ingrédient.
+        orm.reinitialiserTable(Ingredient.class);
+        //On réinitialise la table unité.
+        orm.reinitialiserTable(Unite.class);
+    }
+
     @BeforeAll
     static void faireAvantTousLesTests() {
         ORM.CONFIGURATION_FILENAME = "./configuration/configuration_bdd_test.properties";
@@ -32,9 +36,18 @@ public class IngredientTest {
         ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 3", Compte.class));
     }
 
+    @BeforeEach
+    void faireAvantChaqueTest() {
+       reinitialiserTables();
+    }
+
+    @AfterAll
+    static void faireApresTousLesTests() {
+        reinitialiserTables();
+    }
+
     @Test
-    @Order(1)
-    @DisplayName("Test - ajouter un ingédient - cas 1 : n-uplet ingrédient bien ajouté")
+    @DisplayName("Test - ajouter un ingrédient - cas 1 : n-uplet ingrédient bien ajouté")
     void testAjouterIngredientCasBienAjoute() {
         //On simule les saisies de l'ajout dans ce fichier.
         System.setIn(IngredientTest.class.getResourceAsStream("./saisies/ingredient_test/ajouter_cas_1.txt"));
@@ -56,7 +69,6 @@ public class IngredientTest {
     }
 
     @Test
-    @Order(2)
     @DisplayName("Test - ajouter un ingrédient - cas 2 : n-uplet ingrédient bien ajouté avec le bon libellé")
     void testAjouterIngredientCas2BonLibelle() {
         //On simule les saisies de l'ajout dans ce fichier.
@@ -72,20 +84,13 @@ public class IngredientTest {
         IngredientControleur.ajouter();
 
         //L'ingédient inséré doit avoir ce libellé : "libellé test 1 ajouter cas 2 bien libellé".
-        Ingredient ingredientInsere = (Ingredient) orm.chercherNUpletAvecPredicat("WHERE ID = 2", Ingredient.class);
+        Ingredient ingredientInsere = (Ingredient) orm.chercherNUpletAvecPredicat("WHERE ID = 1", Ingredient.class);
         assertEquals("libellé test 1 ajouter cas 2 bien libellé", ingredientInsere.getLibelle());
     }
 
     @Test
-    @Order(10)
     @DisplayName("Test - ajouter un ingrédient - cas 3 : n-uplet ingrédient non ajouté ")
     void testAjouterIngredientCasPasDUnite() {
-        //On vide la table ingrédient.
-        orm.chercherTousLesNUplets(Ingredient.class).forEach(orm::supprimerNUplet);
-
-        //On vide la table unité.
-        orm.chercherTousLesNUplets(Unite.class).forEach(orm::supprimerNUplet);
-
         //On simule les saisies de l'ajout dans ce fichier.
         System.setIn(IngredientTest.class.getResourceAsStream("./saisies/ingredient_test/ajouter_cas_3.txt"));
         ui.reinitialiserScanner();
@@ -96,7 +101,6 @@ public class IngredientTest {
     }
 
     @Test
-    @Order(3)
     @DisplayName("Test : modifier un ingrédient - cas 1 : n-uplet ingrédient bien trouvé")
     void testModifierIngredientCasBienTrouve() {
         //On ajoute une unité.
@@ -119,12 +123,11 @@ public class IngredientTest {
         IngredientControleur.modifier();
 
         //Un ingrédient a du être inséré.
-        Ingredient ingredientApres = (Ingredient) orm.chercherNUpletAvecPredicat("WHERE ID = 2",Ingredient.class);
+        Ingredient ingredientApres = (Ingredient) orm.chercherNUpletAvecPredicat("WHERE ID = 1",Ingredient.class);
         assertNotEquals(ingredientsAvant.getLibelle(), ingredientApres.getLibelle());
     }
 
     @Test
-    @Order(4)
     @DisplayName("Test : modifier un ingrédient - cas 2 : n-uplet ingrédient non trouvé")
     void testModifierIngredientCasNonTrouve() {
         //on ajoute une unité.
@@ -153,7 +156,6 @@ public class IngredientTest {
     }
 
     @Test
-    @Order(5)
     @DisplayName("Test - lister les ingrédients")
     void testListerIngredient() {
         //On simule les saisies de lister dans ce fichier.
@@ -171,13 +173,13 @@ public class IngredientTest {
     }
 
     @Test
-    @Order(6)
     @DisplayName("Test : supprimer un ingrédient - cas 1 : n-uplet ingrédient bien supprimé")
     void testSupprimerIngrédientCas1Supprime() {
+        //Ajouter un unité pour pouvoir ajouter un ingrédient.
         Unite unite = new Unite();
         unite.setLibelle("unite");
         orm.persisterNUplet(unite);
-
+        //Ajouter un ingrédient.
         Ingredient ingredient = new Ingredient();
         ingredient.setLibelle("libellé ingrédient 3");
         ingredient.setIdUnite(1);
@@ -200,12 +202,8 @@ public class IngredientTest {
     }
 
     @Test
-    @Order(7)
     @DisplayName("Test - supprimer un ingrédient - cas 2 : aucun n-uplet ingrédient trouvé")
     void testSupprimerIngredientCas2PasDeUnite() {
-        //On vide la table ingrédient.
-        orm.chercherTousLesNUplets(Ingredient.class).forEach(orm::supprimerNUplet);
-
         //On simule les saisies de la suppression dans ce fichier.
         System.setIn(IngredientTest.class.getResourceAsStream("./saisies/ingredient_test/supprimer_cas_2.txt"));
         ui.reinitialiserScanner();
@@ -215,7 +213,6 @@ public class IngredientTest {
     }
 
     @Test
-    @Order(9)
     @DisplayName("Test : modifier stock d'un ingrédient - cas 1 : n-uplet ingrédient non trouvé")
     void testModifierStockIngredientCasNontrouve(){
         //on ajoute une unité.
@@ -240,7 +237,6 @@ public class IngredientTest {
     }
 
     @Test
-    @Order(8)
     @DisplayName("Test : modifier stock d'un ingrédient - cas 2 : n-uplet ingrédient trouvé")
     void testModifierStockIngredientCastrouve(){
         //on ajoute une unité.

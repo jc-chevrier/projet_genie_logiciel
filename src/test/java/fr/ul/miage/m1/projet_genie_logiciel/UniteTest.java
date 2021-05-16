@@ -2,6 +2,7 @@ package fr.ul.miage.m1.projet_genie_logiciel;
 
 import fr.ul.miage.m1.projet_genie_logiciel.controleurs.UniteControleur;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Compte;
+import fr.ul.miage.m1.projet_genie_logiciel.entites.Ingredient;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Unite;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
 import org.junit.jupiter.api.*;
@@ -16,6 +17,11 @@ public class UniteTest {
     private static ORM orm;
     private static UI ui;
 
+    static void reinitialiserTables(){
+        //On réinitialise la table unité.
+        orm.reinitialiserTable(Unite.class);
+    }
+
     @BeforeAll
     static void faireAvantTousLesTests() {
         ORM.CONFIGURATION_FILENAME = "./configuration/configuration_bdd_test.properties";
@@ -26,10 +32,20 @@ public class UniteTest {
         ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 3", Compte.class));
     }
 
+    @BeforeEach
+    void faireAvantChaqueTest() {
+        reinitialiserTables();
+    }
+
+    @AfterAll
+    static void faireApresTousLesTests() {
+        reinitialiserTables();
+    }
+
     @Test
-    @Order(1)
     @DisplayName("Test : lister les unités - cas 1 : unités trouvées")
     void testListerCas1Trouvees() {
+
         //On ajoute une unité à lister.
         Unite unite1 = new Unite();
         unite1.setLibelle("libellé");
@@ -44,12 +60,8 @@ public class UniteTest {
     }
 
     @Test
-    @Order(2)
     @DisplayName("Test : lister les unités - cas 2 : aucune unité trouvée")
     void testListerCas2PasTrouvees() {
-        //On vide la table unité.
-        orm.chercherTousLesNUplets(Unite.class).forEach(orm::supprimerNUplet);
-
         //On simule les saisies de listing dans ce fichier.
         System.setIn(UniteTest.class.getResourceAsStream("./saisies/unite_test/lister_cas_2.txt"));
         ui.reinitialiserScanner();
@@ -59,7 +71,6 @@ public class UniteTest {
     }
 
     @Test
-    @Order(3)
     @DisplayName("Test : ajouter une unité - cas 1 : unité bien ajoutée")
     void testAjouterCas1BienAjoutee() {
         //On simule les saisies d'ajout dans ce fichier.
@@ -77,7 +88,6 @@ public class UniteTest {
     }
 
     @Test
-    @Order(4)
     @DisplayName("Test : ajouter une unité - cas 2 : unité bien ajoutée avec bon libellé")
     void testAjouterCas2BonLibelle() {
         //On simule les saisies de l'ajout dans ce fichier.
@@ -88,12 +98,11 @@ public class UniteTest {
         UniteControleur.ajouter();
 
         //L'unité insérée doit avoir ce libellé : "libellé test ajouter".
-        Unite uniteInseree = (Unite) orm.chercherNUpletAvecPredicat("WHERE ID = 3", Unite.class);
+        Unite uniteInseree = (Unite) orm.chercherNUpletAvecPredicat("WHERE ID = 1", Unite.class);
         assertEquals("libellé test ajouter", uniteInseree.getLibelle());
     }
 
     @Test
-    @Order(5)
     @DisplayName("Test : modifier une unité - cas 1 : unité bien modifié")
     void testModifierCas1BienModifiee() {
         //On ajoute une unité à modifier.
@@ -109,17 +118,13 @@ public class UniteTest {
         UniteControleur.modifier();
 
         //L'unité modifiée doit avoir ce libellé : "libellé modifié".
-        Unite uniteModifie = (Unite) orm.chercherNUpletAvecPredicat("WHERE ID = 4", Unite.class);
+        Unite uniteModifie = (Unite) orm.chercherNUpletAvecPredicat("WHERE ID = 1", Unite.class);
         assertEquals("libellé modifié", uniteModifie.getLibelle());
     }
 
     @Test
-    @Order(6)
     @DisplayName("Test : modifier une unité - cas 2 : aucune unité trouvé")
     void testModifierCa2PasTrouvees() {
-        //On vide la table unité.
-        orm.chercherTousLesNUplets(Unite.class).forEach(orm::supprimerNUplet);
-
         //On simule les saisies de modification dans ce fichier.
         System.setIn(UniteTest.class.getResourceAsStream("./saisies/unite_test/modifier_cas_1.txt"));
         ui.reinitialiserScanner();
@@ -129,7 +134,6 @@ public class UniteTest {
     }
 
     @Test
-    @Order(7)
     @DisplayName("Test : supprimer une unité - cas 1 : unité bien supprimée")
     void testSupprimerCas1BienSupprimee() {
         //On ajoute une unité à supprimer.
@@ -152,7 +156,6 @@ public class UniteTest {
     }
 
     @Test
-    @Order(8)
     @DisplayName("Test : supprimer une unité - cas 2 : unité supprimée correcte")
     void testSupprimerCas2Correcte() {
         //On ajoute une unité à supprimer.
@@ -165,24 +168,20 @@ public class UniteTest {
         ui.reinitialiserScanner();
 
         //Unité existant avant.
-        Unite uniteAvant = (Unite) orm.chercherNUpletAvecPredicat("WHERE ID = 6", Unite.class);
+        Unite uniteAvant = (Unite) orm.chercherNUpletAvecPredicat("WHERE ID = 1", Unite.class);
         assertNotNull(uniteAvant);
 
         //On simule le scénario de suppression.
         UniteControleur.supprimer();
 
         //Unité suppirmée après.
-        Unite uniteApres = (Unite) orm.chercherNUpletAvecPredicat("WHERE ID = 6", Unite.class);
+        Unite uniteApres = (Unite) orm.chercherNUpletAvecPredicat("WHERE ID = 1", Unite.class);
         assertNull(uniteApres);
     }
 
     @Test
-    @Order(9)
     @DisplayName("Test : supprimer une unité - cas 3 : aucune unité trouvée")
     void testSupprimerCas3PasTrouvees() {
-        //On vide la table unité.
-        orm.chercherTousLesNUplets(Unite.class).forEach(orm::supprimerNUplet);
-
         //On simule les saisies de la suppression dans ce fichier.
         System.setIn(UniteTest.class.getResourceAsStream("./saisies/unite_test/supprimer_cas_3.txt"));
         ui.reinitialiserScanner();
