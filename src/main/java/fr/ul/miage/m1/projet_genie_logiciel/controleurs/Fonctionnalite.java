@@ -57,15 +57,16 @@ public class Fonctionnalite {
                               new Fonctionnalite("Modifier un plat", PlatControleur::modifier),
                               new Fonctionnalite("Supprimer un plat du catalogue des plats", PlatControleur::supprimer),
                               new Fonctionnalite("Lister les plats à préparer des commandes", AccueilControleur::consulter),//TODO à modifier
-                              new Fonctionnalite("Valider la préparation d'un plat d'une commande", AccueilControleur::consulter)));//TODO à modifier
+                              new Fonctionnalite("Valider la préparation d'un plat d'une commande", PlatControleur::validerPreparation)));
 
         List<Fonctionnalite> fonctionnalitesServeur = new ArrayList<Fonctionnalite>(
                 Arrays.asList(new Fonctionnalite("Lister tous les plats de la carte", PlatControleur::listerCarte),
                               new Fonctionnalite("Lister tous les plats disponibles de la carte", PlatControleur::ListerDisponibleCarte),
                               new Fonctionnalite("Lister les plats disponibles de la carte pour une catégorie", AccueilControleur::consulter), //TODO à modifier
-                              new Fonctionnalite("Lister les catégories de plats disponibles de la carte", AccueilControleur::consulter), //TODO à modifier
+                              new Fonctionnalite("Lister les catégories de plats disponibles de la carte", CategorieControleur::listerPlatsDisponibles),
                               new Fonctionnalite("Ajouter une commande", CommandeControleur::ajouter),//TODO à modifier
                               new Fonctionnalite("Modifier une commande", AccueilControleur::consulter),//TODO à modifier
+                              new Fonctionnalite("Annuler une commande", AccueilControleur::consulter),//TODO à modifier
                               new Fonctionnalite("Lister les plats prêts d'une commande ", AccueilControleur::consulter))); //TODO à modifier
 
         List<Fonctionnalite> fonctionnalitesAssistantService = new ArrayList<Fonctionnalite>(
