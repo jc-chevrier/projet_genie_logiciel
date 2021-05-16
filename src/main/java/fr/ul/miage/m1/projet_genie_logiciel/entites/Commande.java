@@ -67,6 +67,7 @@ public class Commande extends Entite {
     public void setIdPlace(@NotNull Integer idPlace) {
         set("ID_PLACE", idPlace);
     }
+
     public String toString() {
         ORM orm = ORM.getInstance();
         Integer id = getId();
@@ -83,7 +84,8 @@ public class Commande extends Entite {
             Plat plat = (Plat) orm.chercherNUpletAvecPredicat(
                     "WHERE ID = " + ligneCommande.getIdPlat(),
                      Plat.class);
-            contenu += "(" + plat.getlibelle()+ " : " +
+            contenu += "(" + plat.getlibelle()+ ", " +
+                    plat.getPrix()+" €, x"+
                     ligneCommande.getNbOccurences() + ")" +
                     ((index < (nbLignesCommandes - 1)) ? ", " : " ]");
         }
