@@ -29,10 +29,10 @@ public class PlatControleur extends Controleur {
         List<Entite> plats = orm.chercherTousLesNUplets(Plat.class);
 
         //Si pas de plats dans le cataloque.
-        if(plats.isEmpty()) {
+        if (plats.isEmpty()) {
             //Message d'erreur.
             ui.afficher("Aucun plat trouvé dans le cataloque !");
-        //Sinon.
+            //Sinon.
         } else {
             //Listing.
             ui.listerNUplets(plats);
@@ -57,7 +57,7 @@ public class PlatControleur extends Controleur {
         List<Entite> plats = orm.chercherNUpletsAvecPredicat("WHERE CARTE = 1", Plat.class);
 
         //Si pas de plats de la carte.
-        if(plats.isEmpty()) {
+        if (plats.isEmpty()) {
             //Message d'erreur.
             ui.afficher("Aucun plat trouvé dans la carte du jour !");
             //Sinon.
@@ -73,7 +73,7 @@ public class PlatControleur extends Controleur {
     /**
      * Choisir un ingrédient pour un plat,
      * et saisir la quantité associée pour le plat.
-     *
+     * <p>
      * La méthode prend en paramètre la composition du plat actuelle.
      *
      * @param composition
@@ -87,24 +87,24 @@ public class PlatControleur extends Controleur {
         //Ingrédients pas encore sélectionnés.
         List<Entite> ingredients;
         //Si la composition actuelle du plat est vide.
-        if(composition.isEmpty()) {
+        if (composition.isEmpty()) {
             ingredients = orm.chercherTousLesNUplets(Ingredient.class);
-        //Sinon.
+            //Sinon.
         } else {
             //On n'autorise pas les ingrédients déjà présents dans la composition.
             List<String> idsIngredientsDejaSelectionnes = composition
-                                                          .stream()
-                                                          .map(platIngredient -> platIngredient.getIdIngredient().toString())
-                                                          .collect(Collectors.toList());
+                    .stream()
+                    .map(platIngredient -> platIngredient.getIdIngredient().toString())
+                    .collect(Collectors.toList());
             ingredients = orm.chercherNUpletsAvecPredicat(
-                                             "WHERE ID NOT IN (" + String.join(",", idsIngredientsDejaSelectionnes) + ")",
-                                             Ingredient.class);
+                    "WHERE ID NOT IN (" + String.join(",", idsIngredientsDejaSelectionnes) + ")",
+                    Ingredient.class);
         }
 
         //Si plus d'ingrédients disponibles pour la composition du plat.
-        if(ingredients.isEmpty()) {
+        if (ingredients.isEmpty()) {
             return null;
-        //Sinon.
+            //Sinon.
         } else {
             //Questions et saisies.
             ui.afficher("Ajout d'un ingrédient au plat :");
@@ -136,7 +136,7 @@ public class PlatControleur extends Controleur {
         boolean continuerComposition;
         do {
             PlatIngredients platIngredient = saisirPlatIngredient(platIngredients);
-            if(platIngredient == null) {
+            if (platIngredient == null) {
                 ui.afficher("Plus d'ingrédients disponibles !");
                 continuerComposition = false;
             } else {
@@ -171,7 +171,6 @@ public class PlatControleur extends Controleur {
         //Caractéristiques du plat.
         String libelle = ui.poserQuestion("Saisir un libellé :", UI.REGEX_CHAINE_DE_CARACTERES);
         Double prix = ui.poserQuestionDecimal("Saisir un prix : ", UI.REGEX_DECIMAL_POSITIF);
-
         //Composition du plat.
         List<PlatIngredients> platIngredients = composer();
 
@@ -205,18 +204,18 @@ public class PlatControleur extends Controleur {
         List<Entite> ingredients = orm.chercherTousLesNUplets(Ingredient.class);
 
         //Si pas de catégories trouvées.
-        if(categories.isEmpty()) {
+        if (categories.isEmpty()) {
             //Message d'erreur.
             ui.afficher("Aucune catégorie trouvée pour les plats !");
             ui.afficher("Ajoutez d'abord des catégories avant d'ajouter un plat !");
-        //Sinon.
-        }else {
+            //Sinon.
+        } else {
             //Si pas d'ingrdéient dans le catalogue.
-            if(ingredients.isEmpty()) {
+            if (ingredients.isEmpty()) {
                 //Message d'erreur.
                 ui.afficher("Aucun ingrédient trouvé dans le cataloque pour composer le plat !");
                 ui.afficher("Ajoutez d'abord des ingrédients avant d'ajouter un plat !");
-            //Sinon.
+                //Sinon.
             } else {
                 //Saisie et sauvegarde.
                 Plat plat = new Plat();
@@ -247,10 +246,10 @@ public class PlatControleur extends Controleur {
         List<Entite> plats = orm.chercherTousLesNUplets(Plat.class);
 
         //Si pas d'unités trouvées.
-        if(plats.isEmpty()) {
+        if (plats.isEmpty()) {
             //Message d'erreur.
             ui.afficher("Aucune plat trouvé dans le cataloque !");
-            //Sinon.
+        //Sinon.
         } else {
             //Saisie du plat à modofier.
             int idPlat = ui.poserQuestionListeNUplets("Sélectionner un plat :", plats);
@@ -258,7 +257,7 @@ public class PlatControleur extends Controleur {
 
             //Suppression de l'ancienne composition du plat.
             orm.chercherNUpletsAvecPredicat("WHERE ID_PLAT = " + idPlat, PlatIngredients.class)
-               .forEach(orm::supprimerNUplet);
+                    .forEach(orm::supprimerNUplet);
 
             //Saisie et sauvegarde.
             editerEtPersister(plat);
@@ -287,10 +286,10 @@ public class PlatControleur extends Controleur {
         List<Entite> plats = orm.chercherTousLesNUplets(Plat.class);
 
         //Si pas de plats dans le cataloque.
-        if(plats.isEmpty()) {
+        if (plats.isEmpty()) {
             //Message d'erreur.
             ui.afficher("Aucun plat trouvé dans le cataloque !");
-        //Sinon.
+            //Sinon.
         } else {
             //Question et saisies.
             int idPlat = ui.poserQuestionListeNUplets("Sélectionner un plat :", plats);
@@ -298,7 +297,7 @@ public class PlatControleur extends Controleur {
 
             //Sauvegarde : suppression du plat et de sa composition.
             List<Entite> platIngredients = orm.chercherNUpletsAvecPredicat("WHERE ID_PLAT = " + plat.getId(),
-                                                                           PlatIngredients.class);
+                    PlatIngredients.class);
             platIngredients.forEach(orm::supprimerNUplet);
             orm.supprimerNUplet(plat);
 
@@ -324,10 +323,10 @@ public class PlatControleur extends Controleur {
         //Récupération des plats qui ne font pas partie de la carte.
         List<Entite> plats = orm.chercherNUpletsAvecPredicat("WHERE CARTE = 0", Plat.class);
         //Si pas de plats dans le cataloque.
-        if(plats.isEmpty()) {
+        if (plats.isEmpty()) {
             //Message d'erreur.
             ui.afficher("Aucun plat trouvé dans le cataloque !");
-        //Sinon.
+            //Sinon.
         } else {
             //Question et saisies.
             int idPlat = ui.poserQuestionListeNUplets("Sélectionner un plat :", plats);
@@ -361,10 +360,10 @@ public class PlatControleur extends Controleur {
         List<Entite> plats = orm.chercherNUpletsAvecPredicat("WHERE CARTE = 1", Plat.class);
 
         //Si pas de plats dans le cataloque.
-        if(plats.isEmpty()) {
+        if (plats.isEmpty()) {
             //Message d'erreur.
             ui.afficher("Aucun plat trouvé dans le carte du jour !");
-        //Sinon.
+            //Sinon.
         } else {
             //Question et saisies.
             int idPlat = ui.poserQuestionListeNUplets("Sélectionner un plat :", plats);
@@ -382,6 +381,7 @@ public class PlatControleur extends Controleur {
         //Retour à l'accueil.
         AccueilControleur.consulter();
     }
+
     /**
      * Lister les plats disponibles de la carte.
      */
@@ -393,14 +393,14 @@ public class PlatControleur extends Controleur {
         //Message de titre.
         ui.afficherAvecDelimiteurEtUtilisateur("Listing des plats disponibles de la carte du jour :");
         //Récupération des plats disponibles de la carte.
-        List<Entite> platsDisponibles = orm.chercherNUpletsAvecPredicat("INNER JOIN PLAT_INGREDIENTS AS PI "+
-                                                                                 "ON PI.ID_PLAT = FROM_TABLE.ID "+
-                                                                                 "INNER JOIN INGREDIENT AS I "+
-                                                                                 "ON I.ID = PI.ID_INGREDIENT "+
-                                                                                 "WHERE PI.QUANTITE <= I.STOCK AND FROM_TABLE.CARTE = 1", Plat.class);
+        List<Entite> platsDisponibles = orm.chercherNUpletsAvecPredicat("INNER JOIN PLAT_INGREDIENTS AS PI " +
+                "ON PI.ID_PLAT = FROM_TABLE.ID " +
+                "INNER JOIN INGREDIENT AS I " +
+                "ON I.ID = PI.ID_INGREDIENT " +
+                "WHERE PI.QUANTITE <= I.STOCK AND FROM_TABLE.CARTE = 1", Plat.class);
 
         //Si pas de plats de la carte.
-        if(platsDisponibles.isEmpty()) {
+        if (platsDisponibles.isEmpty()) {
             //Message d'erreur.
             ui.afficher("Aucun plat disponible trouvé dans la carte du jour !");
             //Sinon.
@@ -414,5 +414,103 @@ public class PlatControleur extends Controleur {
 
     }
 
-}
+    /**
+     * Valider la préparation d'un plat d'une commande.
+     */
+    public static void validerPreparation() {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
 
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Validation de la préparation d'un plat d'une commande :");
+
+        //Récupération des commandes en attente.
+        List<Entite> commandes = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'en attente'", Commande.class);
+
+        //Si pas de commande en attente.
+        if (commandes.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucune commande en attente trouvée !");
+            //Sinon.
+        } else {
+            //Question et saisies.
+            int idCommande = ui.poserQuestionListeNUplets("Sélectionner une commande :", commandes);
+            Commande commande = (Commande) filtrerListeNUpletsAvecId(commandes, idCommande);
+
+            //Récupération des plats en attente de la commande sélectionnée
+            List<Entite> commandePlats = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'en attente' AND ID_COMMANDE = "+idCommande, LigneCommande.class);
+
+            //Si pas de plat en attente.
+            if (commandePlats.isEmpty()) {
+                //Message d'erreur.
+                ui.afficher("Aucun plat en attente trouvé pour la commande sélectionnée !");
+                //Sinon.
+            } else {
+                //Question et saisies.
+                int idPlat = ui.poserQuestionListeNUplets("Sélectionner un ligne de commande :", commandePlats);
+                LigneCommande plat = (LigneCommande) filtrerListeNUpletsAvecId(commandePlats, idPlat);
+
+                //Sauvegarde : modification du plat.
+                plat.setEtat("prêt");
+                orm.persisterNUplet(plat);
+                //Récupération des plats en attente de la commande sélectionnée
+                List<Entite> commandePlats1 = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'en attente' AND ID_COMMANDE = "+idCommande, LigneCommande.class);
+                if(commandePlats1.isEmpty()){
+                    //Message de résultat.
+                    commande.setEtat("servi");
+                    orm.persisterNUplet(commande);
+                }
+                //Message de résultat.
+                ui.afficher("Plat prêt !");
+                ui.afficher(plat.toString());
+            }
+        }
+        //Retour à l'accueil.
+        AccueilControleur.consulter();
+
+    }
+    /**
+     * Lister les plats disponibles dans la carte du jour pour une catégorie.
+     */
+    public static void listerDisponiblesPourCategorie() {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Listing des plats disponibles dans la carte du jour pour une catégorie :");
+
+        //Récupération des catégories.
+        List<Entite> categories = orm.chercherTousLesNUplets(Categorie.class);
+
+        //Question et saisies.
+        int idCategorie = ui.poserQuestionListeNUplets("Sélectionner une catégorie :", categories);
+        Categorie categorie = (Categorie) filtrerListeNUpletsAvecId(categories, idCategorie);
+
+        //Récupération des plats disponibles pour une categorie.
+        List<Entite> plats = orm.chercherNUpletsAvecPredicat(" WHERE FROM_TABLE.ID IN ( " +
+                "SELECT P.ID " +
+                "FROM PLAT AS P " +
+                "INNER JOIN CATEGORIE AS C " +
+                "ON P.ID_CATEGORIE = C.ID " +
+                "INNER JOIN PLAT_INGREDIENTS AS PI " +
+                "ON PI.ID_PLAT = P.ID " +
+                "INNER JOIN INGREDIENT AS I " +
+                "ON I.ID = PI.ID_INGREDIENT " +
+                "WHERE PI.QUANTITE <= I.STOCK AND P.CARTE = 1 AND C.ID ="+idCategorie+")", Plat.class);
+
+
+        //Si pas de plat disponible.
+        if(plats.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucun plat trouvé !");
+        } else {
+            //Litsing.
+            ui.listerNUplets(plats);
+        }
+
+        //Retour vers l'accueil.
+        AccueilControleur.consulter();
+    }
+}

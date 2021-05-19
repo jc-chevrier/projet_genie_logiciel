@@ -19,6 +19,11 @@ public class CategorieTest {
     private static ORM orm;
     private static UI ui;
 
+    static void reinitialiserTables(){
+        //On réinitialise la table catégorie.
+        orm.reinitialiserTable(Categorie.class);
+    }
+
     @BeforeAll
     static void faireAvantTousLesTests() {
         ORM.CONFIGURATION_FILENAME = "./configuration/configuration_bdd_test.properties";
@@ -28,8 +33,18 @@ public class CategorieTest {
         //On se connecte en tant que cuisinier.
         ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 3", Compte.class));
     }
+
+    @BeforeEach
+    void faireAvantChaqueTest() {
+        reinitialiserTables();
+    }
+
+    @AfterAll
+    static void faireApresTousLesTests() {
+        reinitialiserTables();
+    }
+
     @Test
-    @Order(1)
     @DisplayName("Test : lister les categories - cas 1 : categories trouvées")
     void testListerCas1Trouvees() {
         //On ajoute une categorie à lister.
@@ -44,13 +59,10 @@ public class CategorieTest {
         //On simule le scénario de listing.
         CategorieControleur.lister();
     }
+
     @Test
-    @Order(2)
     @DisplayName("Test : lister les catégories - cas 2 : aucune catégorie trouvée")
     void testListerCas2PasTrouvees() {
-        //On vide la table catégorie.
-        orm.chercherTousLesNUplets(Categorie.class).forEach(orm::supprimerNUplet);
-
         //On simule les saisies de listing dans ce fichier.
         System.setIn(CategorieTest.class.getResourceAsStream("./saisies/categorie_test/lister_cas_2.txt"));
         ui.reinitialiserScanner();
@@ -58,8 +70,8 @@ public class CategorieTest {
         //On simule le scénario de listing.
         UniteControleur.lister();
     }
+
     @Test
-    @Order(3)
     @DisplayName("Test : ajouter une catégorie - cas 1 : catégorie bien ajoutée")
     void testAjouterCas1BienAjoutee() {
         //On simule les saisies d'ajout dans ce fichier.
@@ -75,8 +87,8 @@ public class CategorieTest {
         int nbCategoriesApres = orm.compterTousLesNUplets(Categorie.class);
         assertEquals(nbCategoriesAvant + 1, nbCategoriesApres);
     }
+
     @Test
-    @Order(4)
     @DisplayName("Test : ajouter une catégorie - cas 2 : catégorie bien ajoutée avec bon libellé")
     void testAjouterCas2BonLibelle() {
         //On simule les saisies de l'ajout dans ce fichier.
@@ -87,11 +99,11 @@ public class CategorieTest {
         CategorieControleur.ajouter();
 
         //La catégorie insérée doit avoir ce libellé : "libellé test ajouter".
-        Categorie categorieInseree = (Categorie) orm.chercherNUpletAvecPredicat("WHERE ID = 3", Categorie.class);
+        Categorie categorieInseree = (Categorie) orm.chercherNUpletAvecPredicat("WHERE ID = 1", Categorie.class);
         assertEquals("libellé test ajouter", categorieInseree.getLibelle());
     }
+
     @Test
-    @Order(5)
     @DisplayName("Test : modifier une catégorie - cas 1 : catégorie bien modifiée")
     void testModifierCas1BienModifiee() {
         //On ajoute une catégorie à modifier.
@@ -107,17 +119,13 @@ public class CategorieTest {
         CategorieControleur.modifier();
 
         //La catégorie modifiée doit avoir ce libellé : "libellé modifié".
-        Categorie categorieModifie = (Categorie) orm.chercherNUpletAvecPredicat("WHERE ID = 4", Categorie.class);
+        Categorie categorieModifie = (Categorie) orm.chercherNUpletAvecPredicat("WHERE ID = 1", Categorie.class);
         assertEquals("libellé modifié", categorieModifie.getLibelle());
     }
 
     @Test
-    @Order(6)
     @DisplayName("Test : modifier une catégorie - cas 2 : aucune catégorie trouvée")
     void testModifierCa2PasTrouvees() {
-        //On vide la table catégorie.
-        orm.chercherTousLesNUplets(Categorie.class).forEach(orm::supprimerNUplet);
-
         //On simule les saisies de modification dans ce fichier.
         System.setIn(CategorieTest.class.getResourceAsStream("./saisies/categorie_test/modifier_cas_1.txt"));
         ui.reinitialiserScanner();
@@ -125,8 +133,8 @@ public class CategorieTest {
         //On simule le scénario de modification.
         CategorieControleur.modifier();
     }
+
     @Test
-    @Order(7)
     @DisplayName("Test : supprimer une catégorie - cas 1 : catégorie bien supprimée")
     void testSupprimerCas1BienSupprimee() {
         //On ajoute une catégorie à supprimer.
@@ -149,7 +157,6 @@ public class CategorieTest {
     }
 
     @Test
-    @Order(8)
     @DisplayName("Test : supprimer une catégorie - cas 2 : catégorie supprimée correcte")
     void testSupprimerCas2Correcte() {
         //On ajoute une catégorie à supprimer.
@@ -162,24 +169,20 @@ public class CategorieTest {
         ui.reinitialiserScanner();
 
         //Catégorie existante avant.
-        Categorie categorieAvant = (Categorie) orm.chercherNUpletAvecPredicat("WHERE ID = 6", Categorie.class);
+        Categorie categorieAvant = (Categorie) orm.chercherNUpletAvecPredicat("WHERE ID = 1", Categorie.class);
         assertNotNull(categorieAvant);
 
         //On simule le scénario de suppression.
         CategorieControleur.supprimer();
 
         //Catégorie suppirmée après.
-        Categorie categorieApres = (Categorie) orm.chercherNUpletAvecPredicat("WHERE ID = 6", Categorie.class);
+        Categorie categorieApres = (Categorie) orm.chercherNUpletAvecPredicat("WHERE ID = 1", Categorie.class);
         assertNull(categorieApres);
     }
 
     @Test
-    @Order(9)
     @DisplayName("Test : supprimer une catégorie - cas 3 : aucune catégorie trouvée")
     void testSupprimerCas3PasTrouvees() {
-        //On vide la table catégorie.
-        orm.chercherTousLesNUplets(Categorie.class).forEach(orm::supprimerNUplet);
-
         //On simule les saisies de la suppression dans ce fichier.
         System.setIn(UniteTest.class.getResourceAsStream("./saisies/categorie_test/supprimer_cas_3.txt"));
         ui.reinitialiserScanner();

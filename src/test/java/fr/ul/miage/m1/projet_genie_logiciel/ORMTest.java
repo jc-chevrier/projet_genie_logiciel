@@ -1,10 +1,7 @@
 package fr.ul.miage.m1.projet_genie_logiciel;
 
-import fr.ul.miage.m1.projet_genie_logiciel.entites.Place;
-import fr.ul.miage.m1.projet_genie_logiciel.entites.Unite;
+import fr.ul.miage.m1.projet_genie_logiciel.entites.*;
 import org.junit.jupiter.api.*;
-import fr.ul.miage.m1.projet_genie_logiciel.entites.Entite;
-import fr.ul.miage.m1.projet_genie_logiciel.entites.Role;
 import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,95 +10,150 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ORMTest {
     private static ORM orm;
 
+    static void reinitialiserTables(){
+        //On réinitialise la table place.
+        orm.reinitialiserTable(Place.class);
+        //On réinitialise la table unité.
+        orm.reinitialiserTable(Unite.class);
+    }
+
     @BeforeAll
     static void setUp() {
         ORM.CONFIGURATION_FILENAME = "./configuration/configuration_bdd_test.properties";
         orm = ORM.getInstance();
     }
 
+    @BeforeEach
+    void faireAvantChaqueTest() {
+        reinitialiserTables();
+    }
+
+    @AfterAll
+    static void faireApresTousLesTests() {
+        reinitialiserTables();
+    }
+
     @Test
     @DisplayName("Test : chercher tous les n-uplets - cas n-uplets trouvés")
     void testChercherTousLesNUpletsTrouves() {
-        List<Entite> list = orm.chercherTousLesNUplets(Role.class);
-        assertEquals(false, list.isEmpty());
+        //On ajoute une unité à lister.
+        Unite unite1 = new Unite();
+        unite1.setLibelle("libellé");
+        orm.persisterNUplet(unite1);
+
+        List<Entite> liste = orm.chercherTousLesNUplets(Unite.class);
+        assertEquals(false, liste.isEmpty());
     }
 
     @Test
     @DisplayName("Test : chercher tous les n-uplets - cas n-uplets non trouvés")
     void testChercherTousLesNUpletsNonTrouves() {
-        List<Entite> list = orm.chercherTousLesNUplets(Unite.class);
-        assertEquals(true, list.isEmpty());
+
+        List<Entite> liste = orm.chercherTousLesNUplets(Unite.class);
+        assertEquals(true, liste.isEmpty());
     }
 
     @Test
     @DisplayName("Test : chercher le n-uplet avec un predicat - cas n-uplet trouvé")
     void testChercherNUpletAvecPredicatCasTrouve(){
-        Entite nUplet = orm.chercherNUpletAvecPredicat("WHERE ID=2",Role.class);
+        //On ajoute une unité à lister.
+        Unite unite1 = new Unite();
+        unite1.setLibelle("libellé");
+        orm.persisterNUplet(unite1);
+
+        Entite nUplet = orm.chercherNUpletAvecPredicat("WHERE ID=1",Unite.class);
         assertNotNull(nUplet);
     }
 
     @Test
     @DisplayName("Test : chercher un n-uplet avec un predicat - cas n-uplet non trouvé")
     void testChercherNUpletAvecPredicatCasNonTrouve(){
-        Entite nUplet = orm.chercherNUpletAvecPredicat("WHERE ID=-7",Role.class);
+        Entite nUplet = orm.chercherNUpletAvecPredicat("WHERE ID=-7",Unite.class);
         assertEquals(null, nUplet);
     }
 
     @Test
     @DisplayName("Test : chercher un n-uplet avec un predicat - cas  n-uplet trouvé ")
     void testChercherNUpletAvecPredicatCasCorrect(){
-        Entite nUplet = orm.chercherNUpletAvecPredicat("WHERE ID=2",Role.class);
-        assertEquals(2, nUplet.getId());
+        //On ajoute une unité à lister.
+        Unite unite1 = new Unite();
+        unite1.setLibelle("libellé");
+        orm.persisterNUplet(unite1);
+
+        Entite nUplet = orm.chercherNUpletAvecPredicat("WHERE ID=1",Unite.class);
+        assertEquals(1, nUplet.getId());
     }
 
     @Test
     @DisplayName("Test : chercher des n-uplets avec un predicat - cas n-uplets trouvés")
     void testChercherNUpletsAvecPredicatCasTrouve() {
-        List<Entite> list = orm.chercherNUpletsAvecPredicat("WHERE ID IN (2,3)", Role.class);
-        assertEquals(2,list.size());
+        //On ajoute une unité à lister.
+        Unite unite1 = new Unite();
+        unite1.setLibelle("libellé");
+        orm.persisterNUplet(unite1);
+        //On ajoute une deuxième unité à lister.
+        Unite unite2 = new Unite();
+        unite2.setLibelle("libellé");
+        orm.persisterNUplet(unite2);
+        List<Entite> liste = orm.chercherNUpletsAvecPredicat("WHERE ID IN (1,2)", Unite.class);
+        assertEquals(2,liste.size());
     }
 
     @Test
     @DisplayName("Test : chercher des n-uplets avec un predicat - cas n-uplets non trouvés")
     void testChercherNUpletsAvecPredicatCasNonTrouve() {
-        List<Entite> list = orm.chercherNUpletsAvecPredicat("WHERE ID IN (-2,-3)", Role.class);
-        assertEquals(true,list.isEmpty());
+        List<Entite> liste = orm.chercherNUpletsAvecPredicat("WHERE ID IN (-2,-3)", Unite.class);
+        assertEquals(true,liste.isEmpty());
     }
 
     @Test
     @DisplayName("Test : chercher des n-uplets avec un predicat - cas n-uplets corrects")
     void testChercherNUpletsAvecPredicatCasCorrects() {
-        List<Entite> list = orm.chercherNUpletsAvecPredicat("WHERE ID IN (2,3) ORDER BY ID", Role.class);
-        assertEquals(2,list.get(0).getId());
-        assertEquals(3,list.get(1).getId());
+        //On ajoute une unité à lister.
+        Unite unite1 = new Unite();
+        unite1.setLibelle("libellé");
+        orm.persisterNUplet(unite1);
+        //On ajoute une deuxième unité à lister.
+        Unite unite2 = new Unite();
+        unite2.setLibelle("libellé");
+        orm.persisterNUplet(unite2);
+
+        List<Entite> list = orm.chercherNUpletsAvecPredicat("WHERE ID IN (1,2) ORDER BY ID", Role.class);
+        assertEquals(1,list.get(0).getId());
+        assertEquals(2,list.get(1).getId());
     }
 
     @Test
     @DisplayName("Test : faire persister un n-uplet - cas insérer un n-uplet")
     void testPersisterNUpletCasInsertion() {
-        Role nUpletAInserer = new Role();
-        nUpletAInserer.setLibelle("Test");
-        orm.persisterNUplet(nUpletAInserer);
-        Role nUpletInsere = (Role) orm.chercherNUpletAvecPredicat("WHERE LIBELLE = 'Test'", Role.class);
+        //On ajoute une unité à lister.
+        Unite unite1 = new Unite();
+        unite1.setLibelle("libellé");
+        orm.persisterNUplet(unite1);
+        Unite nUpletInsere = (Unite) orm.chercherNUpletAvecPredicat("WHERE LIBELLE = 'libellé'", Unite.class);
         assertEquals(true, nUpletInsere != null);
     }
 
     @Test
     @DisplayName("Test : faire persister un n-uplet - cas insérer un n-uplet")
     void testPersisterNUpletCasMiseAJour() {
-        Role nUpletAMettreAJour = (Role) orm.chercherNUpletAvecPredicat("WHERE ID = 4", Role.class);
-        nUpletAMettreAJour.setLibelle("Maitre Hotel MAJ");
+        //On ajoute une unité à lister.
+        Unite unite1 = new Unite();
+        unite1.setLibelle("libellé");
+        orm.persisterNUplet(unite1);
+
+        Unite nUpletAMettreAJour = (Unite) orm.chercherNUpletAvecPredicat("WHERE ID = 1", Unite.class);
+        nUpletAMettreAJour.setLibelle("libellé modifié");
         orm.persisterNUplet(nUpletAMettreAJour);
-        Role nUpletMisAJour = (Role) orm.chercherNUpletAvecPredicat("WHERE ID = 4", Role.class);
-        assertEquals("Maitre Hotel MAJ", nUpletMisAJour.getLibelle());
+
+       Unite nUpletMisAJour = (Unite) orm.chercherNUpletAvecPredicat("WHERE ID = 1", Unite.class);
+        assertEquals("libellé modifié", nUpletMisAJour.getLibelle());
     }
 
 
     @Test
     @DisplayName("Test : supprimer un n-uplet avec un prédicat")
     void testSupprimerNUpletAvecPredicat() {
-        orm.chercherTousLesNUplets(Unite.class).forEach(orm::supprimerNUplet);
-
         Unite unite = new Unite();
         unite.setLibelle("libellé unité à suppprimer");
         orm.persisterNUplet(unite);
@@ -128,24 +180,23 @@ public class ORMTest {
     @Test
     @DisplayName("Test : supprimer un n-uplet")
     void testSupprimerNUplet() {
-        Role role = new Role();
-        role.setLibelle("libellé");
-        orm.persisterNUplet(role);
+        //On ajoute une unité à lister.
+        Unite unite = new Unite();
+        unite.setLibelle("libellé");
+        orm.persisterNUplet(unite);
 
-        Role nUpletASupprimer = (Role) orm.chercherNUpletAvecPredicat("WHERE ID = 6", Role.class);
+        Unite nUpletASupprimer = (Unite) orm.chercherNUpletAvecPredicat("WHERE ID = 1", Unite.class);
         assertNotNull(nUpletASupprimer);
 
         orm.supprimerNUplet(nUpletASupprimer);
 
-        Role nUpletSupprime = (Role) orm.chercherNUpletAvecPredicat("WHERE ID = 6", Role.class);
+        Unite nUpletSupprime = (Unite) orm.chercherNUpletAvecPredicat("WHERE ID = 1", Unite.class);
         assertNull(nUpletSupprime);
     }
 
     @Test
     @DisplayName("Test : supprimer tous les n-uplets")
     void testSupprimerTousLesNUplets() {
-        orm.chercherTousLesNUplets(Place.class).forEach(orm::supprimerNUplet);
-
         Place place = new Place();
         place.setEtat("libre");
         orm.persisterNUplet(place);
