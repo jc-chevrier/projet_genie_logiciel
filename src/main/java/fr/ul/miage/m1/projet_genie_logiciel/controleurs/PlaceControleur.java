@@ -1,10 +1,10 @@
 package fr.ul.miage.m1.projet_genie_logiciel.controleurs;
 
-import fr.ul.miage.m1.projet_genie_logiciel.entites.Compte;
-import fr.ul.miage.m1.projet_genie_logiciel.entites.Entite;
-import fr.ul.miage.m1.projet_genie_logiciel.entites.Place;
+import fr.ul.miage.m1.projet_genie_logiciel.entites.*;
 import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
+
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -396,4 +396,123 @@ public class PlaceControleur extends Controleur {
         //Retour vers l'accueil.
         AccueilControleur.consulter();
     }
+
+    /**
+     * Lister les tables réservées
+     */
+    public static void listerReserver() {
+        //UI et ORM
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Listing des tables réservées :");
+
+        //Récupération des tables réservées dans le restaurant.
+        List<Entite> placesReservees = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'réservé' ", Place.class);
+
+        //Si pas de tables réservées.
+        if (placesReservees.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucune table n'est réservées dans le restaurant !");
+        //Sinon
+        } else {
+            //Listing.
+            ui.listerNUplets(placesReservees);
+        }
+
+        //Retour vers l'accueil.
+        AccueilControleur.consulter();
+    }
+
+    /**
+     * Réserver une table.
+     */
+    public static void reserverTable() {
+        //UI et ORM
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Réservation d'une table :");
+
+        //Récupération de la liste des tables libres.
+        List<Entite> placesLibres = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'libre'", Place.class);
+
+        //Si pas de tables à réserver.
+        if (placesLibres.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucune table n'est disponible pour la réservation dans le restaurant !");
+        //Sinon.
+        } else {
+            //Questions et saisies.
+            int idPlace = ui.poserQuestionListeNUplets("Sélectionner une table :", placesLibres);
+            Place place = (Place) filtrerListeNUpletsAvecId(placesLibres, idPlace);
+            //Saisie des informations pour la réservation d'une table.
+            String nom = ui.poserQuestion("Saisir le nom pour la réservation :", UI.REGEX_CHAINE_DE_CARACTERES);
+            String prenom = ui.poserQuestion("Saisir le prénom pour la réservation :", UI.REGEX_CHAINE_DE_CARACTERES);
+
+            //Sauvegarde : modification de la table.
+            place.setNomReservation(nom);
+            place.setPrenomReservation(prenom);
+            place.setDatetimeReservation(new Date());
+            place.setEtat("réservé");
+            orm.persisterNUplet(place);
+
+            //Message de résultat.
+            ui.afficher("Nouvelle réservation de la table réussie !");
+            ui.afficher(place.toString());
+        }
+
+        //Retour à l'accueil.
+        AccueilControleur.consulter();
+    }
+
+    /**
+     * Annuler la réservation d'une table.
+     */
+    public static void annulerReservation() {
+        //UI et ORM
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Annulation d'une réservation dans le restaurant :");
+
+        //Récupération de la liste des tables réservées.
+        List<Entite> placesReservees = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'réservé'", Place.class);
+
+        //Si pas de tables.
+        if(placesReservees.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucune table réservée trouvée dans le restaurant !");
+        //Sinon.
+        } else {
+            //Questions et saisies.
+            //Saisie des informations pour la réservation d'une table.
+            String nom = ui.poserQuestion("Saisir le nom pour la réservation :", UI.REGEX_CHAINE_DE_CARACTERES);
+            String prenom = ui.poserQuestion("Saisir le prénom pour la réservation :", UI.REGEX_CHAINE_DE_CARACTERES);
+            placesReservees = orm.chercherNUpletsAvecPredicat("WHERE NOM_RESERVATION = '" + nom + "'" +
+                                                                    " AND PRENOM_RESERVATION = '" + prenom  + "'", Place.class);
+
+            //Questions et saisies.
+            int idPlace = ui.poserQuestionListeNUplets("Selectionner une table réservée :", placesReservees);
+            Place place = (Place) filtrerListeNUpletsAvecId(placesReservees, idPlace);
+
+            //Sauvegarde : modification de la table.
+            place.setNomReservation(null);
+            place.setPrenomReservation(null);
+            place.setDatetimeReservation(null);
+            place.setEtat("libre");
+            orm.persisterNUplet(place);
+
+            //Message de résultat.
+            ui.afficher(" Annulation de la réservation réussie !");
+            ui.afficher(placesReservees.toString());
+        }
+
+        //Retour à l'accueil.
+        AccueilControleur.consulter();
+    }
+
 }

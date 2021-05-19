@@ -1,5 +1,8 @@
 package fr.ul.miage.m1.projet_genie_logiciel.controleurs;
 
+import fr.ul.miage.m1.projet_genie_logiciel.entites.Commande;
+import fr.ul.miage.m1.projet_genie_logiciel.entites.Entite;
+import fr.ul.miage.m1.projet_genie_logiciel.entites.LigneCommande;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.*;
 import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
@@ -326,9 +329,8 @@ public class CommandeControleur extends Controleur {
     }
 
     /**
-     * Lister tous les plats prêts dans le restaurant,
+     * Lister les plats prêts dans le restaurant,
      * pour les tables du serveur connecté,
-     * quelque soit la commande et la table.
      */
     public static void listerToutesLignesPretes() {
         //UI et ORM.
@@ -405,6 +407,34 @@ public class CommandeControleur extends Controleur {
                 //Message de résultat.
                 ui.listerNUplets(lignesCommande);
             }
+        }
+
+        //Retour vers l'accueil.
+        AccueilControleur.consulter();
+    }
+
+    /*
+    * Lister tous les plats à préparer.
+     */
+    public static void listerLignesAPreparer() {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Listing des plats à préparer des commandes :");
+
+        //Récupération des lignes de commandes à préparer.
+        List<Entite> lignesCommandeAPreparer = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'en attente'", LigneCommande.class);
+
+        //Si pas de plats en attente.
+        if (lignesCommandeAPreparer.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucun plat n'est à préparer dans le restaurant !");
+            //Sinon
+        } else {
+            //Listing.
+            ui.listerNUplets(lignesCommandeAPreparer);
         }
 
         //Retour vers l'accueil.

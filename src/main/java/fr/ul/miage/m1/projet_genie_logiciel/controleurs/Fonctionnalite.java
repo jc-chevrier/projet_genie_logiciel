@@ -1,6 +1,5 @@
 package fr.ul.miage.m1.projet_genie_logiciel.controleurs;
 
-import fr.ul.miage.m1.projet_genie_logiciel.entites.Plat;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Role;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
 import java.util.*;
@@ -34,9 +33,9 @@ public class Fonctionnalite {
                               new Fonctionnalite("Désallouer une table à un client", PlaceControleur::desallouerPourClient),
                               new Fonctionnalite("Allouer une table à un serveur", PlaceControleur::allouerPourServeur),
                               new Fonctionnalite("Désallouer une table à un serveur", PlaceControleur::desallouerPourServeur),
-                              new Fonctionnalite("Lister les tables réservées", AccueilControleur::consulter),//TODO à modifier
-                              new Fonctionnalite("Réserver une table", AccueilControleur::consulter),//TODO à modifier
-                              new Fonctionnalite("Annuler la réservation d'une table", AccueilControleur::consulter),//TODO à modifier
+                              new Fonctionnalite("Lister les tables réservées", PlaceControleur::listerReserver),
+                              new Fonctionnalite("Réserver une table", PlaceControleur::reserverTable),
+                              new Fonctionnalite("Annuler la réservation d'une table", PlaceControleur::annulerReservation),
                               new Fonctionnalite("Valider le paiement d'une commande", CommandeControleur::validerPaiement)));
 
         List<Fonctionnalite> fonctionnalitesCuisinier = new ArrayList<Fonctionnalite>(
@@ -57,7 +56,7 @@ public class Fonctionnalite {
                               new Fonctionnalite("Ajouter un plat au catalogue des plats", PlatControleur::ajouter),
                               new Fonctionnalite("Modifier un plat", PlatControleur::modifier),
                               new Fonctionnalite("Supprimer un plat du catalogue des plats", PlatControleur::supprimer),
-                              new Fonctionnalite("Lister les plats à préparer des commandes", AccueilControleur::consulter),//TODO à modifier
+                              new Fonctionnalite("Lister les plats à préparer des commandes", CommandeControleur::listerLignesAPreparer),
                               new Fonctionnalite("Valider la préparation d'un plat d'une commande", PlatControleur::validerPreparation)));
 
         List<Fonctionnalite> fonctionnalitesServeur = new ArrayList<Fonctionnalite>(
