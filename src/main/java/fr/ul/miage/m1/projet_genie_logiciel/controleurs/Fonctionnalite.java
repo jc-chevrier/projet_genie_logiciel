@@ -1,5 +1,6 @@
 package fr.ul.miage.m1.projet_genie_logiciel.controleurs;
 
+import fr.ul.miage.m1.projet_genie_logiciel.entites.Plat;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Role;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
 import java.util.*;
@@ -62,7 +63,7 @@ public class Fonctionnalite {
         List<Fonctionnalite> fonctionnalitesServeur = new ArrayList<Fonctionnalite>(
                 Arrays.asList(new Fonctionnalite("Lister tous les plats de la carte", PlatControleur::listerCarte),
                               new Fonctionnalite("Lister tous les plats disponibles de la carte", PlatControleur::ListerDisponibleCarte),
-                              new Fonctionnalite("Lister les plats disponibles de la carte pour une catégorie", AccueilControleur::consulter), //TODO à modifier
+                              new Fonctionnalite("Lister les plats disponibles de la carte pour une catégorie", PlatControleur::listerDisponiblesPourCategorie),
                               new Fonctionnalite("Lister les catégories de plats disponibles de la carte", CategorieControleur::listerPlatsDisponibles),
                               new Fonctionnalite("Ajouter une commande", CommandeControleur::ajouter),
                               new Fonctionnalite("Supprimer une commande", CommandeControleur::supprimer),
