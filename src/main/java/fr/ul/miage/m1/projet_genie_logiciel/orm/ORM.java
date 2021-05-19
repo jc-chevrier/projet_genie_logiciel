@@ -93,7 +93,8 @@ public class ORM {
                                 structure.keySet()
                                         .stream()
                                         .collect(Collectors.joining(", FROM_TABLE.", "FROM_TABLE.", "")) +
-                                " FROM " + nomTable + " AS FROM_TABLE " + predicat + ";";
+                                " FROM " + nomTable + " AS FROM_TABLE " + predicat + "" +
+                                " ORDER BY FROM_TABLE.ID;";
 
         List<Entite> listeNUplets = new ArrayList<Entite>();
         try {
@@ -352,7 +353,7 @@ public class ORM {
             //Récupération des métadonnées de la table.
             String nomTable = EntiteMetadonnee.getEntiteNomTable(entiteClasse);
 
-            requeteString = "ALTER SEQUENCE " + nomTable.toLowerCase() + "_id_seq RESTART WITH " + idDebut + " ;";
+            requeteString = "ALTER SEQUENCE " + nomTable.toLowerCase() + "_id_seq RESTART WITH " + idDebut + ";";
             Statement requete = connexion.createStatement();
             //Execution de la requête.
             requete.executeUpdate(requeteString);

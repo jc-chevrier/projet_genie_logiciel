@@ -4,7 +4,6 @@ import fr.ul.miage.m1.projet_genie_logiciel.entites.*;
 import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -328,6 +327,7 @@ public class CommandeControleur extends Controleur {
 
     /**
      * Lister tous les plats prêts dans le restaurant,
+     * pour les tables du serveur connecté,
      * quelque soit la commande et la table.
      */
     public static void listerToutesLignesPretes() {
@@ -336,10 +336,17 @@ public class CommandeControleur extends Controleur {
         ORM orm = getORM();
 
         //Message de titre.
-        ui.afficherAvecDelimiteurEtUtilisateur("Listing des plats prêts :");
+        ui.afficherAvecDelimiteurEtUtilisateur("Listing des plats prêts pour mes tables :");
 
-        //Récupération des plats porêts non servis.
-        List<Entite> lignesCommande = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'prêt'", LigneCommande.class);
+        //Récupération des plats prêts non servis.
+        List<Entite> lignesCommande = orm.chercherNUpletsAvecPredicat("INNER JOIN COMMANDE AS C " +
+                                                                               "ON C.ID = FROM_TABLE.ID_COMMANDE " +
+                                                                               "INNER JOIN PLACE AS P " +
+                                                                               "ON P.ID = C.ID_PLACE " +
+                                                                               "WHERE FROM_TABLE.ETAT = 'prêt' " +
+                                                                               "AND P.ID_COMPTE_SERVEUR = " +
+                                                                                getUtilisateurConnecte().getId(),
+                                                                                LigneCommande.class);
 
         //Si pas de plats prêts non servis.
         if(lignesCommande.isEmpty()) {
@@ -356,7 +363,7 @@ public class CommandeControleur extends Controleur {
     }
 
     /**
-     * Lister tous les plats prêts dans le restaurant,
+     * Lister les plats prêts dans le restaurant,
      * pour une table.
      */
     public static void listerLignesPretesPLace() {
@@ -365,19 +372,22 @@ public class CommandeControleur extends Controleur {
         ORM orm = getORM();
 
         //Message de titre.
-        ui.afficherAvecDelimiteurEtUtilisateur("Listing des plats prêts pour une table :");
+        ui.afficherAvecDelimiteurEtUtilisateur("Listing des plats prêts pour une de mes tables :");
 
-        //Récupération des tables occupées dans le restaurant.
-        List<Entite>  placesOccupees =  orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'occupé'", Place.class);
+        //Récupération des tables occupées du serveur dans le restaurant.
+        List<Entite>  placesOccupees =  orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'occupé' " +
+                                                                                 "AND ID_COMPTE_SERVEUR = " +
+                                                                                 getUtilisateurConnecte().getId(),
+                                                                                 Place.class);
 
-        //Si plas de tables occupées dans le restaurant.
+        //Si pas de tables du serveur occupées dans le restaurant.
         if(placesOccupees.isEmpty()) {
             //Message d'erreur.
-            ui.afficher("Aucun table n'est occupée dans le restaurant !");
+            ui.afficher("Aucune de vos tables n'est occupée dans le restaurant !");
         //Sinon.
         } else {
             //Questions et saisies.
-            int idPlace = ui.poserQuestionListeNUplets("Sélectionner une table", placesOccupees);
+            int idPlace = ui.poserQuestionListeNUplets("Sélectionner une table :", placesOccupees);
 
             //Récupération des plats prêts non servis.
             List<Entite> lignesCommande = orm.chercherNUpletsAvecPredicat("INNER JOIN COMMANDE AS C " +
