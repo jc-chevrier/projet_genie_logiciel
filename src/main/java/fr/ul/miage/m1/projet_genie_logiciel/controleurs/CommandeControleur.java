@@ -338,7 +338,7 @@ public class CommandeControleur extends Controleur {
         //Message de titre.
         ui.afficherAvecDelimiteurEtUtilisateur("Listing des plats prêts :");
 
-        //Récupération des platsporêts non servis.
+        //Récupération des plats porêts non servis.
         List<Entite> lignesCommande = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'prêt'", LigneCommande.class);
 
         //Si pas de plats prêts non servis.
@@ -349,6 +349,52 @@ public class CommandeControleur extends Controleur {
         } else {
             //Message de résultat.
             ui.listerNUplets(lignesCommande);
+        }
+
+        //Retour vers l'accueil.
+        AccueilControleur.consulter();
+    }
+
+    /**
+     * Lister tous les plats prêts dans le restaurant,
+     * pour une table.
+     */
+    public static void listerLignesPretesPLace() {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Listing des plats prêts pour une table :");
+
+        //Récupération des tables occupées dans le restaurant.
+        List<Entite>  placesOccupees =  orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'occupé'", Place.class);
+
+        //Si plas de tables occupées dans le restaurant.
+        if(placesOccupees.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucun table n'est occupée dans le restaurant !");
+        //Sinon.
+        } else {
+            //Questions et saisies.
+            int idPlace = ui.poserQuestionListeNUplets("Sélectionner une table", placesOccupees);
+
+            //Récupération des plats prêts non servis.
+            List<Entite> lignesCommande = orm.chercherNUpletsAvecPredicat("INNER JOIN COMMANDE AS C " +
+                                                                                   "ON C.ID = FROM_TABLE.ID_COMMANDE " +
+                                                                                   "WHERE FROM_TABLE.ETAT = 'prêt' "  +
+                                                                                   "AND C.ID_PLACE = " + idPlace,
+                                                                                    LigneCommande.class);
+
+            //Si pas de plats prêts non servis pour la table sélectionnée.
+            if(lignesCommande.isEmpty()) {
+                //Message d'erreur.
+                ui.afficher("Aucun plat prêt attendant d'être servi pour cette table !");
+            //Sinon.
+            } else {
+                //Message de résultat.
+                ui.listerNUplets(lignesCommande);
+            }
         }
 
         //Retour vers l'accueil.
