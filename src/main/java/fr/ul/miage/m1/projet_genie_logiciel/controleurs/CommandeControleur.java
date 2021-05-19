@@ -325,4 +325,33 @@ public class CommandeControleur extends Controleur {
         //Retour vers l'accueil.
         AccueilControleur.consulter();
     }
+
+    /**
+     * Lister tous les plats prêts dans le restaurant,
+     * quelque soit la commande et la table.
+     */
+    public static void listerToutesLignesPretes() {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Listing des plats prêts :");
+
+        //Récupération des platsporêts non servis.
+        List<Entite> lignesCommande = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'prêt'", LigneCommande.class);
+
+        //Si pas de plats prêts non servis.
+        if(lignesCommande.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucun plat prêt attendant d'être servi !");
+       //Sinon.
+        } else {
+            //Message de résultat.
+            ui.listerNUplets(lignesCommande);
+        }
+
+        //Retour vers l'accueil.
+        AccueilControleur.consulter();
+    }
 }
