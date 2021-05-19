@@ -36,7 +36,7 @@ public class Fonctionnalite {
                               new Fonctionnalite("Désallouer une table à un serveur", PlaceControleur::desallouerPourServeur),
                               new Fonctionnalite("Lister les tables réservées", PlaceControleur::listerReserver),
                               new Fonctionnalite("Réserver une table", PlaceControleur::reserverTable),
-                              new Fonctionnalite("Annuler la réservation d'une table", AccueilControleur::consulter),//TODO à modifier
+                              new Fonctionnalite("Annuler la réservation d'une table", PlaceControleur::annulerReservation),
                               new Fonctionnalite("Valider le paiement d'une commande", CommandeControleur::validerPaiement)));
 
         List<Fonctionnalite> fonctionnalitesCuisinier = new ArrayList<Fonctionnalite>(
