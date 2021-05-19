@@ -438,17 +438,17 @@ public class PlaceControleur extends Controleur {
         ui.afficherAvecDelimiteurEtUtilisateur("Réservation d'une table :");
 
         //Récupération de la liste des tables libres.
-        List<Entite> places = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'libre'", Place.class);
+        List<Entite> placesLibres = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'libre'", Place.class);
 
         //Si pas de tables à réserver.
-        if (places.isEmpty()) {
+        if (placesLibres.isEmpty()) {
             //Message d'erreur.
             ui.afficher("Aucune table n'est disponible pour la réservation dans le restaurant !");
         //Sinon.
         } else {
             //Questions et saisies.
-            int idPlace = ui.poserQuestionListeNUplets("Sélectionner une table :", places);
-            Place place = (Place) filtrerListeNUpletsAvecId(places, idPlace);
+            int idPlace = ui.poserQuestionListeNUplets("Sélectionner une table :", placesLibres);
+            Place place = (Place) filtrerListeNUpletsAvecId(placesLibres, idPlace);
             //Saisie des informations pour la réservation d'une table.
             String nom = ui.poserQuestion("Saisir le nom pour la réservation :", UI.REGEX_CHAINE_DE_CARACTERES);
             String prenom = ui.poserQuestion("Saisir le prénom pour la réservation :", UI.REGEX_CHAINE_DE_CARACTERES);
