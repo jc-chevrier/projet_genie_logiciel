@@ -1,10 +1,12 @@
 package fr.ul.miage.m1.projet_genie_logiciel.controleurs;
 
+import fr.ul.miage.m1.projet_genie_logiciel.entites.Commande;
+import fr.ul.miage.m1.projet_genie_logiciel.entites.Entite;
+import fr.ul.miage.m1.projet_genie_logiciel.entites.LigneCommande;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.*;
 import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -327,8 +329,8 @@ public class CommandeControleur extends Controleur {
     }
 
     /**
-     * Lister tous les plats prêts dans le restaurant,
-     * quelque soit la commande et la table.
+     * Lister les plats prêts dans le restaurant,
+     * pour les tables du serveur connecté,
      */
     public static void listerToutesLignesPretes() {
         //UI et ORM.
@@ -336,10 +338,17 @@ public class CommandeControleur extends Controleur {
         ORM orm = getORM();
 
         //Message de titre.
-        ui.afficherAvecDelimiteurEtUtilisateur("Listing des plats prêts :");
+        ui.afficherAvecDelimiteurEtUtilisateur("Listing des plats prêts pour mes tables :");
 
-        //Récupération des platsporêts non servis.
-        List<Entite> lignesCommande = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'prêt'", LigneCommande.class);
+        //Récupération des plats prêts non servis.
+        List<Entite> lignesCommande = orm.chercherNUpletsAvecPredicat("INNER JOIN COMMANDE AS C " +
+                                                                               "ON C.ID = FROM_TABLE.ID_COMMANDE " +
+                                                                               "INNER JOIN PLACE AS P " +
+                                                                               "ON P.ID = C.ID_PLACE " +
+                                                                               "WHERE FROM_TABLE.ETAT = 'prêt' " +
+                                                                               "AND P.ID_COMPTE_SERVEUR = " +
+                                                                                getUtilisateurConnecte().getId(),
+                                                                                LigneCommande.class);
 
         //Si pas de plats prêts non servis.
         if(lignesCommande.isEmpty()) {
@@ -349,6 +358,83 @@ public class CommandeControleur extends Controleur {
         } else {
             //Message de résultat.
             ui.listerNUplets(lignesCommande);
+        }
+
+        //Retour vers l'accueil.
+        AccueilControleur.consulter();
+    }
+
+    /**
+     * Lister les plats prêts dans le restaurant,
+     * pour une table.
+     */
+    public static void listerLignesPretesPLace() {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Listing des plats prêts pour une de mes tables :");
+
+        //Récupération des tables occupées du serveur dans le restaurant.
+        List<Entite>  placesOccupees =  orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'occupé' " +
+                                                                                 "AND ID_COMPTE_SERVEUR = " +
+                                                                                 getUtilisateurConnecte().getId(),
+                                                                                 Place.class);
+
+        //Si pas de tables du serveur occupées dans le restaurant.
+        if(placesOccupees.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucune de vos tables n'est occupée dans le restaurant !");
+        //Sinon.
+        } else {
+            //Questions et saisies.
+            int idPlace = ui.poserQuestionListeNUplets("Sélectionner une table :", placesOccupees);
+
+            //Récupération des plats prêts non servis.
+            List<Entite> lignesCommande = orm.chercherNUpletsAvecPredicat("INNER JOIN COMMANDE AS C " +
+                                                                                   "ON C.ID = FROM_TABLE.ID_COMMANDE " +
+                                                                                   "WHERE FROM_TABLE.ETAT = 'prêt' "  +
+                                                                                   "AND C.ID_PLACE = " + idPlace,
+                                                                                    LigneCommande.class);
+
+            //Si pas de plats prêts non servis pour la table sélectionnée.
+            if(lignesCommande.isEmpty()) {
+                //Message d'erreur.
+                ui.afficher("Aucun plat prêt attendant d'être servi pour cette table !");
+            //Sinon.
+            } else {
+                //Message de résultat.
+                ui.listerNUplets(lignesCommande);
+            }
+        }
+
+        //Retour vers l'accueil.
+        AccueilControleur.consulter();
+    }
+
+    /*
+    * Lister tous les plats à préparer.
+     */
+    public static void listerLignesAPreparer() {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Listing des plats à préparer des commandes :");
+
+        //Récupération des lignes de commandes à préparer.
+        List<Entite> lignesCommandeAPreparer = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'en attente'", LigneCommande.class);
+
+        //Si pas de plats en attente.
+        if (lignesCommandeAPreparer.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucun plat n'est à préparer dans le restaurant !");
+            //Sinon
+        } else {
+            //Listing.
+            ui.listerNUplets(lignesCommandeAPreparer);
         }
 
         //Retour vers l'accueil.
