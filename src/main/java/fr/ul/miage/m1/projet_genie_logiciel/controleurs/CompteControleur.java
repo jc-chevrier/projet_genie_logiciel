@@ -97,5 +97,43 @@ public class CompteControleur extends Controleur{
         AccueilControleur.consulter();
     }
 
+    /**
+     * Suuprimer un salarié.
+     */
+    public static void supprimer() {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Suppression d'un salarié :");
+
+        //Récupération des salariés exsitants.
+        List<Entite> salaries = orm.chercherTousLesNUplets(Compte.class);
+
+        //Si pas de plats dans le cataloque.
+        if (salaries.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucun salarié trouvé !");
+        //Sinon.
+        } else {
+            //Question et saisies.
+            int idSalarie = ui.poserQuestionListeNUplets("Sélectionner un salarié :", salaries);
+            Compte compte = (Compte) filtrerListeNUpletsAvecId(salaries, idSalarie);
+
+            //Sauvegarde : suppression du salarié.
+            List<Entite> salarie = orm.chercherNUpletsAvecPredicat("WHERE ID = " + idSalarie,
+                    PlatIngredients.class);
+            salarie.forEach(orm::supprimerNUplet);
+            orm.supprimerNUplet(compte);
+
+            //Message de résultat.
+            ui.afficher("Salarié supprimé !");
+        }
+
+        //Retour vers l'accueil.
+        AccueilControleur.consulter();
+    }
+
 }
 
