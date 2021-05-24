@@ -22,7 +22,7 @@ public class StatGeneral extends Entite {
         STRUCTURE = new HashMap<String, Class>();
         STRUCTURE.put("ID", Integer.class);
         STRUCTURE.put("DATE_JOUR", Date.class);
-        STRUCTURE.put("TEMPS_PREPARATION", Double.class);
+        STRUCTURE.put("TEMPS_PREPARATION", Integer.class);
         STRUCTURE.put("NB_COMMANDES", Integer.class);
         STRUCTURE.put("NB_CLIENTS", Integer.class);
     }
@@ -43,11 +43,11 @@ public class StatGeneral extends Entite {
         set("DATE_JOUR", dateJour);
     }
 
-    public Double getTempsPreparation() {
-        return (Double) get("TEMPS_PREPARATION");
+    public Integer getTempsPreparation() {
+        return (Integer) get("TEMPS_PREPARATION");
     }
 
-    public void setTempsPreparation(Double tempsPreparation) { set("TEMPS_PREPARATION", tempsPreparation);}
+    public void setTempsPreparation(Integer tempsPreparation) { set("TEMPS_PREPARATION", tempsPreparation);}
 
     public Integer getNbCommandes() {return (Integer) get("NB_COMMANDES");}
 

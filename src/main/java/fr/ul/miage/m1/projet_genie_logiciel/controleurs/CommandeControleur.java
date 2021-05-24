@@ -6,6 +6,8 @@ import fr.ul.miage.m1.projet_genie_logiciel.entites.LigneCommande;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.*;
 import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -319,9 +321,11 @@ public class CommandeControleur extends Controleur {
             commande.setEtat("payé");
             orm.persisterNUplet(commande);
 
-            //Mise à jour du nombre de commande.
-            StatGeneral statGeneral = orm.chercherNUpletAvecPredicat("WHERE DATE_JOUR = " + new Date(),
-                                                                              StatGeneral.class);
+            //Mise à jour du nombre de commandes.
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+            String aujourdhui = dateFormat.format(new Date());
+            StatGeneral statGeneral = (StatGeneral) orm.chercherNUpletAvecPredicat("WHERE TO_CHAR(DATE_JOUR, 'mm-dd-yyyy') = '" + aujourdhui + "'",
+                                                                                    StatGeneral.class);
             if(statGeneral == null) {
                 statGeneral = new StatGeneral();
                 statGeneral.setDateJour(new Date());
