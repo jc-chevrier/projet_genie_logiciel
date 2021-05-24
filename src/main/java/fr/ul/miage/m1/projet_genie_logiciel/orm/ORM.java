@@ -121,7 +121,7 @@ public class ORM {
                     } else if (type.equals(String.class)) {
                         valeur = resultatLignes.getString(attribut);
                     } else if (type.equals(Date.class)) {
-                        valeur = resultatLignes.getDate(attribut);
+                        valeur = resultatLignes.getTimestamp(attribut);
                     }
                     nUpletAttributs.put(attribut, valeur);
                 }

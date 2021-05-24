@@ -73,7 +73,7 @@ public class Fonctionnalite {
                               new Fonctionnalite("Ajouter une commande", CommandeControleur::ajouter),
                               new Fonctionnalite("Supprimer une commande", CommandeControleur::supprimer),
                               new Fonctionnalite("Lister les plats prêts pour mes tables", CommandeControleur::listerToutesLignesPretes),
-                              new Fonctionnalite("Lister les plats prêts pour une de mes tables", CommandeControleur::listerLignesPretesPLace)));
+                              new Fonctionnalite("Lister les plats prêts pour une de mes tables", CommandeControleur::listerLignesPretesPlace)));
 
         List<Fonctionnalite> fonctionnalitesAssistantService = new ArrayList<Fonctionnalite>(
                 Arrays.asList(new Fonctionnalite("Lister les tables à préparer", PlaceControleur::listerAPreparer),

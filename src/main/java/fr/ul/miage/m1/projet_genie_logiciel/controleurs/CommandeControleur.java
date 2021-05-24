@@ -37,7 +37,6 @@ public class CommandeControleur extends Controleur {
         if (composition.isEmpty()) {
             platsDisponibles = orm.chercherNUpletsAvecPredicat("WHERE " + Plat.PREDICAT_DISPONIBLE_EN_STOCK,
                                                                         Plat.class);
-        //Sinon.
         } else {
             //On autorise pas les plats déjà slécionnés pour la commande.
             List<String> idsPlatsDejaSelectionnes = composition.stream()
@@ -54,7 +53,6 @@ public class CommandeControleur extends Controleur {
         //Si plus de plats disponibles no nutilisés dans la composition.
         if (platsDisponibles.isEmpty()) {
             return null;
-        //Sinon.
         } else {
             //Questions et saisies.
             ui.afficher("Ajout d'un plat à la commande :");
@@ -198,14 +196,12 @@ public class CommandeControleur extends Controleur {
         if(placesOccupees.isEmpty()) {
             //Message d'erreur.
             ui.afficher("Aucune table occupée parmi mes tables dans le restaurant !");
-        //Sinon.
         } else {
             //Si pas de disponibles dans le restaurant.
             if(platsDisponibles.isEmpty()) {
                 //Message d'erreur.
                 ui.afficher("Aucun plat disponible en stock : pour aucun plat les quantités d'ingrédients " +
                                      "requises sont toutes présentes en stock !");
-            //Sinon.
             } else {
                 //Saisie et sauvegarde.
                 Commande commande = new Commande();
@@ -242,7 +238,6 @@ public class CommandeControleur extends Controleur {
         if (placesOccupees.isEmpty()) {
             //Message d'erreur.
             ui.afficher("Aucune table occupée trouvée parmi mes tables dans le restaurant !");
-        //Sinon.
         } else {
             //Question et saisies.
             int idPlace = ui.poserQuestionListeNUplets("Sélectionner une table :", placesOccupees);
@@ -257,7 +252,6 @@ public class CommandeControleur extends Controleur {
             if (commandesEnAttente.isEmpty()) {
                 //Message d'erreur.
                 ui.afficher("Aucune commande en attente de préparation trouvée pour cette table !");
-            //Sinon.
             } else {
                 //Question et saisies.
                 int idPCommande = ui.poserQuestionListeNUplets("Sélectionner une commande :", commandesEnAttente);
@@ -295,62 +289,6 @@ public class CommandeControleur extends Controleur {
     }
 
     /**
-     * Valider le paiement d'une commande.
-     */
-    public static void validerPaiement() {
-        //UI et ORM.
-        UI ui = getUI();
-        ORM orm = getORM();
-
-        //Message de titre.
-        ui.afficherAvecDelimiteurEtUtilisateur("Valider le paiement d'une commande :");
-
-        //Récupération des commandes servies.
-        List<Entite> commandes = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'servi'", Commande.class);
-        //Si pas de commande servie.
-        if(commandes.isEmpty()) {
-            //Message d'erreur.
-            ui.afficher("Aucune commande servie trouvée !");
-            //Sinon.
-        } else {
-            //Question et saisies.
-            int idCommande = ui.poserQuestionListeNUplets("Sélectionner une commande :", commandes);
-            Commande commande = (Commande) filtrerListeNUpletsAvecId(commandes, idCommande);
-
-            //Sauvegarde : modification du plat.
-            commande.setEtat("payé");
-            orm.persisterNUplet(commande);
-
-            //Mise à jour du nombre de commandes du jour.
-            SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
-            String aujourdhui = dateFormat.format(new Date());
-            StatGeneral statGeneral = (StatGeneral) orm.chercherNUpletAvecPredicat("WHERE TO_CHAR(DATE_JOUR, 'mm-dd-yyyy') = '" +
-                                                                                    aujourdhui + "'",
-                                                                                    StatGeneral.class);
-            if(statGeneral == null) {
-                statGeneral = new StatGeneral();
-                statGeneral.setDateJour(new Date());
-                statGeneral.setNbCommandes(1);
-            } else {
-                Integer nbCommandesActuel = statGeneral.getNbCommandes();
-                if(nbCommandesActuel == null) {
-                    statGeneral.setNbCommandes(1);
-                } else {
-                    statGeneral.setNbCommandes(nbCommandesActuel + 1);
-                }
-            }
-            orm.persisterNUplet(statGeneral);
-
-            //Message de résultat.
-            ui.afficher("Commande payée !");
-            ui.afficher(commande.toString());
-        }
-
-        //Retour vers l'accueil.
-        AccueilControleur.consulter();
-    }
-
-    /**
      * Lister les plats prêts dans le restaurant,
      * pour les tables du serveur connecté,
      */
@@ -376,59 +314,9 @@ public class CommandeControleur extends Controleur {
         if(lignesCommande.isEmpty()) {
             //Message d'erreur.
             ui.afficher("Aucun plat prêt attendant d'être servi !");
-       //Sinon.
         } else {
             //Message de résultat.
             ui.listerNUplets(lignesCommande);
-        }
-
-        //Retour vers l'accueil.
-        AccueilControleur.consulter();
-    }
-
-    /**
-     * Lister les plats prêts dans le restaurant,
-     * pour une table.
-     */
-    public static void listerLignesPretesPLace() {
-        //UI et ORM.
-        UI ui = getUI();
-        ORM orm = getORM();
-
-        //Message de titre.
-        ui.afficherAvecDelimiteurEtUtilisateur("Listing des plats prêts pour une de mes tables :");
-
-        //Récupération des tables occupées du serveur dans le restaurant.
-        List<Entite>  placesOccupees =  orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'occupé' " +
-                                                                                 "AND ID_COMPTE_SERVEUR = " +
-                                                                                 getUtilisateurConnecte().getId(),
-                                                                                 Place.class);
-
-        //Si pas de tables du serveur occupées dans le restaurant.
-        if(placesOccupees.isEmpty()) {
-            //Message d'erreur.
-            ui.afficher("Aucune de vos tables n'est occupée dans le restaurant !");
-        //Sinon.
-        } else {
-            //Questions et saisies.
-            int idPlace = ui.poserQuestionListeNUplets("Sélectionner une table :", placesOccupees);
-
-            //Récupération des plats prêts non servis.
-            List<Entite> lignesCommande = orm.chercherNUpletsAvecPredicat("INNER JOIN COMMANDE AS C " +
-                                                                                   "ON C.ID = FROM_TABLE.ID_COMMANDE " +
-                                                                                   "WHERE FROM_TABLE.ETAT = 'prêt' "  +
-                                                                                   "AND C.ID_PLACE = " + idPlace,
-                                                                                    LigneCommande.class);
-
-            //Si pas de plats prêts non servis pour la table sélectionnée.
-            if(lignesCommande.isEmpty()) {
-                //Message d'erreur.
-                ui.afficher("Aucun plat prêt attendant d'être servi pour cette table !");
-            //Sinon.
-            } else {
-                //Message de résultat.
-                ui.listerNUplets(lignesCommande);
-            }
         }
 
         //Retour vers l'accueil.
@@ -453,7 +341,6 @@ public class CommandeControleur extends Controleur {
         if (lignesCommandeAPreparer.isEmpty()) {
             //Message d'erreur.
             ui.afficher("Aucun plat n'est à préparer dans le restaurant !");
-            //Sinon
         } else {
             //Listing.
             ui.listerNUplets(lignesCommandeAPreparer);
@@ -481,40 +368,59 @@ public class CommandeControleur extends Controleur {
         if (commandes.isEmpty()) {
             //Message d'erreur.
             ui.afficher("Aucune commande en attente trouvée !");
-        //Sinon.
         } else {
             //Question et saisies.
             int idCommande = ui.poserQuestionListeNUplets("Sélectionner une commande :", commandes);
             Commande commande = (Commande) filtrerListeNUpletsAvecId(commandes, idCommande);
 
             //Récupération des plats en attente de la commande sélectionnée
-            List<Entite> commandePlats = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'en attente' " +
+            List<Entite> lignesCommande = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'en attente' " +
                                                                             "AND ID_COMMANDE = " + idCommande,
                                                                              LigneCommande.class);
 
             //Si pas de plat en attente.
-            if (commandePlats.isEmpty()) {
+            if (lignesCommande.isEmpty()) {
                 //Message d'erreur.
                 ui.afficher("Aucun plat en attente trouvé pour la commande sélectionnée !");
-           //Sinon.
             } else {
                 //Question et saisies.
-                int idLigneComande = ui.poserQuestionListeNUplets("Sélectionner un ligne de commande :", commandePlats);
-                LigneCommande ligneCommande = (LigneCommande) filtrerListeNUpletsAvecId(commandePlats, idLigneComande);
-
-                //Récupération du nombre de plats encore en attente de la commande sélectionnée.
-                int nbPlatsEncoreEnAttente = orm.compterNUpletsAvecPredicat("WHERE ETAT = 'en attente' " +
-                                                                                     "AND ID_COMMANDE = " + idCommande,
-                                                                                      LigneCommande.class);
+                int idLigneCommande = ui.poserQuestionListeNUplets("Sélectionner un ligne de commande :", lignesCommande);
+                LigneCommande ligneCommande = (LigneCommande) filtrerListeNUpletsAvecId(lignesCommande, idLigneCommande);
 
                 //Sauvegarde : modification de la ligne de commande.
                 ligneCommande.setEtat("prêt");
                 orm.persisterNUplet(ligneCommande);
 
-                //Sauvegarde : modification de la commande (si nécessaire).
+                //Récupération du nombre de plats encore en attente de la commande sélectionnée.
+                int nbPlatsEncoreEnAttente = orm.compterNUpletsAvecPredicat("WHERE ETAT = 'en attente' " +
+                                                                                     "AND ID_COMMANDE = " + idCommande,
+                                                                                     LigneCommande.class);
+
                 if(nbPlatsEncoreEnAttente == 0) {
+                    //Sauvegarde : modification de la commande (si nécessaire).
                     commande.setEtat("servi");
                     orm.persisterNUplet(commande);
+
+                    //Sauvegarde : mise à jour du temps de préparation du jour.
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+                    String aujourdhui = dateFormat.format(new Date());
+                    StatGeneral statGeneral = (StatGeneral) orm.chercherNUpletAvecPredicat("WHERE TO_CHAR(DATE_JOUR, 'mm-dd-yyyy') = '" +
+                                                                                                    aujourdhui + "'",
+                                                                                                    StatGeneral.class);
+                    int tempsPreparation = (int) ((new Date()).getTime() - commande.getDatetimeCreation().getTime()) / 1000 / 60;
+                    if(statGeneral == null) {
+                        statGeneral = new StatGeneral();
+                        statGeneral.setDateJour(new Date());
+                        statGeneral.setTempsPreparation(tempsPreparation);
+                    } else {
+                        Integer tempsPreparationActuel = statGeneral.getTempsPreparation();
+                        if(tempsPreparationActuel == null) {
+                            statGeneral.setTempsPreparation(tempsPreparation);
+                        } else {
+                            statGeneral.setTempsPreparation(tempsPreparationActuel + tempsPreparation);
+                        }
+                    }
+                    orm.persisterNUplet(statGeneral);
                 }
 
                 //Message de résultat.
@@ -524,6 +430,108 @@ public class CommandeControleur extends Controleur {
         }
 
         //Retour à l'accueil.
+        AccueilControleur.consulter();
+    }
+
+    /**
+     * Lister les plats prêts dans le restaurant,
+     * pour une table.
+     */
+    public static void listerLignesPretesPlace() {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Listing des plats prêts pour une de mes tables :");
+
+        //Récupération des tables occupées du serveur dans le restaurant.
+        List<Entite>  placesOccupees =  orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'occupé' " +
+                        "AND ID_COMPTE_SERVEUR = " +
+                        getUtilisateurConnecte().getId(),
+                Place.class);
+
+        //Si pas de tables du serveur occupées dans le restaurant.
+        if(placesOccupees.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucune de vos tables n'est occupée dans le restaurant !");
+        } else {
+            //Questions et saisies.
+            int idPlace = ui.poserQuestionListeNUplets("Sélectionner une table :", placesOccupees);
+
+            //Récupération des plats prêts non servis.
+            List<Entite> lignesCommande = orm.chercherNUpletsAvecPredicat("INNER JOIN COMMANDE AS C " +
+                            "ON C.ID = FROM_TABLE.ID_COMMANDE " +
+                            "WHERE FROM_TABLE.ETAT = 'prêt' "  +
+                            "AND C.ID_PLACE = " + idPlace,
+                    LigneCommande.class);
+
+            //Si pas de plats prêts non servis pour la table sélectionnée.
+            if(lignesCommande.isEmpty()) {
+                //Message d'erreur.
+                ui.afficher("Aucun plat prêt attendant d'être servi pour cette table !");
+            } else {
+                //Message de résultat.
+                ui.listerNUplets(lignesCommande);
+            }
+        }
+
+        //Retour vers l'accueil.
+        AccueilControleur.consulter();
+    }
+
+    /**
+     * Valider le paiement d'une commande.
+     */
+    public static void validerPaiement() {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Valider le paiement d'une commande :");
+
+        //Récupération des commandes servies.
+        List<Entite> commandes = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'servi'", Commande.class);
+        //Si pas de commande servie.
+        if(commandes.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucune commande servie trouvée !");
+        } else {
+            //Question et saisies.
+            int idCommande = ui.poserQuestionListeNUplets("Sélectionner une commande :", commandes);
+            Commande commande = (Commande) filtrerListeNUpletsAvecId(commandes, idCommande);
+
+            //Sauvegarde : modification du plat.
+            commande.setEtat("payé");
+            orm.persisterNUplet(commande);
+
+            //Sauvegarde : mise à jour du nombre de commandes du jour.
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+            String aujourdhui = dateFormat.format(new Date());
+            StatGeneral statGeneral = (StatGeneral) orm.chercherNUpletAvecPredicat("WHERE TO_CHAR(DATE_JOUR, 'mm-dd-yyyy') = '" +
+                            aujourdhui + "'",
+                    StatGeneral.class);
+            if(statGeneral == null) {
+                statGeneral = new StatGeneral();
+                statGeneral.setDateJour(new Date());
+                statGeneral.setNbCommandes(1);
+            } else {
+                Integer nbCommandesActuel = statGeneral.getNbCommandes();
+                if(nbCommandesActuel == null) {
+                    statGeneral.setNbCommandes(1);
+                } else {
+                    statGeneral.setNbCommandes(nbCommandesActuel + 1);
+                }
+            }
+            orm.persisterNUplet(statGeneral);
+
+            //Message de résultat.
+            ui.afficher("Commande payée !");
+            ui.afficher(commande.toString());
+        }
+
+        //Retour vers l'accueil.
         AccueilControleur.consulter();
     }
 }
