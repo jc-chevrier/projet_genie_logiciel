@@ -4,6 +4,7 @@ import fr.ul.miage.m1.projet_genie_logiciel.entites.*;
 import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -350,6 +351,21 @@ public class PlaceControleur extends Controleur {
             }
             place.setEtat("occupé");
             orm.persisterNUplet(place);
+
+            //Mise à jour du nombre de clients.
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+            String aujourdhui = dateFormat.format(new Date());
+            StatGeneral statGeneral = (StatGeneral) orm.chercherNUpletAvecPredicat("WHERE TO_CHAR(DATE_JOUR, 'mm-dd-yyyy') = '" +
+                                                                                   aujourdhui + "'",
+                                                                                   StatGeneral.class);
+            if(statGeneral == null) {
+                statGeneral = new StatGeneral();
+                statGeneral.setDateJour(new Date());
+                statGeneral.setNbClients(1);
+            } else {
+                statGeneral.setNbClients(statGeneral.getNbClients() + 1);
+            }
+            orm.persisterNUplet(statGeneral);
 
             //Message de résultat.
             ui.afficher("Nouvelle allocation de la table réussie !");
