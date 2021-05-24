@@ -60,5 +60,42 @@ public class CompteControleur extends Controleur{
         //Retour vers l'accueil.
         AccueilControleur.consulter();
     }
+
+    /**
+     * Modifier un salarié.
+     */
+    public static void modifier() {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Modification d'un salarié :");
+
+        //Récupération des salariés existants.
+        List<Entite> salaries = orm.chercherTousLesNUplets(Compte.class);
+
+        //Si pas de salarié trouvés.
+        if (salaries.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucun salarié trouvé !");
+        //Sinon.
+        } else {
+            //Saisie du salarié à modofier.
+            int idSalarie = ui.poserQuestionListeNUplets("Sélectionner un salarié :", salaries);
+            Compte compte = (Compte) filtrerListeNUpletsAvecId(salaries, idSalarie);
+
+            //Saisie et sauvegarde.
+            editerEtPersister(compte);
+
+            //Message de résultat.
+            ui.afficher("Informations salarié modifié !");
+            ui.afficher(compte.toString());
+        }
+
+        //Retour vers l'accueil.
+        AccueilControleur.consulter();
+    }
+
 }
 
