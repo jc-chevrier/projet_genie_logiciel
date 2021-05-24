@@ -28,7 +28,9 @@ public class AuthControleur extends Controleur {
 
         //Vérification.
         Compte compte = (Compte) orm.chercherNUpletAvecPredicat("WHERE LOWER(nom) = LOWER('" + nom + "') " +
-                                                                "AND LOWER(prenom) = LOWER('" + prenom + "')", Compte.class);
+                                                                         "AND LOWER(prenom) = LOWER('" + prenom + "')" +
+                                                                         "AND ACTIF = 1",
+                                                                          Compte.class);
         //Cas récursif.
         if(compte == null) {
             ui.afficher("Erreur durant la tentative de connexion !");

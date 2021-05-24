@@ -156,7 +156,7 @@ public class PlatControleur extends Controleur {
      *
      * @param plat
      */
-    private static void editerEtPersister(Plat plat) {
+    private static void editerEtPersister(@NotNull Plat plat) {
         //UI et ORM.
         UI ui = getUI();
         ORM orm = getORM();
