@@ -6,7 +6,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Fonctionnalité.
+ * Classe pour le référencement des
+ * fonctionnalités.
  *
  * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */

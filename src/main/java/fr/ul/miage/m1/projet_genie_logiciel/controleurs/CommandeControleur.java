@@ -6,7 +6,6 @@ import fr.ul.miage.m1.projet_genie_logiciel.entites.LigneCommande;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.*;
 import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -461,10 +460,10 @@ public class CommandeControleur extends Controleur {
 
             //Récupération des plats prêts non servis.
             List<Entite> lignesCommande = orm.chercherNUpletsAvecPredicat("INNER JOIN COMMANDE AS C " +
-                            "ON C.ID = FROM_TABLE.ID_COMMANDE " +
-                            "WHERE FROM_TABLE.ETAT = 'prêt' "  +
-                            "AND C.ID_PLACE = " + idPlace,
-                    LigneCommande.class);
+                                                                                    "ON C.ID = FROM_TABLE.ID_COMMANDE " +
+                                                                                    "WHERE FROM_TABLE.ETAT = 'prêt' "  +
+                                                                                    "AND C.ID_PLACE = " + idPlace,
+                                                                                     LigneCommande.class);
 
             //Si pas de plats prêts non servis pour la table sélectionnée.
             if(lignesCommande.isEmpty()) {
@@ -510,8 +509,8 @@ public class CommandeControleur extends Controleur {
             SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
             String aujourdhui = dateFormat.format(new Date());
             StatGeneral statGeneral = (StatGeneral) orm.chercherNUpletAvecPredicat("WHERE TO_CHAR(DATE_JOUR, 'mm-dd-yyyy') = '" +
-                            aujourdhui + "'",
-                    StatGeneral.class);
+                                                                                    aujourdhui + "'",
+                                                                                    StatGeneral.class);
             if(statGeneral == null) {
                 statGeneral = new StatGeneral();
                 statGeneral.setDateJour(new Date());
