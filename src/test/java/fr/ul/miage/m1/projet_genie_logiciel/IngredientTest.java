@@ -233,7 +233,7 @@ public class IngredientTest {
         ui.reinitialiserScanner();
 
         //On simule le scénario d'incrémentation.
-        IngredientControleur.incrementerStock();
+        IngredientControleur.modifierStock();
     }
 
     @Test
@@ -256,6 +256,6 @@ public class IngredientTest {
         ui.reinitialiserScanner();
 
         //On simule le scénario d'incrémentation.
-        IngredientControleur.incrementerStock();
+        IngredientControleur.modifierStock();
     }
 }

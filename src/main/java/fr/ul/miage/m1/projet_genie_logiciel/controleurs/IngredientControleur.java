@@ -9,7 +9,7 @@ import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
 import java.util.List;
 
 /**
- * Controleur pour les ingrédients des plats.
+ * Contrôleur pour les ingrédients des plats.
  *
  * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */
@@ -168,13 +168,13 @@ public class IngredientControleur extends Controleur {
     /**
      * Modifier le stock d'un ingédient.
      */
-    public static void incrementerStock() {
+    public static void modifierStock() {
         //UI et ORM.
         UI ui = getUI();
         ORM orm = getORM();
 
         //Message de titre.
-        ui.afficherAvecDelimiteurEtUtilisateur("Incrementation du stock d'un ingrédient :");
+        ui.afficherAvecDelimiteurEtUtilisateur("Modification du stock d'un ingrédient :");
 
         //Récupération des ingrédients existants.
         List<Entite> ingredients = orm.chercherTousLesNUplets(Ingredient.class);
@@ -188,10 +188,22 @@ public class IngredientControleur extends Controleur {
             //Questions et saisies.
             int idIngredient = ui.poserQuestionListeNUplets("Sélectionner un ingrédient :", ingredients);
             Ingredient ingredient = (Ingredient) filtrerListeNUpletsAvecId(ingredients, idIngredient);
-            double stock = ui.poserQuestionDecimal("Saisir le stock que vous voulez ajouter :" , UI.REGEX_GRAND_DECIMAL_POSITIF);
+            double stockActuel =  ingredient.getStock();
+            //(La vérification est trop complexe à faire avec une expression
+            //régulière, on l'a fait avec une boucle).
+            boolean nouveauStockNegatif;
+            double quantite;
+            do {
+                quantite = ui.poserQuestionDecimal("Saisir le stock que vous voulez ajouter ou retirer :",
+                                                             UI.REGEX_GRAND_DECIMAL_POSITIF_OU_NEGATIF);
+                nouveauStockNegatif = quantite < 0 && (stockActuel + quantite) < 0;
+                if(nouveauStockNegatif) {
+                    ui.afficher("La quantité à retirer est plus grande que le stock actuel !");
+                }
+            } while(nouveauStockNegatif);
 
             //Sauvegarde : incrémentation du stock de l'ingrédient.
-            ingredient.setStock(ingredient.getStock()+stock);
+            ingredient.setStock(ingredient.getStock() + quantite);
             orm.persisterNUplet(ingredient);
 
             //Message de résultat.

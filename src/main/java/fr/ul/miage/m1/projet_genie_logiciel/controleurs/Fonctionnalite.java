@@ -47,7 +47,7 @@ public class Fonctionnalite {
                               new Fonctionnalite("Ajouter un ingrédient au catalogue des ingrédients", IngredientControleur::ajouter),
                               new Fonctionnalite("Modifier un ingrédient", IngredientControleur::modifier),
                               new Fonctionnalite("Supprimer un ingrédient au catalogue des ingrédients", IngredientControleur::supprimer),
-                              new Fonctionnalite("Incrémenter le stock d'un ingrédient", IngredientControleur::incrementerStock),
+                              new Fonctionnalite("Modifier le stock d'un ingrédient", IngredientControleur::modifierStock),
                               new Fonctionnalite("Lister les catégories", CategorieControleur::lister),
                               new Fonctionnalite("Ajouter une catégorie", CategorieControleur::ajouter),
                               new Fonctionnalite("Modifier une catégorie", CategorieControleur::modifier),
