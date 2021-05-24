@@ -411,12 +411,15 @@ public class CommandeControleur extends Controleur {
                         statGeneral = new StatGeneral();
                         statGeneral.setDateJour(new Date());
                         statGeneral.setTempsPreparation(tempsPreparation);
+                        statGeneral.setNbCommandesPreparees(1);
                     } else {
                         Integer tempsPreparationActuel = statGeneral.getTempsPreparation();
                         if(tempsPreparationActuel == null) {
                             statGeneral.setTempsPreparation(tempsPreparation);
+                            statGeneral.setNbCommandesPreparees(1);
                         } else {
                             statGeneral.setTempsPreparation(tempsPreparationActuel + tempsPreparation);
+                            statGeneral.setNbCommandesPreparees(statGeneral.getNbCommandesPreparees() + 1);
                         }
                     }
                     orm.persisterNUplet(statGeneral);
@@ -514,13 +517,13 @@ public class CommandeControleur extends Controleur {
             if(statGeneral == null) {
                 statGeneral = new StatGeneral();
                 statGeneral.setDateJour(new Date());
-                statGeneral.setNbCommandes(1);
+                statGeneral.setNbCommandesPayees(1);
             } else {
-                Integer nbCommandesActuel = statGeneral.getNbCommandes();
+                Integer nbCommandesActuel = statGeneral.getNbCommandesPayees();
                 if(nbCommandesActuel == null) {
-                    statGeneral.setNbCommandes(1);
+                    statGeneral.setNbCommandesPayees(1);
                 } else {
-                    statGeneral.setNbCommandes(nbCommandesActuel + 1);
+                    statGeneral.setNbCommandesPayees(nbCommandesActuel + 1);
                 }
             }
             orm.persisterNUplet(statGeneral);
