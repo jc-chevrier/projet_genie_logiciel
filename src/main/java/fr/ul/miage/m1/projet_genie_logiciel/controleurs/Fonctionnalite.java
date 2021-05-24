@@ -23,7 +23,12 @@ public class Fonctionnalite {
     static {
         List<Fonctionnalite> fonctionnalitesDirecteur = new ArrayList<Fonctionnalite>(
                 Arrays.asList(new Fonctionnalite("Ajouter un plat à la carte du jour", PlatControleur::ajouterACarte),
-                              new Fonctionnalite("Supprimer un plat de la carte du jour", PlatControleur::supprimerDeCarte)));
+                              new Fonctionnalite("Supprimer un plat de la carte du jour", PlatControleur::supprimerDeCarte),
+                              new Fonctionnalite("Consulter les statistiques générales ", AccueilControleur::consulter),
+                              new Fonctionnalite("Consulter les statistiques sur le chiffre d'afaire ", AccueilControleur::consulter),// TODO à modifier
+                              new Fonctionnalite("Ajouter un salarié ", AccueilControleur::consulter),// TODO à modifier
+                              new Fonctionnalite("Modifier les informations d'un salarié ", AccueilControleur::consulter),// TODO à modifier
+                              new Fonctionnalite("Supprimer un salarié ", AccueilControleur::consulter)));// TODO à modifier
 
         List<Fonctionnalite> fonctionnalitesMaitreHotel = new ArrayList<Fonctionnalite>(
                 Arrays.asList(new Fonctionnalite("Lister toutes les tables", PlaceControleur::lister),
@@ -67,7 +72,8 @@ public class Fonctionnalite {
                               new Fonctionnalite("Lister les catégories de plats disponibles de la carte", CategorieControleur::listerPlatsDisponibles),
                               new Fonctionnalite("Ajouter une commande", CommandeControleur::ajouter),
                               new Fonctionnalite("Supprimer une commande", CommandeControleur::supprimer),
-                              new Fonctionnalite("Lister les plats prêts d'une commande ", CommandeControleur::listerToutesLignesPretes)));
+                              new Fonctionnalite("Lister les plats prêts d'une commande ", CommandeControleur::listerToutesLignesPretes),
+                              new Fonctionnalite("Chercher un plat avec son libelle ", AccueilControleur::consulter)));// TODO à modifier
 
         List<Fonctionnalite> fonctionnalitesAssistantService = new ArrayList<Fonctionnalite>(
                 Arrays.asList(new Fonctionnalite("Lister les tables à préparer", PlaceControleur::listerAPreparer),
