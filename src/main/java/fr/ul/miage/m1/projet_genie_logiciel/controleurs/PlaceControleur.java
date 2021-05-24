@@ -352,7 +352,7 @@ public class PlaceControleur extends Controleur {
             place.setEtat("occupé");
             orm.persisterNUplet(place);
 
-            //Mise à jour du nombre de clients.
+            //Mise à jour du nombre de clients du jour.
             SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
             String aujourdhui = dateFormat.format(new Date());
             StatGeneral statGeneral = (StatGeneral) orm.chercherNUpletAvecPredicat("WHERE TO_CHAR(DATE_JOUR, 'mm-dd-yyyy') = '" +
@@ -363,7 +363,12 @@ public class PlaceControleur extends Controleur {
                 statGeneral.setDateJour(new Date());
                 statGeneral.setNbClients(1);
             } else {
-                statGeneral.setNbClients(statGeneral.getNbClients() + 1);
+                Integer nbClientsActuel = statGeneral.getNbClients();
+                if(nbClientsActuel == null) {
+                    statGeneral.setNbClients(1);
+                } else {
+                    statGeneral.setNbClients(nbClientsActuel + 1);
+                }
             }
             orm.persisterNUplet(statGeneral);
 

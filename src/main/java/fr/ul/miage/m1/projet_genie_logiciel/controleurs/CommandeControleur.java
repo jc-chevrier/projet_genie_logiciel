@@ -321,7 +321,7 @@ public class CommandeControleur extends Controleur {
             commande.setEtat("payé");
             orm.persisterNUplet(commande);
 
-            //Mise à jour du nombre de commandes.
+            //Mise à jour du nombre de commandes du jour.
             SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
             String aujourdhui = dateFormat.format(new Date());
             StatGeneral statGeneral = (StatGeneral) orm.chercherNUpletAvecPredicat("WHERE TO_CHAR(DATE_JOUR, 'mm-dd-yyyy') = '" + aujourdhui + "'",
@@ -331,7 +331,12 @@ public class CommandeControleur extends Controleur {
                 statGeneral.setDateJour(new Date());
                 statGeneral.setNbCommandes(1);
             } else {
-                statGeneral.setNbCommandes(statGeneral.getNbCommandes() + 1);
+                Integer nbCommandesActuel = statGeneral.getNbCommandes();
+                if(nbCommandesActuel == null) {
+                    statGeneral.setNbCommandes(1);
+                } else {
+                    statGeneral.setNbCommandes(nbCommandesActuel + 1);
+                }
             }
             orm.persisterNUplet(statGeneral);
 
