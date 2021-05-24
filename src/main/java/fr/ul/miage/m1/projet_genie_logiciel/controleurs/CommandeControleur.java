@@ -255,7 +255,7 @@ public class CommandeControleur extends Controleur {
             if (commandesEnAttente.isEmpty()) {
                 //Message d'erreur.
                 ui.afficher("Aucune commande en attente de préparation trouvée pour cette table !");
-                //Sinon.
+            //Sinon.
             } else {
                 //Question et saisies.
                 int idPCommande = ui.poserQuestionListeNUplets("Sélectionner une commande :", commandesEnAttente);
@@ -318,6 +318,18 @@ public class CommandeControleur extends Controleur {
             //Sauvegarde : modification du plat.
             commande.setEtat("payé");
             orm.persisterNUplet(commande);
+
+            //Mise à jour du nombre de commande.
+            StatGeneral statGeneral = orm.chercherNUpletAvecPredicat("WHERE DATE_JOUR = " + new Date(),
+                                                                              StatGeneral.class);
+            if(statGeneral == null) {
+                statGeneral = new StatGeneral();
+                statGeneral.setDateJour(new Date());
+                statGeneral.setNbCommandes(1);
+            } else {
+                statGeneral.setNbCommandes(statGeneral.getNbCommandes() + 1);
+            }
+            orm.persisterNUplet(statGeneral);
 
             //Message de résultat.
             ui.afficher("Commande payée !");
