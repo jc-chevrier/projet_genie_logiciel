@@ -22,7 +22,12 @@ public class Fonctionnalite {
     static {
         List<Fonctionnalite> fonctionnalitesDirecteur = new ArrayList<Fonctionnalite>(
                 Arrays.asList(new Fonctionnalite("Ajouter un plat à la carte du jour", PlatControleur::ajouterACarte),
-                              new Fonctionnalite("Supprimer un plat de la carte du jour", PlatControleur::supprimerDeCarte)));
+                              new Fonctionnalite("Supprimer un plat de la carte du jour", PlatControleur::supprimerDeCarte),
+                              new Fonctionnalite("Consulter les statistiques générales ", AccueilControleur::consulter),
+                              new Fonctionnalite("Consulter les statistiques sur le chiffre d'afaire ", AccueilControleur::consulter),// TODO à modifier
+                              new Fonctionnalite("Ajouter un salarié ", AccueilControleur::consulter),// TODO à modifier
+                              new Fonctionnalite("Modifier les informations d'un salarié ", AccueilControleur::consulter),// TODO à modifier
+                              new Fonctionnalite("Supprimer un salarié ", AccueilControleur::consulter)));// TODO à modifier
 
         List<Fonctionnalite> fonctionnalitesMaitreHotel = new ArrayList<Fonctionnalite>(
                 Arrays.asList(new Fonctionnalite("Lister toutes les tables", PlaceControleur::lister),
