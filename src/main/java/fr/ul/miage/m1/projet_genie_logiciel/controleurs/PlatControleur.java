@@ -513,4 +513,34 @@ public class PlatControleur extends Controleur {
         //Retour vers l'accueil.
         AccueilControleur.consulter();
     }
+
+    /**
+     * Chercher plat avec un libellé.
+     */
+    public static void chercher() {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Chercher un plat avec libellé :");
+        String plat = ui.poserQuestion("Saisir un plat :", UI.REGEX_CHAINE_DE_CARACTERES);
+
+        //Récupération des plats exsitants.
+        List<Entite> plats = orm.chercherNUpletsAvecPredicat("WHERE LIBELLE LIKE '%"+plat+"%'",Plat.class);
+
+        //Si pas de plat.
+        if (plats.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucun plat trouvé !");
+        //Sinon.
+        } else {
+            //Listing.
+            ui.listerNUplets(plats);
+        }
+
+        //Retour vers l'accueil.
+        AccueilControleur.consulter();
+    }
+
 }
