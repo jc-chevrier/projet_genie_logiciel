@@ -251,7 +251,7 @@ public class ORM {
         String requeteString = "SELECT COUNT(FROM_TABLE.*) AS NOMBRE_NUPLETS FROM " + nomTable + " AS FROM_TABLE " + predicat + ";";
 
         //Exécution de la requête.
-        Integer nombreNUplets = ((Long) chercherNUplets(requeteString).get(0).get("NOMBRE_NUPLETS")).intValue()lo;
+        Integer nombreNUplets = ((Long) chercherNUplets(requeteString).get(0).get("NOMBRE_NUPLETS")).intValue();
 
         return nombreNUplets;
     }
