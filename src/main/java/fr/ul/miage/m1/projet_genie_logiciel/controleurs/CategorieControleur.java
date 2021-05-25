@@ -146,10 +146,11 @@ public class CategorieControleur extends Controleur {
         //Retour vers l'accueil.
         AccueilControleur.consulter();
     }
+
     /**
      * Lister les catégories des plats disponibles dans la carte du jour.
      */
-    public static void listerPlatsDisponibles() {
+    public static void listerDisponibles() {
         //UI et ORM.
         UI ui = getUI();
         ORM orm = getORM();
@@ -167,13 +168,14 @@ public class CategorieControleur extends Controleur {
                                                                             "ON PI.ID_PLAT = P.ID " +
                                                                             "INNER JOIN INGREDIENT AS I " +
                                                                             "ON I.ID = PI.ID_INGREDIENT " +
-                                                                            "WHERE PI.QUANTITE <= I.STOCK AND P.CARTE = 1)", Categorie.class);
-
+                                                                            "WHERE PI.QUANTITE <= I.STOCK AND P.CARTE = 1)",
+                                                                            Categorie.class);
 
         //Si pas de catégories trouvées.
         if(categories.isEmpty()) {
             //Message d'erreur.
             ui.afficher("Aucune catégorie trouvée dans le cataloque !");
+        //Sinon.
         } else {
             //Litsing.
             ui.listerNUplets(categories);
@@ -182,6 +184,4 @@ public class CategorieControleur extends Controleur {
         //Retour vers l'accueil.
         AccueilControleur.consulter();
     }
-
-
 }

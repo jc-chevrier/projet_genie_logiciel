@@ -6,7 +6,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Fonctionnalité.
+ * Classe pour le référencement des
+ * fonctionnalités.
  *
  * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */
@@ -22,7 +23,13 @@ public class Fonctionnalite {
     static {
         List<Fonctionnalite> fonctionnalitesDirecteur = new ArrayList<Fonctionnalite>(
                 Arrays.asList(new Fonctionnalite("Ajouter un plat à la carte du jour", PlatControleur::ajouterACarte),
-                              new Fonctionnalite("Supprimer un plat de la carte du jour", PlatControleur::supprimerDeCarte)));
+                              new Fonctionnalite("Supprimer un plat de la carte du jour", PlatControleur::supprimerDeCarte),
+                              new Fonctionnalite("Consulter les statistiques générales", AccueilControleur::consulter),
+                              new Fonctionnalite("Consulter les statistiques sur le chiffre d'affaire", AccueilControleur::consulter),// TODO à modifier
+                              new Fonctionnalite("Lister les salariés", AccueilControleur::consulter),// TODO à modifier
+                              new Fonctionnalite("Ajouter un salarié", AccueilControleur::consulter),// TODO à modifier
+                              new Fonctionnalite("Modifier les informations d'un salarié", AccueilControleur::consulter),// TODO à modifier
+                              new Fonctionnalite("Supprimer un salarié", AccueilControleur::consulter)));// TODO à modifier
 
         List<Fonctionnalite> fonctionnalitesMaitreHotel = new ArrayList<Fonctionnalite>(
                 Arrays.asList(new Fonctionnalite("Lister toutes les tables", PlaceControleur::lister),
@@ -47,7 +54,7 @@ public class Fonctionnalite {
                               new Fonctionnalite("Ajouter un ingrédient au catalogue des ingrédients", IngredientControleur::ajouter),
                               new Fonctionnalite("Modifier un ingrédient", IngredientControleur::modifier),
                               new Fonctionnalite("Supprimer un ingrédient au catalogue des ingrédients", IngredientControleur::supprimer),
-                              new Fonctionnalite("Incrémenter le stock d'un ingrédient", IngredientControleur::incrementerStock),
+                              new Fonctionnalite("Modifier le stock d'un ingrédient", IngredientControleur::modifierStock),
                               new Fonctionnalite("Lister les catégories", CategorieControleur::lister),
                               new Fonctionnalite("Ajouter une catégorie", CategorieControleur::ajouter),
                               new Fonctionnalite("Modifier une catégorie", CategorieControleur::modifier),
@@ -57,17 +64,17 @@ public class Fonctionnalite {
                               new Fonctionnalite("Modifier un plat", PlatControleur::modifier),
                               new Fonctionnalite("Supprimer un plat du catalogue des plats", PlatControleur::supprimer),
                               new Fonctionnalite("Lister les plats à préparer des commandes", CommandeControleur::listerLignesAPreparer),
-                              new Fonctionnalite("Valider la préparation d'un plat d'une commande", PlatControleur::validerPreparation)));
+                              new Fonctionnalite("Valider la préparation d'un plat d'une commande",  CommandeControleur::validerPreparation)));
 
         List<Fonctionnalite> fonctionnalitesServeur = new ArrayList<Fonctionnalite>(
                 Arrays.asList(new Fonctionnalite("Lister tous les plats de la carte", PlatControleur::listerCarte),
                               new Fonctionnalite("Lister tous les plats disponibles de la carte", PlatControleur::ListerDisponibleCarte),
                               new Fonctionnalite("Lister les plats disponibles de la carte pour une catégorie", PlatControleur::listerDisponiblesPourCategorie),
-                              new Fonctionnalite("Lister les catégories de plats disponibles de la carte", CategorieControleur::listerPlatsDisponibles),
+                              new Fonctionnalite("Lister les catégories de plats disponibles de la carte", CategorieControleur::listerDisponibles),
                               new Fonctionnalite("Ajouter une commande", CommandeControleur::ajouter),
                               new Fonctionnalite("Supprimer une commande", CommandeControleur::supprimer),
                               new Fonctionnalite("Lister les plats prêts pour mes tables", CommandeControleur::listerToutesLignesPretes),
-                              new Fonctionnalite("Lister les plats prêts pour une de mes tables", CommandeControleur::listerLignesPretesPLace)));
+                              new Fonctionnalite("Lister les plats prêts pour une de mes tables", CommandeControleur::listerLignesPretesPlace)));
 
         List<Fonctionnalite> fonctionnalitesAssistantService = new ArrayList<Fonctionnalite>(
                 Arrays.asList(new Fonctionnalite("Lister les tables à préparer", PlaceControleur::listerAPreparer),

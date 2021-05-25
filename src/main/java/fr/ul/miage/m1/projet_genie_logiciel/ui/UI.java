@@ -21,17 +21,12 @@ public class UI {
 
     //Expression régulière des chaines de caractères.
     public final static String REGEX_CHAINE_DE_CARACTERES = ".{1,50}";
-    //Expression régulière des entiers positifs.
-    public final static String REGEX_ENTIER_POSITIF = "[1-9]{1}[0-9]{0,7}";
     //Expression régulière des nombres décimaux positifs.
-    public final static String REGEX_DECIMAL_POSITIF = "[1-9]{1,5}|[1-9]{1,5}\\.{1}[0-9]{1,3}|[0-9]{1,5}\\.{1}[1-9]{1,3}";
+    public final static String REGEX_DECIMAL_POSITIF = "[0-9]{1,5}|[0-9]{1,5}\\.{1}[0-9]{1,3}";
     //Expression régulière des grands nombres décimaux positifs.
-    public final static String REGEX_GRAND_DECIMAL_POSITIF = "[1-9]{1,13}|[1-9]{1,13}\\.{1}[0-9]{1,3}|[0-9]{1,13}\\.{1}[1-9]{1,3}";
-
-    //Description des entiers positifs.
-    public final static String DESCRIPTION_ENTIER_POSITIF = "entier positif";
-    //Description des décimaux positifs.
-    public final static String DESCRIPTION_DECIMAL_POSITIF  = "nombre décimal positif";
+    public final static String REGEX_GRAND_DECIMAL_POSITIF = "[0-9]{1,13}|[0-9]{1,13}\\.{1}[0-9]{1,3}";
+    //Expression régulière des nombres décimaux positifs ou négatifs.
+    public final static String REGEX_GRAND_DECIMAL_POSITIF_OU_NEGATIF = "-{0,1}(" + REGEX_DECIMAL_POSITIF + ")";
 
     //Singleton.
     private static UI UISingleton;
