@@ -75,8 +75,73 @@ public class ORM {
     }
 
     /**
+     * Chercher des n-uplets de manière "sauvage",
+     * sans préciser de structure / d'entité correspondante.
+     *
+     * Cette méthode permet de faire une recherche libre
+     * entièrement écrite puis passée en paramètre.
+     *
+     * @param requeteString
+     * @return le résultat de la fonction de la fonction d'agrégation
+     */
+    public List<Map<String, Object>> chercherNUplets(@NotNull String requeteString) {
+        //Construction de la requête.
+        Statement requete = null;
+        List<Map<String, Object>> resultatLignes = new ArrayList<Map<String, Object>>();
+
+        try {
+            //Exécution de la requête.
+            requete = connexion.createStatement();
+            ResultSet resultatLignes_ = requete.executeQuery(requeteString);
+
+            //Récupération des libellés des attributs du résultat.
+            ResultSetMetaData resultatMetadonnees = resultatLignes_.getMetaData();
+            List<String> attributs = new ArrayList<String>();
+            int nombreAttributs = resultatMetadonnees.getColumnCount();
+            for(int indexAttribut = 1; indexAttribut <= nombreAttributs; indexAttribut++) {
+                attributs.add(resultatMetadonnees.getColumnName(indexAttribut).toUpperCase());
+            }
+
+            //Lecture du résultat de la requête.
+            while(resultatLignes_.next()) {
+                Map<String, Object> resultatLigne = new HashMap<String, Object>();
+                resultatLignes.add(resultatLigne);
+                for(String attribut : attributs) {
+                    Object valeur = resultatLignes_.getObject(attribut);
+                    resultatLigne.put(attribut, valeur);
+                }
+            }
+
+            //Fin de la lecture du résultat de la requête.
+            resultatLignes_.close();
+            //Fin de la requête.
+            requete.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Erreur ! Une requête se sélection a échouée : \"" + requeteString + "\" !");
+            System.exit(1);
+        }
+
+        return resultatLignes;
+    }
+
+    /**
      * Chercher des n-uplets d'une table
      * avec un prédicat.
+     *
+     * La requête en interne fait un "SELECT * FROM"
+     * sur la table désdignée par la classe précisée
+     * ne paramètre.
+     *
+     * Cette méthode de recherche / de sélection permet
+     * de préciser un prédicat / une condition de recherche :
+     * condition WHERE, et INNER JOIN avant, si besoin
+     * de faire des jointures pour le prédicat.
+     *
+     * Les n-uplets sont ordonnées avec le champ id.
+     * On part du postulat que toute tables de nos bases
+     * de données ont toujours une clé primaire
+     * nommée "id".
      *
      * @param predicat
      * @param entiteClasse
@@ -98,11 +163,11 @@ public class ORM {
 
         List<Entite> listeNUplets = new ArrayList<Entite>();
         try {
-            //Execution de la requête.
+            //Exécution de la requête.
             requete = connexion.createStatement();
             ResultSet resultatLignes = requete.executeQuery(requeteString);
 
-            //Lecture du résultat de la requête.
+            //Lecture des lignes du résultat de la requête.
             while(resultatLignes.next()) {
                 Map<String, Object> nUpletAttributs = new HashMap<String, Object>();
                 for(String attribut : structure.keySet()) {
@@ -146,6 +211,9 @@ public class ORM {
      * Chercher un n-uplet d'une table
      * avec un prédicat.
      *
+     * Cette méthode retourne le premier n-uplet trouvé par cette autre méthode :
+     * @see fr.ul.miage.m1.projet_genie_logiciel.orm.ORM#chercherNUpletsAvecPredicat(String, Class) 
+     * 
      * @param predicat
      * @param entiteClasse
      * @return
@@ -157,6 +225,9 @@ public class ORM {
 
     /**
      * Chercher tous les n-uplets d'une table.
+     *
+     * Cette méthode utilise cette autre méthode, sans prédicat :
+     * @see fr.ul.miage.m1.projet_genie_logiciel.orm.ORM#chercherNUpletAvecPredicat(String, Class)
      */
     public List<Entite> chercherTousLesNUplets(@NotNull Class entiteClasse) {
         return chercherNUpletsAvecPredicat("", entiteClasse);
@@ -165,6 +236,8 @@ public class ORM {
     /**
      * Compter le nombre de n-uplets
      * d'une table avec un prédicat.
+     *
+     * @see fr.ul.miage.m1.projet_genie_logiciel.orm.ORM#chercherNUplets(String)
      *
      * @param predicat
      * @param entiteClasse
@@ -175,29 +248,10 @@ public class ORM {
         String nomTable = EntiteMetadonnee.getEntiteNomTable(entiteClasse);
 
         //Construction de la requête.
-        Statement requete = null;
         String requeteString = "SELECT COUNT(FROM_TABLE.*) AS NOMBRE_NUPLETS FROM " + nomTable + " AS FROM_TABLE " + predicat + ";";
 
-        Integer nombreNUplets = 0;
-        try {
-            //Execution de la requête.
-            requete = connexion.createStatement();
-            ResultSet resultatLignes = requete.executeQuery(requeteString);
-
-            //Lecture du résultat de la requête.
-            while(resultatLignes.next()) {
-                nombreNUplets = resultatLignes.getInt("NOMBRE_NUPLETS");
-            }
-
-            //Fin de la lecture du résultat de la requête.
-            resultatLignes.close();
-            //Fin de la requête.
-            requete.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Erreur ! Une requête se sélection a échouée : \"" + requeteString + "\" !");
-            System.exit(1);
-        }
+        //Exécution de la requête.
+        Integer nombreNUplets = ((Long) chercherNUplets(requeteString).get(0).get("NOMBRE_NUPLETS")).intValue()lo;
 
         return nombreNUplets;
     }
@@ -205,6 +259,10 @@ public class ORM {
     /**
      * Compter le nombre total de
      * n-uplets d'une table.
+     *
+     * Cette méthode utilise cette
+     * autre méthode, sans prédicat :
+     * @see fr.ul.miage.m1.projet_genie_logiciel.orm.ORM#compterNUpletsAvecPredicat(String, Class) 
      *
      * @param entiteClasse
      * @return
@@ -325,6 +383,8 @@ public class ORM {
     /**
      * Supprimer un n-uplet.
      *
+     * @see fr.ul.miage.m1.projet_genie_logiciel.orm.ORM#supprimerNUpletsAvecPredicat(String, Class) 
+     * 
      * @param nUplet
      */
     public void supprimerNUplet(@NotNull Entite nUplet) {
@@ -335,6 +395,10 @@ public class ORM {
      * Supprimer tous les n-uplets d'une
      * table.
      *
+     * Cette méthode utilise cette autre
+     * méthode, sans prédicat :
+     *  @see fr.ul.miage.m1.projet_genie_logiciel.orm.ORM#supprimerNUpletsAvecPredicat(String, Class)
+     *
      * @param entiteClasse
      */
     public void supprimerTousLesNUplets(@NotNull Class entiteClasse) {
@@ -342,8 +406,8 @@ public class ORM {
     }
 
     /**
-     * Réinitialiser une séuence d'id
-     * à une valur de départ.
+     * Réinitialiser une séquence d'id
+     * à une valeur de départ.
      *
      * @param entiteClasse
      */
@@ -352,10 +416,10 @@ public class ORM {
         try {
             //Récupération des métadonnées de la table.
             String nomTable = EntiteMetadonnee.getEntiteNomTable(entiteClasse);
-
+            //Contruction de la requête.
             requeteString = "ALTER SEQUENCE " + nomTable.toLowerCase() + "_id_seq RESTART WITH " + idDebut + ";";
             Statement requete = connexion.createStatement();
-            //Execution de la requête.
+            //Exécution de la requête.
             requete.executeUpdate(requeteString);
             //Validation de la transaction.
             connexion.commit();
@@ -372,6 +436,8 @@ public class ORM {
      * Réinitialiser une séuence d'id
      * à une valur de départ.
      *
+     * @see fr.ul.miage.m1.projet_genie_logiciel.orm.ORM#reinitialiserSequenceId(int, Class) 
+     * 
      * @param entiteClasse
      */
     public void reinitialiserSequenceIdA1(@NotNull Class entiteClasse) {
@@ -382,6 +448,9 @@ public class ORM {
      * Supprimer tous les n-uplets d'une table,
      * et réinitialiser la séquence de ses ids à 1.
      *
+     * @see fr.ul.miage.m1.projet_genie_logiciel.orm.ORM#supprimerTousLesNUplets(Class)
+     * @see fr.ul.miage.m1.projet_genie_logiciel.orm.ORM#reinitialiserSequenceIdA1(Class) 
+     * 
      * @param entiteClasse
      */
     public void reinitialiserTable(@NotNull Class entiteClasse) {
