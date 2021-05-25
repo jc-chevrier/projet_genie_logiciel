@@ -24,7 +24,7 @@ public class Fonctionnalite {
         List<Fonctionnalite> fonctionnalitesDirecteur = new ArrayList<Fonctionnalite>(
                 Arrays.asList(new Fonctionnalite("Ajouter un plat à la carte du jour", PlatControleur::ajouterACarte),
                               new Fonctionnalite("Supprimer un plat de la carte du jour", PlatControleur::supprimerDeCarte),
-                              new Fonctionnalite("Consulter les statistiques générales", AccueilControleur::consulter),
+                              new Fonctionnalite("Consulter les statistiques générales", StatControleur::consulterGenerales),
                               new Fonctionnalite("Consulter les statistiques sur le chiffre d'affaire", AccueilControleur::consulter),// TODO à modifier
                               new Fonctionnalite("Lister les salariés", AccueilControleur::consulter),// TODO à modifier
                               new Fonctionnalite("Ajouter un salarié", AccueilControleur::consulter),// TODO à modifier
