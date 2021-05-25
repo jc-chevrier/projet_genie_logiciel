@@ -334,6 +334,9 @@ public class CommandeControleur extends Controleur {
                 statGeneral.setNbCommandes(statGeneral.getNbCommandes() + 1);
             }
             orm.persisterNUplet(statGeneral);
+            //Mise à jour du chiffre d'affaire par plat
+            Plat plats = orm.chercherTousLesNUplets("WHERE ")
+            StatChiffreAffaire statChiffreAffaire = orm.chercherNUpletsAvecPredicat("INNER JOIN COMMANDE")
 
             //Message de résultat.
             ui.afficher("Commande payée !");
