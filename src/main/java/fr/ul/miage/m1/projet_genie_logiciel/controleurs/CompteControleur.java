@@ -135,5 +135,33 @@ public class CompteControleur extends Controleur{
         AccueilControleur.consulter();
     }
 
+    /**
+     * Lister tous les salarié.
+     */
+    public static void lister() {
+        //UI et ORM.
+        UI ui = getUI();
+        ORM orm = getORM();
+
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Listing de tous les salariés :");
+
+        //Récupération des comptes exsitants.
+        List<Entite> comptes = orm.chercherTousLesNUplets(Compte.class);
+
+        //Si pas de salarié.
+        if (comptes.isEmpty()) {
+            //Message d'erreur.
+            ui.afficher("Aucun salarié trouvé !");
+            //Sinon.
+        } else {
+            //Listing.
+            ui.listerNUplets(comptes);
+        }
+
+        //Retour vers l'accueil.
+        AccueilControleur.consulter();
+    }
+
 }
 
