@@ -25,7 +25,7 @@ public class Fonctionnalite {
                 Arrays.asList(new Fonctionnalite("Ajouter un plat à la carte du jour", PlatControleur::ajouterACarte),
                               new Fonctionnalite("Supprimer un plat de la carte du jour", PlatControleur::supprimerDeCarte),
                               new Fonctionnalite("Consulter les statistiques générales", AccueilControleur::consulter),
-                              new Fonctionnalite("Consulter les statistiques sur le chiffre d'affaire", AccueilControleur::consulter),// TODO à modifier
+                              new Fonctionnalite("Consulter les statistiques sur le chiffre d'affaire", StatControleur::consulterChiffreAffaire),
                               new Fonctionnalite("Lister les salariés", AccueilControleur::consulter),// TODO à modifier
                               new Fonctionnalite("Ajouter un salarié", AccueilControleur::consulter),// TODO à modifier
                               new Fonctionnalite("Modifier les informations d'un salarié", AccueilControleur::consulter),// TODO à modifier
