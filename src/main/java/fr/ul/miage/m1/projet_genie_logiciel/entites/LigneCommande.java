@@ -71,13 +71,10 @@ public class LigneCommande extends Entite {
     @Override
     public String toString() {
         ORM orm = ORM.getInstance();
-        Integer id = getId();
-
-        Plat plat = (Plat) orm.chercherNUpletAvecPredicat("WHERE ID = "  + id, Plat.class);
-        String contenu = "Ligne de commande [ id = " + id +
+        Plat plat = (Plat) orm.chercherNUpletAvecPredicat("WHERE ID = "  + getIdPlat(), Plat.class);
+        String contenu = "Ligne de commande [ id = " + getId() +
                 ", état = " + getEtat() +
                 ", id de la commande = " + getIdCommande() + " ]\n" + getNbOccurences() + "x " + plat.toString();
-
         return contenu;
     }
 }

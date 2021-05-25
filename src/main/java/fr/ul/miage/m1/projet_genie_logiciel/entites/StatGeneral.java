@@ -23,7 +23,8 @@ public class StatGeneral extends Entite {
         STRUCTURE.put("ID", Integer.class);
         STRUCTURE.put("DATE_JOUR", Date.class);
         STRUCTURE.put("TEMPS_PREPARATION", Integer.class);
-        STRUCTURE.put("NB_COMMANDES", Integer.class);
+        STRUCTURE.put("NB_COMMANDES_PREPAREES", Integer.class);
+        STRUCTURE.put("NB_COMMANDES_PAYEES", Integer.class);
         STRUCTURE.put("NB_CLIENTS", Integer.class);
     }
 
@@ -49,9 +50,13 @@ public class StatGeneral extends Entite {
 
     public void setTempsPreparation(Integer tempsPreparation) { set("TEMPS_PREPARATION", tempsPreparation);}
 
-    public Integer getNbCommandes() {return (Integer) get("NB_COMMANDES");}
+    public Integer getNbCommandesPreparees() {return (Integer) get("NB_COMMANDES_PREPAREES");}
 
-    public void setNbCommandes(Integer nbCommandes) { set("NB_COMMANDES", nbCommandes);}
+    public void setNbCommandesPreparees(Integer nbCommandesPreparees) { set("NB_COMMANDES_PREPAREES", nbCommandesPreparees);}
+
+    public Integer getNbCommandesPayees() {return (Integer) get("NB_COMMANDES_PAYEES");}
+
+    public void setNbCommandesPayees(Integer nbCommandesPayees) { set("NB_COMMANDES_PAYEES", nbCommandesPayees);}
 
     public Integer getNbClients() { return (Integer) get("NB_CLIENTS");}
 
