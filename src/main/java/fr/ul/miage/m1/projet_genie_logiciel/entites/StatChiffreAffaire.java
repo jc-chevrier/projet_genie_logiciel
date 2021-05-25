@@ -52,17 +52,13 @@ public class StatChiffreAffaire extends Entite {
         set("CHIFFRE_AFFAIRE_DEJEUNER", chiffreAffaireDejeuner);
     }
 
-    public Double getChiffreAffaireDiner() {
-        return (Double) get("CHIFFRE_AFFAIRE_DINER");
-    }
+    public Double getChiffreAffaireDiner() { return (Double) get("CHIFFRE_AFFAIRE_DINER"); }
 
     public void setChiffreAffaireDiner(Double chiffreAffaireDiner) {
         set("CHIFFRE_AFFAIRE_DINER", chiffreAffaireDiner);
     }
 
-    public Double getChiffreAffaire() {
-        return (Double) get("CHIFFRE_AFFAIRE");
-    }
+    public Double getChiffreAffaire() { return (Double) get("CHIFFRE_AFFAIRE"); }
 
     public void setChiffreAffaire(Double chiffreAffaire) {
         set("CHIFFRE_AFFAIRE", chiffreAffaire);

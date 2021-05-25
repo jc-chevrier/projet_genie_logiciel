@@ -510,6 +510,7 @@ public class CommandeControleur extends Controleur {
 
             //Sauvegarde : mise à jour du nombre de commandes du jour.
             SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+            Date aujourdhuiDate = new Date();
             String aujourdhui = dateFormat.format(new Date());
             StatGeneral statGeneral = (StatGeneral) orm.chercherNUpletAvecPredicat("WHERE TO_CHAR(DATE_JOUR, 'mm-dd-yyyy') = '" +
                                                                                     aujourdhui + "'",
@@ -527,7 +528,61 @@ public class CommandeControleur extends Controleur {
                 }
             }
             orm.persisterNUplet(statGeneral);
+            //Mise à jour du chiffre d'affaire
+            List<Entite> statChiffreAffaires = orm.chercherNUpletsAvecPredicat("INNER JOIN LIGNE_COMMANDE AS LC "+
+                                                                                " ON LC.ID_PLAT = FROM_TABLE.ID_PLAT "+
+                                                                                " WHERE TO_CHAR(DATE_JOUR, 'mm-dd-yyyy') = '" +
+                                                                                aujourdhui + "' AND LC.ID_COMMANDE ="+
+                                                                                commande.getId(),
+                                                                                StatChiffreAffaire.class);
+            //Liste vide : pas de stat pour la commande sélectionnée aujourdui.
+            if(statChiffreAffaires.isEmpty()){
+                 orm.chercherNUpletsAvecPredicat("WHERE ID_COMMANDE ="+commande.getId(),LigneCommande.class)
+                    .forEach(entite -> {
+                        LigneCommande ligneCommande = (LigneCommande) entite;
+                        StatChiffreAffaire statChiffreAffaire = new StatChiffreAffaire();
+                        statChiffreAffaire.setDateJour(aujourdhuiDate);
+                        statChiffreAffaire.setIdPlat(ligneCommande.getIdPlat());
+                        Plat plat = (Plat) orm.chercherNUpletAvecPredicat("WHERE ID ="+ligneCommande.getIdPlat(),Plat.class);
+                        Double chiffreAffaire = plat.getPrix()*ligneCommande.getNbOccurences();
+                        //Vérifier si le plat a été commandé pour le déjeuner ou le dinner
+                        if(aujourdhuiDate.getHours()>11 && aujourdhuiDate.getHours()<14){
+                            statChiffreAffaire.setChiffreAffaireDejeuner(chiffreAffaire);
+                            statChiffreAffaire.setChiffreAffaire(chiffreAffaire);
+                        }else{
+                            statChiffreAffaire.setChiffreAffaireDiner(chiffreAffaire);
+                            statChiffreAffaire.setChiffreAffaire(chiffreAffaire);
 
+                        }
+                        orm.persisterNUplet(statChiffreAffaire);
+                    });
+             //Sinon : Remettre à jour les stat
+            }else{
+                statChiffreAffaires.forEach(entite -> {
+                    StatChiffreAffaire statChiffreAffaire = (StatChiffreAffaire) entite;
+                    Plat plat = (Plat) orm.chercherNUpletAvecPredicat("WHERE ID ="+statChiffreAffaire.getIdPlat(),Plat.class);
+                    LigneCommande ligneCommande = (LigneCommande) orm.chercherNUpletAvecPredicat("WHERE ID_PLAT = "+plat.getId()+
+                                                                                                          " AND ID_COMMANDE = "+commande.getId(),
+                                                                                                           LigneCommande.class);
+                    Double chiffreAffaire = plat.getPrix()*ligneCommande.getNbOccurences();
+                    if(aujourdhuiDate.getHours()>11 && aujourdhuiDate.getHours()<14){
+                        if(statChiffreAffaire.getChiffreAffaireDejeuner() == null){
+                            statChiffreAffaire.setChiffreAffaireDejeuner(chiffreAffaire);
+                        }else{
+                            statChiffreAffaire.setChiffreAffaireDejeuner(statChiffreAffaire.getChiffreAffaireDejeuner() +chiffreAffaire);
+                        }
+                        statChiffreAffaire.setChiffreAffaire(statChiffreAffaire.getChiffreAffaire() + chiffreAffaire);
+                    }else{
+                        if(statChiffreAffaire.getChiffreAffaireDiner() == null){
+                            statChiffreAffaire.setChiffreAffaireDiner(chiffreAffaire);
+                        }else{
+                            statChiffreAffaire.setChiffreAffaireDiner(statChiffreAffaire.getChiffreAffaireDiner() + chiffreAffaire);
+                        }
+                        statChiffreAffaire.setChiffreAffaire(statChiffreAffaire.getChiffreAffaire() + chiffreAffaire);
+                    }
+                    orm.persisterNUplet(statChiffreAffaire);
+                });
+            }
             //Message de résultat.
             ui.afficher("Commande payée !");
             ui.afficher(commande.toString());
