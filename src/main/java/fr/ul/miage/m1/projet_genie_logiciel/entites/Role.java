@@ -1,12 +1,11 @@
 package fr.ul.miage.m1.projet_genie_logiciel.entites;
 
-import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Entité rôle.
+ * Entité des rôles des utilisateurs.
  *
  * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */

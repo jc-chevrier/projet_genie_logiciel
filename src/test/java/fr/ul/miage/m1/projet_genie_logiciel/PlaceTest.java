@@ -13,15 +13,15 @@ public class PlaceTest {
     private static ORM orm;
     private static UI ui;
 
-    static void reinitialiserTables(){
+    static void reinitialiserTables() {
         //On réinitialise la table place.
         orm.reinitialiserTable(Place.class);
-        orm.reinitialiserSequenceId(6,Compte.class);
+        orm.reinitialiserSequenceId(6, Compte.class);
     }
 
     static void reinitialiserCompteServeur4(){
         int compte4Exsite = orm.compterNUpletsAvecPredicat("WHERE ID = 4", Compte.class);
-        if(compte4Exsite == 0){
+        if(compte4Exsite == 0) {
             orm.reinitialiserSequenceId(4,Compte.class);
             Compte compte = new Compte();
             compte.setIdRole(4);
@@ -36,7 +36,6 @@ public class PlaceTest {
     static void faireAvantTousLesTests() {
         ORM.CONFIGURATION_FILENAME = "./configuration/configuration_bdd_test.properties";
         orm = ORM.getInstance();
-
         ui = UI.getInstance();
     }
 
@@ -63,10 +62,6 @@ public class PlaceTest {
         place.setEtat("libre");
         orm.persisterNUplet(place);
 
-        //On simule les saisies de listing dans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/lister_cas_1.txt"));
-        ui.reinitialiserScanner();
-
         //On simule le scénario de listing.
         PlaceControleur.lister();
     }
@@ -77,10 +72,6 @@ public class PlaceTest {
         //On se connecte en tant que maitre d'hotel.
         ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
 
-        //On simule les saisies de listing dans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/lister_cas_2.txt"));
-        ui.reinitialiserScanner();
-
         //On simule le scénario de listing.
         PlaceControleur.lister();
     }
@@ -90,10 +81,6 @@ public class PlaceTest {
     void testAjouterCas1BienAjoutee() {
         //On se connecte en tant que maitre d'hotel.
         ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
-
-        //On simule les saisies d'ajout dans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/ajouter_cas_1.txt"));
-        ui.reinitialiserScanner();
 
         int nbPlacesAvant = orm.compterTousLesNUplets(Place.class);
 
@@ -110,10 +97,6 @@ public class PlaceTest {
     void testAjouterCas2BonsAttributs() {
         //On se connecte en tant que maitre d'hotel.
         ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
-
-        //On simule les saisies d'ajout dans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/ajouter_cas_2.txt"));
-        ui.reinitialiserScanner();
 
         //On simule le scénario d'ajout.
         PlaceControleur.ajouter();
@@ -185,10 +168,6 @@ public class PlaceTest {
         //On se connecte en tant que maitre d'hotel.
         ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
 
-        //On simule les saisies de la suppression dans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/supprimer_cas_3.txt"));
-        ui.reinitialiserScanner();
-
         //On simule le scénario de suppression.
         PlaceControleur.supprimer();
     }
@@ -203,10 +182,6 @@ public class PlaceTest {
         Place place = new Place();
         place.setEtat("sale");
         orm.persisterNUplet(place);
-
-        //On simule les saisies de listing dans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/lister_a_preparer_cas_1.txt"));
-        ui.reinitialiserScanner();
 
         //On simule le scénario de listing.
         PlaceControleur.listerAPreparer();
@@ -223,10 +198,6 @@ public class PlaceTest {
         place.setEtat("libre");
         orm.persisterNUplet(place);
 
-        //On simule les saisies de listing dans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/lister_a_preparer_cas_2.txt"));
-        ui.reinitialiserScanner();
-
         //On simule le scénario de listing.
         PlaceControleur.listerAPreparer();
     }
@@ -236,10 +207,6 @@ public class PlaceTest {
     void testListerAPreparerCas3PasTrouvees() {
         //On se connecte en tant qu'assistant de service.
         ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 5", Compte.class));
-
-        //On simule les saisies de listing dans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/lister_a_preparer_cas_3.txt"));
-        ui.reinitialiserScanner();
 
         //On simule le scénario de listing.
         PlaceControleur.listerAPreparer();
@@ -309,10 +276,6 @@ public class PlaceTest {
         place.setEtat("libre");
         orm.persisterNUplet(place);
 
-        //On simule les saisies de validation dans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/valider_preparation_cas_3.txt"));
-        ui.reinitialiserScanner();
-
         //On simule le scénario de validation.
         PlaceControleur.validerPreparation();
     }
@@ -322,10 +285,6 @@ public class PlaceTest {
     void testValiderPreparationCas4PasTrouvees() {
         //On se connecte en tant qu'assistant de service.
         ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 5", Compte.class));
-
-        //On simule les saisies de validation dans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/valider_preparation_cas_4.txt"));
-        ui.reinitialiserScanner();
 
         //On simule le scénario de validation.
         PlaceControleur.validerPreparation();
@@ -343,10 +302,6 @@ public class PlaceTest {
         place.setEtat("libre");
         orm.persisterNUplet(place);
 
-        //On simule les saisies de listing dans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/lister_disponibles_cas_1.txt"));
-        ui.reinitialiserScanner();
-
         //On simule le scénario de listing.
         PlaceControleur.listerDisponibles();
     }
@@ -362,10 +317,6 @@ public class PlaceTest {
         place.setEtat("sale");
         orm.persisterNUplet(place);
 
-        //On simule les saisies de listing dans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/lister_disponibles_cas_2.txt"));
-        ui.reinitialiserScanner();
-
         //On simule le scénario de listing.
         PlaceControleur.listerDisponibles();
     }
@@ -375,10 +326,6 @@ public class PlaceTest {
     void testListerDisponiblesCas3PasTrouvees() {
         //On se connecte en tant que maitre d'hotel.
         ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
-
-        //On simule les saisies de listing dans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/lister_disponibles_cas_3.txt"));
-        ui.reinitialiserScanner();
 
         //On simule le scénario de listing.
         PlaceControleur.listerDisponibles();
@@ -472,10 +419,6 @@ public class PlaceTest {
         place.setEtat("occupé");
         orm.persisterNUplet(place);
 
-        //On simule les saisies d'allocation ans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/allouer_pour_client_cas_4.txt"));
-        ui.reinitialiserScanner();
-
         //On simule le scénario d'allocation.
         PlaceControleur.allouerPourClient();
     }
@@ -485,10 +428,6 @@ public class PlaceTest {
     void testAllouerPourClientCas5PasTrouvees() {
         //On se connecte en tant que maitre d'hotel.
         ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
-
-        //On simule les saisies d'allocation dans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/allouer_pour_client_cas_5.txt"));
-        ui.reinitialiserScanner();
 
         //On simule le scénario d'allocation.
         PlaceControleur.allouerPourClient();
@@ -557,10 +496,6 @@ public class PlaceTest {
         place.setEtat("sale");
         orm.persisterNUplet(place);
 
-        //On simule les saisies de désallocation dans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/desallouer_pour_client_cas_3.txt"));
-        ui.reinitialiserScanner();
-
         //On simule le scénario de désallocation.
         PlaceControleur.desallouerPourClient();
     }
@@ -570,10 +505,6 @@ public class PlaceTest {
     void testDesallouerPourClientCas4PasTrouvees() {
         //On se connecte en tant que maitre d'hotel.
         ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
-
-        //On simule les saisies de désallocation dans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/desallouer_pour_client_cas_4.txt"));
-        ui.reinitialiserScanner();
 
         //On simule le scénario de désallocation.
         PlaceControleur.desallouerPourClient();
@@ -590,10 +521,6 @@ public class PlaceTest {
         place.setIdCompteServeur(4);
         orm.persisterNUplet(place);
 
-        //On simule les saisies de listing dans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/lister_allouees_pour_serveur_cas_1.txt"));
-        ui.reinitialiserScanner();
-
         //On simule le scénario de listing.
         PlaceControleur.listerAlloueesPourServeur();
     }
@@ -603,10 +530,6 @@ public class PlaceTest {
     void testListerAlloueesPourServeurCas2PasTrouvees() {
         //On se connecte en tant que serveur.
         ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 4", Compte.class));
-
-        //On simule les saisies de listing dans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/lister_allouees_pour_serveur_cas_2.txt"));
-        ui.reinitialiserScanner();
 
         //On simule le scénario de listing.
         PlaceControleur.listerAlloueesPourServeur();
@@ -666,10 +589,6 @@ public class PlaceTest {
         compte.setIdRole(4);
         orm.persisterNUplet(compte);
 
-        //On simule les saisies d'allocation ans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/allouer_pour_serveur_cas_2.txt"));
-        ui.reinitialiserScanner();
-
         //On simule le scénario d'allocation.
         PlaceControleur.allouerPourServeur();
     }
@@ -695,10 +614,6 @@ public class PlaceTest {
         place.setIdCompteServeur(6);
         orm.persisterNUplet(place);
 
-        //On simule les saisies d'allocation ans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/allouer_pour_serveur_cas_3.txt"));
-        ui.reinitialiserScanner();
-
         //On simule le scénario d'allocation.
         PlaceControleur.allouerPourServeur();
     }
@@ -715,10 +630,6 @@ public class PlaceTest {
         Place place = new Place();
         place.setEtat("libre");
         orm.persisterNUplet(place);
-
-        //On simule les saisies d'allocation ans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/allouer_pour_serveur_cas_4.txt"));
-        ui.reinitialiserScanner();
 
         //On simule le scénario d'allocation.
         PlaceControleur.allouerPourServeur();
@@ -740,10 +651,6 @@ public class PlaceTest {
         compte.setIdRole(4);
         orm.persisterNUplet(compte);
 
-        //On simule les saisies d'allocation ans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/allouer_pour_serveur_cas_5.txt"));
-        ui.reinitialiserScanner();
-
         //On simule le scénario d'allocation.
         PlaceControleur.allouerPourServeur();
     }
@@ -756,10 +663,6 @@ public class PlaceTest {
 
         //On supprime les serveurs existants.
         orm.chercherNUpletsAvecPredicat("WHERE ID_ROLE = 4", Compte.class).forEach(orm::supprimerNUplet);
-
-        //On simule les saisies d'allocation ans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/allouer_pour_serveur_cas_6.txt"));
-        ui.reinitialiserScanner();
 
         //On simule le scénario d'allocation.
         PlaceControleur.allouerPourServeur();
@@ -810,10 +713,6 @@ public class PlaceTest {
 
         //On supprime les serveurs existants.
         orm.chercherNUpletsAvecPredicat("WHERE ID_ROLE = 4", Compte.class).forEach(orm::supprimerNUplet);
-
-        //On simule les saisies de désallocation ans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/desallouer_pour_serveur_cas_2.txt"));
-        ui.reinitialiserScanner();
 
         //On simule le scénario de désallocation.
         PlaceControleur.desallouerPourServeur();

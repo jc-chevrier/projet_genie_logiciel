@@ -2,139 +2,112 @@ package fr.ul.miage.m1.projet_genie_logiciel.controleurs;
 
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Entite;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Unite;
-import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
-
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 /**
- * Controleur pour les unités.
+ * Contrôleur pour la gestion des unités.
  *
  * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */
-public class UniteControleur extends Controleur{
+public class UniteControleur extends Controleur {
+    //Messages courants.
+    private final static String MESSAGE_AUCUNE_TROUVEE = "Aucune unité trouvée dans le cataloque !";
+    private final static String MESSAGE_SELECTIONNER = "Sélectionner une unité :";
+
     /**
      * Lister les unités.
      */
     public static void lister() {
-        //UI et ORM.
-        UI ui = getUI();
-        ORM orm = getORM();
-
         //Message de titre.
         ui.afficherAvecDelimiteurEtUtilisateur("Listing des unités :");
 
         //Récupération des unités existantes.
         List<Entite> unites = orm.chercherTousLesNUplets(Unite.class);
 
-        //Si pas d'unités dans le catalogue.
-        if(unites.isEmpty()) {
-            //Message d'erreur.
-            ui.afficher("Aucune unité trouvée dans le cataloque !");
-        //Sinon.
-        } else {
-            //Litsing.
+        //Si des unités ont été trouvées dans le catalogue.
+        if(!ui.afficherSiListeNUpletsVide(unites, MESSAGE_AUCUNE_TROUVEE)) {
+            //Listing.
             ui.listerNUplets(unites);
         }
+    }
 
-        //Retour vers l'accueil.
-        AccueilControleur.consulter();
+    /**
+     * Méthode permettant d'éditer, et de sauvegarder une unité,
+     * qu'elle soit déjà existante en base de données ou non.
+     *
+     * @param unite
+     */
+    private static void editerEtPersister(@NotNull Unite unite) {
+        //Questions et entrées.
+        //Saisie du libellé de l'unité.
+        String libelle = ui.poserQuestion("Saisir un libellé :", UI.REGEX_CHAINE_DE_CARACTERES);
+
+        //Sauvegarde.
+        //Insertion / mise à jour de l'unité.
+        unite.setLibelle(libelle);
+        orm.persisterNUplet(unite);
     }
 
     /**
      * Ajouter une unité.
      */
     public static void ajouter() {
-        //UI.
-        UI ui = getUI();
-        ORM orm = getORM();
-
         //Message de titre.
         ui.afficherAvecDelimiteurEtUtilisateur("Ajout d'une unité :");
 
-        //Questions et entrées.
-        String libelle = ui.poserQuestion("Saisir un libellé : ", UI.REGEX_CHAINE_DE_CARACTERES);
-
-        //Sauvegarde : insertion d'une unité.
+        //Saisie et sauvegarde.
         Unite unite = new Unite();
-        unite.setLibelle(libelle);
-        orm.persisterNUplet(unite);
+        editerEtPersister(unite);
 
         //Message de résultat.
-        ui.afficher("Unité ajoutée !");
-        ui.afficher(unite.toString());
-
-        //Retour vers l'accueil.
-        AccueilControleur.consulter();
+        ui.afficher("Unité ajoutée !\n" + unite);
     }
 
     /**
      * Modifier une unité.
      */
     public static void modifier() {
-        //UI et ORM.
-        UI ui = getUI();
-        ORM orm = getORM();
-
         //Message de titre.
         ui.afficherAvecDelimiteurEtUtilisateur("Modification d'une unité :");
 
         //Récupération des unités existantes.
         List<Entite> unites = orm.chercherTousLesNUplets(Unite.class);
 
-        //Si pas d'unités trouvées.
-        if(unites.isEmpty()) {
-            //Message d'erreur.
-            ui.afficher("Aucune unité trouvée dans le cataloque !");
-        //Sinon.
-        } else {
+        //Si des unités ont été trouvées dans le catalogue.
+        if(!ui.afficherSiListeNUpletsVide(unites, MESSAGE_AUCUNE_TROUVEE)) {
             //Questions et saisies.
-            int idUnite = ui.poserQuestionListeNUplets("Sélectionner une unité :", unites);
-            String libelle = ui.poserQuestion("Saisir un nouveau libellé : ", UI.REGEX_CHAINE_DE_CARACTERES);
-            Unite unite = (Unite) filtrerListeNUpletsAvecId(unites, idUnite);;
+            //Choix de l'unité.
+            Unite unite = (Unite) ui.poserQuestionListeNUplets(MESSAGE_SELECTIONNER, unites);
 
-            //Sauvegarde : suppression de l'unité.
-            unite.setLibelle(libelle);
-            orm.persisterNUplet(unite);
+            //Saisie et sauvegarde.
+            editerEtPersister(unite);
 
             //Message de résultat.
-            ui.afficher("Unité modifiée !");
-            ui.afficher(unite.toString());
+            ui.afficher("Unité modifiée !\n" + unite);
         }
-
-        //Retour vers l'accueil.
-        AccueilControleur.consulter();
     }
 
     /**
      * Supprimer une unité.
      */
     public static void supprimer() {
-        //UI et ORM.
-        UI ui = getUI();
-        ORM orm = getORM();
-
         //Message de titre.
         ui.afficherAvecDelimiteurEtUtilisateur("Suppression d'une unité :");
 
         //Récupération des unités existantes.
         List<Entite> unites = orm.chercherTousLesNUplets(Unite.class);
 
-        //Si pas d'unités trouvées.
-        if(unites.isEmpty()) {
-            //Message d'erreur.
-            ui.afficher("Aucune unité trouvée dans le cataloque !");
-        //Sinon.
-        } else {
+        //Si des unités ont été trouvées dans le catalogue.
+        if(!ui.afficherSiListeNUpletsVide(unites, MESSAGE_AUCUNE_TROUVEE)) {
             //Questions et saisies.
-            int idUnite = ui.poserQuestionListeNUplets("Sélectionner une unité :", unites);
-            Unite unite = (Unite) filtrerListeNUpletsAvecId(unites, idUnite);
-            //Si l'unité a été utilisé par des ingrédinents.
-            if(unite.estUtiliseParIngredient()) {
-                //Message d'erreur.
-                ui.afficher("Cette unité est utilisée par des ingrédients, elle ne peut pas être supprimée !");
-            //Sinon.
-            } else {
+            //Choix de l'unité.
+            Unite unite = (Unite) ui.poserQuestionListeNUplets(MESSAGE_SELECTIONNER, unites);
+
+            //Si l'unité n'est pas utilisée par des ingrédients.
+            String messageErreur = "Cette unité est utilisée par des ingrédients, elle ne peut pas être supprimée !";
+            if(!ui.afficherSiPredicatVrai(unite.estUtiliseeParIngredient(), messageErreur)) {
                 //Sauvegarde : suppression de l'unité.
                 orm.supprimerNUplet(unite);
 
@@ -142,8 +115,5 @@ public class UniteControleur extends Controleur{
                 ui.afficher("Unité supprimée !");
             }
         }
-
-        //Retour vers l'accueil.
-        AccueilControleur.consulter();
     }
 }

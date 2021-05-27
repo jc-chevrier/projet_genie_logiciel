@@ -1,6 +1,5 @@
 package fr.ul.miage.m1.projet_genie_logiciel.controleurs;
 
-import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
 import java.util.List;
 
 /**
@@ -13,15 +12,12 @@ public class AccueilControleur extends Controleur {
      * Obtenir l'accueil de l'interface.
      */
     public static void consulter() {
-        //UI.
-        UI ui = getUI();
-
         //Connexion.
         if(!utilisateurConnecte()) {
             AuthControleur.seConnecter();
         }
 
-        //Message titre.
+        //Message de titre.
         ui.afficherAvecDelimiteurEtUtilisateur("Accueil :");
 
         //Question et saisie fonctionnalités.

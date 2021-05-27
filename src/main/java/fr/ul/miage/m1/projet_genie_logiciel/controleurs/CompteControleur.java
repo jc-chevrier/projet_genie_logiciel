@@ -1,37 +1,56 @@
 package fr.ul.miage.m1.projet_genie_logiciel.controleurs;
 
 import fr.ul.miage.m1.projet_genie_logiciel.entites.*;
-import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 
-public class CompteControleur extends Controleur{
+/**
+ * Contrôleur pour la gestion des salariés.
+ *
+ * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
+ */
+public class CompteControleur extends Controleur {
+    //Messages courants.
+    private final static String MESSAGE_AUCUN_TROUVE =  "Aucun salarié trouvé !";
+    private final static String MESSAGE_SELECTIONNER = "Sélectionner un salarié :";
+
+    /**
+     * Lister tous les salarié.
+     */
+    public static void lister() {
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Listing de tous les salariés :");
+
+        //Récupération des salariés existants.
+        List<Entite> comptes = orm.chercherTousLesNUplets(Compte.class);
+
+        //Si des salariés ont été trouvés.
+        if (!ui.afficherSiListeNUpletsVide(comptes, MESSAGE_AUCUN_TROUVE)) {
+            //Listing.
+            ui.listerNUplets(comptes);
+        }
+    }
+
     /**
      * Méthode permettant d'éditer, et de sauvegarder un salarié,
-     * qu'il soit déjà ajouté ou non.
+     * qu'il existe déjà en base de données ou non.
      *
      * @param compte
      */
     private static void editerEtPersister(@NotNull Compte compte) {
-        //UI et ORM.
-        UI ui = getUI();
-        ORM orm = getORM();
-
-        //Récupération des roles.
+        //Récupération des rôles.
         List<Entite> roles = orm.chercherTousLesNUplets(Role.class);
 
         //Compte.
         //Questions et saisies.
         //Choix du role.
-        int idRole = ui.poserQuestionListeNUplets("Sélectionner un role :", roles);
+        int idRole = ui.poserQuestionListeNUplets("Sélectionner un role :", roles).getId();
         //Caractéristiques du compte.
         String nom = ui.poserQuestion("Saisir un nom :", UI.REGEX_CHAINE_DE_CARACTERES);
         String prenom = ui.poserQuestion("Saisir un prénom : ", UI.REGEX_CHAINE_DE_CARACTERES);
 
-        //Sauvegarde : insertion du role.
-        //Compte.
+        //Sauvegarde : insertion du compte.
         compte.setNom(nom);
         compte.setPrenom(prenom);
         compte.setIdRole(idRole);
@@ -43,19 +62,15 @@ public class CompteControleur extends Controleur{
      * Ajouter un salarié.
      */
     public static void ajouter() {
-        //UI et ORM.
-        UI ui = getUI();
-        ORM orm = getORM();
-
         //Message de titre.
         ui.afficherAvecDelimiteurEtUtilisateur("Ajout d'un salarié :");
 
-        //Saisie et sauvegarde.
+        //Saisies et sauvegarde.
         Compte compte = new Compte();
         editerEtPersister(compte);
+
         //Message de résultat.
-        ui.afficher("Salarié ajouté !");
-        ui.afficher(compte.toString());
+        ui.afficher("Salarié ajouté !\n" + compte);
 
         //Retour vers l'accueil.
         AccueilControleur.consulter();
@@ -65,103 +80,48 @@ public class CompteControleur extends Controleur{
      * Modifier un salarié.
      */
     public static void modifier() {
-        //UI et ORM.
-        UI ui = getUI();
-        ORM orm = getORM();
-
         //Message de titre.
-        ui.afficherAvecDelimiteurEtUtilisateur("Modification d'un salarié :");
+        ui.afficherAvecDelimiteurEtUtilisateur("Modification des informations d'un salarié :");
 
         //Récupération des salariés existants.
-        List<Entite> salaries = orm.chercherTousLesNUplets(Compte.class);
+        List<Entite> comptes = orm.chercherTousLesNUplets(Compte.class);
 
-        //Si pas de salarié trouvés.
-        if (salaries.isEmpty()) {
-            //Message d'erreur.
-            ui.afficher("Aucun salarié trouvé !");
-        //Sinon.
-        } else {
-            //Saisie du salarié à modofier.
-            int idSalarie = ui.poserQuestionListeNUplets("Sélectionner un salarié :", salaries);
-            Compte compte = (Compte) filtrerListeNUpletsAvecId(salaries, idSalarie);
+        //Si des salariés ont été trouvés.
+        if (!ui.afficherSiListeNUpletsVide(comptes, MESSAGE_AUCUN_TROUVE)) {
+            //Questions et saisies.
+            Compte compte = (Compte) ui.poserQuestionListeNUplets(MESSAGE_SELECTIONNER, comptes);
 
-            //Saisie et sauvegarde.
+            //Saisies et sauvegarde.
             editerEtPersister(compte);
 
             //Message de résultat.
-            ui.afficher("Informations salarié modifié !");
-            ui.afficher(compte.toString());
+            ui.afficher("Informations du salarié modifiées !\n" + compte);
         }
-
-        //Retour vers l'accueil.
-        AccueilControleur.consulter();
     }
 
     /**
      * Suuprimer un salarié.
      */
     public static void supprimer() {
-        //UI et ORM.
-        UI ui = getUI();
-        ORM orm = getORM();
-
         //Message de titre.
         ui.afficherAvecDelimiteurEtUtilisateur("Suppression d'un salarié :");
 
-        //Récupération des salariés exsitants.
-        List<Entite> salaries = orm.chercherTousLesNUplets(Compte.class);
+        //Récupération des salariés actifs existants.
+        List<Entite> comptesActifs = orm.chercherNUpletsAvecPredicat("WHERE ACTIF = 1", Compte.class);
 
-        //Si pas de plats dans le cataloque.
-        if (salaries.isEmpty()) {
-            //Message d'erreur.
-            ui.afficher("Aucun salarié trouvé !");
-        //Sinon.
-        } else {
+        //Si des salariés actifs ont été trouvés.
+        String messageErreur = "Aucun salarié actif trouvé !";
+        if (!ui.afficherSiListeNUpletsVide(comptesActifs, messageErreur)) {
             //Question et saisies.
-            int idSalarie = ui.poserQuestionListeNUplets("Sélectionner un salarié :", salaries);
-            Compte compte = (Compte) filtrerListeNUpletsAvecId(salaries, idSalarie);
+            Compte compte = (Compte) ui.poserQuestionListeNUplets(MESSAGE_SELECTIONNER, comptesActifs);
 
-            //Sauvegarde : suppression du salarié.
-            List<Entite> salarie = orm.chercherNUpletsAvecPredicat("WHERE ID = " + idSalarie,
-                    PlatIngredients.class);
-            salarie.forEach(orm::supprimerNUplet);
-            orm.supprimerNUplet(compte);
+            //Sauvegarde : modification du salarié.
+            //Le salarié passe à inactif.
+            compte.setActif(0);
+            orm.persisterNUplet(compte);
 
             //Message de résultat.
             ui.afficher("Salarié supprimé !");
         }
-
-        //Retour vers l'accueil.
-        AccueilControleur.consulter();
     }
-
-    /**
-     * Lister tous les salarié.
-     */
-    public static void lister() {
-        //UI et ORM.
-        UI ui = getUI();
-        ORM orm = getORM();
-
-        //Message de titre.
-        ui.afficherAvecDelimiteurEtUtilisateur("Listing de tous les salariés :");
-
-        //Récupération des comptes exsitants.
-        List<Entite> comptes = orm.chercherTousLesNUplets(Compte.class);
-
-        //Si pas de salarié.
-        if (comptes.isEmpty()) {
-            //Message d'erreur.
-            ui.afficher("Aucun salarié trouvé !");
-            //Sinon.
-        } else {
-            //Listing.
-            ui.listerNUplets(comptes);
-        }
-
-        //Retour vers l'accueil.
-        AccueilControleur.consulter();
-    }
-
 }
-

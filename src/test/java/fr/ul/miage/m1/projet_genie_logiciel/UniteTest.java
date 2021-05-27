@@ -11,7 +11,7 @@ import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
-@DisplayName("Unite")
+@DisplayName("Unité")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class UniteTest {
     private static ORM orm;
@@ -45,15 +45,10 @@ public class UniteTest {
     @Test
     @DisplayName("Test : lister les unités - cas 1 : unités trouvées")
     void testListerCas1Trouvees() {
-
         //On ajoute une unité à lister.
         Unite unite1 = new Unite();
         unite1.setLibelle("libellé");
         orm.persisterNUplet(unite1);
-
-        //On simule les saisies de listing dans ce fichier.
-        System.setIn(UniteTest.class.getResourceAsStream("./saisies/unite_test/lister_cas_1.txt"));
-        ui.reinitialiserScanner();
 
         //On simule le scénario de listing.
         UniteControleur.lister();
@@ -62,10 +57,6 @@ public class UniteTest {
     @Test
     @DisplayName("Test : lister les unités - cas 2 : aucune unité trouvée")
     void testListerCas2PasTrouvees() {
-        //On simule les saisies de listing dans ce fichier.
-        System.setIn(UniteTest.class.getResourceAsStream("./saisies/unite_test/lister_cas_2.txt"));
-        ui.reinitialiserScanner();
-
         //On simule le scénario de listing.
         UniteControleur.lister();
     }
@@ -125,10 +116,6 @@ public class UniteTest {
     @Test
     @DisplayName("Test : modifier une unité - cas 2 : aucune unité trouvé")
     void testModifierCa2PasTrouvees() {
-        //On simule les saisies de modification dans ce fichier.
-        System.setIn(UniteTest.class.getResourceAsStream("./saisies/unite_test/modifier_cas_1.txt"));
-        ui.reinitialiserScanner();
-
         //On simule le scénario de modification.
         UniteControleur.modifier();
     }
@@ -182,10 +169,6 @@ public class UniteTest {
     @Test
     @DisplayName("Test : supprimer une unité - cas 3 : aucune unité trouvée")
     void testSupprimerCas3PasTrouvees() {
-        //On simule les saisies de la suppression dans ce fichier.
-        System.setIn(UniteTest.class.getResourceAsStream("./saisies/unite_test/supprimer_cas_3.txt"));
-        ui.reinitialiserScanner();
-
         //On simule le scénario de suppression.
         UniteControleur.supprimer();
     }

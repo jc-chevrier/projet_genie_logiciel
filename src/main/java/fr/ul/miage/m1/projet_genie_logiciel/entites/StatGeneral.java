@@ -7,7 +7,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Entité stat générale.
+ * Entité des statistiques générales :
+ * - nombre de clients par jour ;
+ * - nombre de commandes préparées par jour ;
+ * - nombre de commandes payées par jour ;
+ * - temps de préparation par jour.
  *
  * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */
@@ -62,4 +66,3 @@ public class StatGeneral extends Entite {
 
     public void setNbClients(Integer nbClients) { set("NB_CLIENTS", nbClients);}
 }
-

@@ -3,11 +3,10 @@ package fr.ul.miage.m1.projet_genie_logiciel.entites;
 import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 /**
- * Entité Compte.
+ * Entité des compte des salariés du restaurant.
  *
  * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */
@@ -67,9 +66,26 @@ public class Compte extends Entite {
         set("ID_ROLE", idRole);
     }
 
+    /**
+     *  Formateur en chaine de caractères partiel, permettant d'afficher
+     *  que de manière partielle un compte, un compte en ne conservant que
+     *  son nom, son prenom, et son rôle.
+     *
+     * @return
+     */
     public String toSimpleString() {
-        Integer idRole = getIdRole();
-        Role role = (Role) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = " + idRole, Role.class);
+        Role role = (Role) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = " + getIdRole(), Role.class);
         return "[ " + getNom() + " " + getPrenom() + " / " + role.getLibelle() + " ]";
+    }
+
+    @Override
+    public String toString() {
+        Role role = (Role) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = " + getIdRole(), Role.class);
+        boolean actif = getActif() == 1;
+        return "[ id = " + getId() +
+                ", nom = " + getNom() +
+                ", prénom = " + getPrenom() +
+                ", rôle = " + role.getLibelle() +
+                ", " + (actif ? "actif" : "non actif") + " ]";
     }
 }
