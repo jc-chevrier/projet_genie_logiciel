@@ -7,51 +7,45 @@ import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Function;
 
 /**
- * Controleur pour les tables du restaurant.
+ * Contrôleur pour la gestion des tables du restaurant.
  *
  * Les tables du restaurant sont appelées "ploces".
  *
  * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */
 public class PlaceControleur extends Controleur {
+    //Messages courants.
+    private final static String MESSAGE_AUCUNE_TROUVEE = "Aucun table déclarée pour le restaurant !";
+    private final static String MESSAGE_SELECTIONNER = "Sélectionner une table :";
+
+    //Formateurs en chaine de caractères courants.
+    private final static Function<Entite, String> FORMATEUR_ETAT = entite -> ((Place) entite).toEtatString();
+    private final static Function<Entite, String> FORMATEUR_ETAT_SERVEUR = entite -> ((Place) entite).toEtatServeurString();
+
     /**
-     * Lister les tables du restaurant.
+     * Lister toutes les tables du restaurant.
      */
     public static void lister() {
-        //UI et ORM.
-        UI ui = getUI();
-        ORM orm = getORM();
-
         //Message de titre.
         ui.afficherAvecDelimiteurEtUtilisateur("Listing des tables du restaurant :");
 
-        //Récupération des tables existantes dans le restaurants.
+        //Récupération des tables existantes dans le restaurant.
         List<Entite> places = orm.chercherTousLesNUplets(Place.class);
 
-        //Si pas de tables déclarées dans le restaurant.
-        if (places.isEmpty()) {
-            //Message d'erreur.
-            ui.afficher("Aucune table déclarée dans le restaurant !");
-        //Sinon.
-        } else {
+        //Si des tables déclarées dans le restaurant ont été trouvées.
+        if (!ui.afficherSiListeNUpletsVide(places, MESSAGE_AUCUNE_TROUVEE)) {
             //Listing.
-            ui.listerNUplets(places, (place) -> ((Place) place).toEtatServeurString());
+            ui.listerNUplets(places, FORMATEUR_ETAT_SERVEUR);
         }
-
-        //Retour vers l'accueil.
-        AccueilControleur.consulter();
     }
 
     /**
      * Ajouter une table au restaurant.
      */
     public static void ajouter() {
-        //UI et ORM.
-        UI ui = getUI();
-        ORM orm = getORM();
-
         //Message de titre.
         ui.afficherAvecDelimiteurEtUtilisateur("Ajout d'une table :");
 
@@ -61,414 +55,287 @@ public class PlaceControleur extends Controleur {
         orm.persisterNUplet(place);
 
         //Message de résultat.
-        ui.afficher("Table ajoutée !");
-        ui.afficher("La table ajoutée a ce numéro : #" + place.getId() + ".");
-        ui.afficher(place.toString());
-
-        //Retour vers l'accueil.
-        AccueilControleur.consulter();
+        ui.afficher("Table ajoutée !\nLa table ajoutée a ce numéro : #" + place.getId() + ".\n" + place);
     }
 
     /*
      * Suuprimer une table du restaurant.
      */
     public static void supprimer() {
-        //UI et ORM.
-        UI ui = getUI();
-        ORM orm = getORM();
-
         //Message de titre.
         ui.afficherAvecDelimiteurEtUtilisateur("Suppression d'une table :");
 
         //Récupération des tables existantes dans le restaurant.
         List<Entite> places = orm.chercherTousLesNUplets(Place.class);
 
-        //Si pas de tables déclarées dans le restaurant.
-        if (places.isEmpty()) {
-            //Message d'erreur.
-            ui.afficher("Aucune table déclarée dans le restaurant !");
-            //Sinon.
-        } else {
+        //Si des tables déclarées dans le restaurant ont été trouvées.
+        if (!ui.afficherSiListeNUpletsVide(places, MESSAGE_AUCUNE_TROUVEE)) {
             //Question et saisies.
-            int idPlace = ui.poserQuestionListeNUplets("Sélectionner une table :", places);
-            Place place = (Place) filtrerListeNUpletsAvecId(places, idPlace);
+            //Choix de la table.
+            Place place = (Place) ui.poserQuestionListeNUplets(MESSAGE_SELECTIONNER, places);
 
-            //Sauvegarde : suppression d'une table.
-            orm.supprimerNUplet(place);
+            //Si la table n'est pas utilisée par des commandes et n'est pas allouée à un serveur.
+            String messageErreur = "Cette table est utilisée par des commandes et / ou est alloué à un serveur, " +
+                                   "\nelle ne peut pas être supprimée !";
+            if(!ui.afficherSiPredicatVrai(place.estUtiliseeParCommandeOuServeur(), messageErreur)) {
+                //Sauvegarde.
+                //Suppression de la table.
+                orm.supprimerNUplet(place);
 
-            //Message de résultat.
-            ui.afficher("Table supprimée !");
+                //Message de résultat.
+                ui.afficher("Table supprimée !");
+            }
         }
-
-        //Retour vers l'accueil.
-        AccueilControleur.consulter();
     }
 
     /**
-     * Lister les tables disponibles
+     * Lister les tables disponibles.
      */
     public static void listerDisponibles() {
-        //UI et ORM
-        UI ui = getUI();
-        ORM orm = getORM();
-
         //Message de titre.
         ui.afficherAvecDelimiteurEtUtilisateur("Listing des tables disponibles :");
 
-        //Récupération des tables libres / disponibles dans le restaurant.
-        List<Entite>  places =  orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'libre' ", Place.class);
+        //Récupération des tables disponibles / libres dans le restaurant.
+        List<Entite> placesDisponibles = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'libre'", Place.class);
 
-        //Si pas de tables disponibles.
-        if(places.isEmpty()) {
-            //Message d'erreur.
-            ui.afficher("Aucune table n'est disponible dans le restaurant !");
-        //Sinon
-        } else {
+        //Si des tables sont disponibles / libres dans le restaurant.
+        String messageErreur = "Aucune table n'est disponible dans le restaurant !";
+        if (!ui.afficherSiListeNUpletsVide(placesDisponibles, messageErreur)) {
             //Listing.
-            ui.listerNUplets(places, (place) -> ((Place) place).toEtatString());
+            ui.listerNUplets(placesDisponibles, FORMATEUR_ETAT);
         }
-
-        //Retour vers l'accueil.
-        AccueilControleur.consulter();
     }
 
     /**
-     * Lister les tables à préparer
+     * Lister les tables à préparer.
      */
     public static void listerAPreparer() {
-        //UI et ORM
-        UI ui = getUI();
-        ORM orm = getORM();
-
         //Message de titre.
         ui.afficherAvecDelimiteurEtUtilisateur("Listing des tables à préparer :");
 
-        //Récupération des tables à préparer dans le restaurant.
-        List<Entite> places =  orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'sale' ", Place.class);
+        //Récupération des tables à préparer / sales dans le restaurant.
+        List<Entite> placesAPreparer = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'sale'", Place.class);
 
-        //Si pas de tables à préparer.
-        if(places.isEmpty()) {
-            //Message d'erreur.
-            ui.afficher("Aucune table à préparer !");
-        //Sinon
-        } else {
-            //Litsing.
-            ui.listerNUplets(places, (place) -> ((Place) place).toEtatString());
+        //Si des tables sont à préparer / sales dans le restaurant.
+        String messageErreur = "Aucune table à préparer dans le restaurant !";
+        if (!ui.afficherSiListeNUpletsVide(placesAPreparer, messageErreur)) {
+            //Listing.
+            ui.listerNUplets(placesAPreparer, FORMATEUR_ETAT);
         }
-
-        //Retour vers l'accueil.
-        AccueilControleur.consulter();
     }
 
     /**
      * Valider la préparation d'une table.
      */
     public static void validerPreparation() {
-        //UI et ORM.
-        UI ui = getUI();
-        ORM orm = getORM();
-
         //Message de titre.
         ui.afficherAvecDelimiteurEtUtilisateur("Validation de la préparation d'une table :");
 
-        //Récupération des tables sales qui étaient à préparer.
-        List<Entite> places = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'sale' ", Place.class);
+        //Récupération des tables à préparer / sales dans le restaurant.
+        List<Entite> placesAPreparer = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'sale'", Place.class);
 
-        //Si pas d'unités dans le catalogue.
-        if (places.isEmpty()) {
-            //Message d'erreur.
-            ui.afficher("Aucune table sale trouvée dans le cataloque !");
-        } else {
+        //Si des tables sont à préparer / sales dans le restaurant.
+        String messageErreur = "Aucune table à préparer dans le restaurant !";
+        if (!ui.afficherSiListeNUpletsVide(placesAPreparer, messageErreur)) {
             //Questions et entrées.
-            int idPlace = ui.poserQuestionListeNUplets("Sélectionner une table :", places, (place) -> ((Place) place).toEtatString());
-            Place place = (Place) filtrerListeNUpletsAvecId(places, idPlace);
+            //Choix de la table.
+            Place place = (Place) ui.poserQuestionListeNUplets(MESSAGE_SELECTIONNER, placesAPreparer, FORMATEUR_ETAT);
 
             //Sauvegarde : modification de la table.
+            //Une table préparée passe à l'état libre.
             place.setEtat("libre");
             orm.persisterNUplet(place);
 
             //Message de résultat.
-            ui.afficher("Table préparée !");
-            ui.afficher(place.toEtatString());
+            ui.afficher("Table préparée !\n" + place);
         }
-
-        //Retour vers l'accueil.
-        AccueilControleur.consulter();
     }
 
     /**
      * Lister les tables pour le serveur.
      */
     public static void listerAlloueesPourServeur() {
-        //UI et ORM
-        UI ui = getUI();
-        ORM orm = getORM();
-
         //Message de titre.
         ui.afficherAvecDelimiteurEtUtilisateur("Listing de mes tables :");
 
         //Récupération des tables du serveur connecté.
-        List<Entite> places = orm.chercherNUpletsAvecPredicat("WHERE ID_COMPTE_SERVEUR = " + getUtilisateurConnecte().getId(), Place.class);
+        List<Entite> mesPlaces = orm.chercherNUpletsAvecPredicat("WHERE ID_COMPTE_SERVEUR = " +
+                                                                 getUtilisateurConnecte().getId(),
+                                                                  Place.class);
 
-        //Si pas de tables à lister pour le serveur
-        if (places.isEmpty()) {
-            //Message d'erreur.
-            ui.afficher("Aucune table allouée pour moi dans le restaurant !");
-        //Sinon
-        } else {
+        //Si des tables sont alllouées au serveur connecté.
+        String messageErreur = "Aucune table allouée pour moi dans le restaurant !";
+        if (!ui.afficherSiListeNUpletsVide(mesPlaces, messageErreur)) {
             //Listing.
-            ui.listerNUplets(places, (place) -> ((Place) place).toEtatServeurString());
+            ui.listerNUplets(mesPlaces, FORMATEUR_ETAT_SERVEUR);
         }
-
-        //Retour vers l'accueil.
-        AccueilControleur.consulter();
     }
 
     /**
      * Allouer une table à un serveur.
      */
     public static void allouerPourServeur() {
-        //UI et ORM
-        UI ui = getUI();
-        ORM orm = getORM();
-
         //Message de titre.
         ui.afficherAvecDelimiteurEtUtilisateur("Allouer une table à un serveur :");
 
         //Récupération des serveurs actifs dans le restaurant.
         List<Entite> comptesServeurs = orm.chercherNUpletsAvecPredicat("WHERE ID_ROLE = 4 AND ACTIF = 1", Compte.class);
         //Récuération des tables du restautant qui ne sont pas allouées à des serveurs.
-        List<Entite> places = orm.chercherNUpletsAvecPredicat("WHERE ID_COMPTE_SERVEUR IS NULL", Place.class);
+        List<Entite> placesSansServeurs = orm.chercherNUpletsAvecPredicat("WHERE ID_COMPTE_SERVEUR IS NULL", Place.class);
 
-        //Si pas de serveurs actifs dans le restaurant.
-        if (comptesServeurs.isEmpty()) {
-            //Message d'erreur.
-            ui.afficher("Aucun serveur actif déclaré dans le restaurant !");
-        //Sinon
-        } else {
-            //Si pas de tables à allouer.
-            if (places.isEmpty()) {
-                //Message d'erreur.
-                ui.afficher("Aucune table non allouée à des serveurs dans le restaurant !");
-            //Sinon
-            } else {
+        //Si des serveurs actifs dans le restaurant ont été trouvés.
+        String messageErreur = "Aucun serveur actif déclaré dans le restaurant !";
+        if (!ui.afficherSiListeNUpletsVide(comptesServeurs, messageErreur)) {
+            //Si des tables sans serveur associé ont été trouvées.
+            messageErreur = "Aucune table non allouée à des serveurs dans le restaurant !";
+            if (!ui.afficherSiListeNUpletsVide(placesSansServeurs, messageErreur)) {
                 //Questions et saisies.
-                int idCompteServeur = ui.poserQuestionListeNUplets("Sélectionner un serveur :", comptesServeurs);
-                int idPlace = ui.poserQuestionListeNUplets("Sélectionner une table :", places, (place) -> ((Place) place).toEtatServeurString());
+                //Choix du serveur.
+                int idCompteServeur = ui.poserQuestionListeNUplets("Sélectionner un serveur :", comptesServeurs).getId();
+                //Choix de la table.
+                Place place = (Place) ui.poserQuestionListeNUplets(MESSAGE_SELECTIONNER, placesSansServeurs, FORMATEUR_ETAT_SERVEUR);
 
                 //Sauvegarde : modification de la table.
-                Place place = (Place) filtrerListeNUpletsAvecId(places, idPlace);
                 place.setIdCompteServeur(idCompteServeur);
                 orm.persisterNUplet(place);
 
                 //Message de résultat.
-                ui.afficher("Nouvelle allocation de la table réussie !");
-                ui.afficher(place.toEtatServeurString());
+                ui.afficher("Nouvelle allocation de la table réussie !\n" + place.toEtatServeurString());
             }
         }
-
-        //Retour vers l'accueil.
-        AccueilControleur.consulter();
     }
 
     /**
      * Désallouer une table à un serveur.
      */
     public static void desallouerPourServeur() {
-        //UI et ORM
-        UI ui = getUI();
-        ORM orm = getORM();
-
         //Message de titre.
         ui.afficherAvecDelimiteurEtUtilisateur("Désallocation d'une table à un serveur :");
 
         //Récupération des serveurs actifs dans le restaurant.
         List<Entite> comptesServeurs = orm.chercherNUpletsAvecPredicat("WHERE ID_ROLE = 4 AND ACTIF = 1", Compte.class);
 
-        //Si pas de tables à désallouer pour le serveur.
-        if (comptesServeurs.isEmpty()) {
-            //Message d'erreur.
-            ui.afficher("Aucun serveur actif trouvé dans le restaurant !");
-        //Sinon
-        } else {
+        //Si des serveurs actifs dans le restaurant ont été trouvés.
+        String messageErreur = "Aucun serveur actif déclaré dans le restaurant !";
+        if (!ui.afficherSiListeNUpletsVide(comptesServeurs, messageErreur)) {
             //Questions et saisies.
-            int idCompteServeur = ui.poserQuestionListeNUplets("Sélectionner un serveur :", comptesServeurs);
-            List<Entite> places = orm.chercherNUpletsAvecPredicat("WHERE ID_COMPTE_SERVEUR = " + idCompteServeur, Place.class);
+            //Choix du serveur.
+            int idCompteServeur = ui.poserQuestionListeNUplets("Sélectionner un serveur :", comptesServeurs).getId();
+            //Choix de la table.
+            List<Entite> placesServeur = orm.chercherNUpletsAvecPredicat("WHERE ID_COMPTE_SERVEUR = " + idCompteServeur, Place.class);
 
-            //Si pas de tables allouées au serveur.
-            if (places.isEmpty()) {
-                //Message d'erreur.
-                ui.afficher("Le serveur n'a aucune table allouée !");
-            //Sinon.
-            } else {
+            //Si des tables allouées au serveur sélectionné ont été trouvées.
+            messageErreur = "Le serveur n'a aucune table allouée !";
+            if (!ui.afficherSiListeNUpletsVide(placesServeur, messageErreur)) {
                 //Questions et saisies.
-                int idPlace = ui.poserQuestionListeNUplets("Sélectionner une table :", places, (place) -> ((Place) place).toEtatServeurString());
+                Place place = (Place) ui.poserQuestionListeNUplets(MESSAGE_SELECTIONNER, placesServeur, FORMATEUR_ETAT_SERVEUR);
 
                 //Sauvegarde : modification de la table.
-                Place place = (Place) filtrerListeNUpletsAvecId(places, idPlace);
                 place.setIdCompteServeur(null);
                 orm.persisterNUplet(place);
 
                 //Message de résultat.
-                ui.afficher("Désallocation de la table réussie !");
-                ui.afficher(place.toEtatServeurString());
+                ui.afficher("Désallocation de la table réussie !\n" + place.toEtatServeurString());
             }
         }
-
-        //Retour vers l'accueil.
-        AccueilControleur.consulter();
     }
 
     /**
      * Allouer une table à un client.
      */
     public static void allouerPourClient() {
-        //UI et ORM
-        UI ui = getUI();
-        ORM orm = getORM();
-
         //Message de titre.
         ui.afficherAvecDelimiteurEtUtilisateur("Allouer une table à un client :");
 
-        //Afficher la liste des tables libres ou réservées
+        //Afficher la liste des tables disponibles ou réservées.
         List<Entite> places = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'libre' OR ETAT = 'réservé'", Place.class);
 
-        //Si pas de tables à allouer pour le client.
-        if (places.isEmpty()) {
-            //Message d'erreur.
-            ui.afficher("Aucune table n'est disponible ou réservée dans le restaurant !");
-        //Sinon.
-        } else {
+        //Si des tables disponibles ou réservées ont été trouvées.
+        String messageErreur = "Aucune table n'est disponible ou réservée dans le restaurant !";
+        if(!ui.afficherSiListeNUpletsVide(places, messageErreur)) {
             //Questions et saisies.
-            int idPlace = ui.poserQuestionListeNUplets("Sélectionner une table :", places);
-            Place place = (Place) filtrerListeNUpletsAvecId(places, idPlace);
+            //Choix de la table.
+            Place place = (Place) ui.poserQuestionListeNUplets(MESSAGE_SELECTIONNER, places);
 
-            //Sauvegarde : modification de la table.
+            //Sauvegarde.
+            //La réservation n'a plus lieu d'être retenue.
             if(place.getDatetimeReservation() != null) {
                 place.setDatetimeReservation(null);
                 place.setNomReservation(null);
                 place.setPrenomReservation(null);
             }
+            //Passage de la table à l'état "occupé".
             place.setEtat("occupé");
             orm.persisterNUplet(place);
-
             //Mise à jour du nombre de clients du jour.
-            SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
-            String aujourdhui = dateFormat.format(new Date());
-            StatGeneral statGeneral = (StatGeneral) orm.chercherNUpletAvecPredicat("WHERE TO_CHAR(DATE_JOUR, 'mm-dd-yyyy') = '" +
-                                                                                   aujourdhui + "'",
-                                                                                   StatGeneral.class);
-            if(statGeneral == null) {
-                statGeneral = new StatGeneral();
-                statGeneral.setDateJour(new Date());
-                statGeneral.setNbClients(1);
-            } else {
-                Integer nbClientsActuel = statGeneral.getNbClients();
-                if(nbClientsActuel == null) {
-                    statGeneral.setNbClients(1);
-                } else {
-                    statGeneral.setNbClients(nbClientsActuel + 1);
-                }
-            }
-            orm.persisterNUplet(statGeneral);
+            StatControleur.incrementerNombreClients();
 
             //Message de résultat.
-            ui.afficher("Nouvelle allocation de la table réussie !");
-            ui.afficher(place.toString());
+            ui.afficher("Nouvelle allocation de la table réussie !\n" + place);
         }
-
-        //Retour vers l'accueil.
-        AccueilControleur.consulter();
     }
 
     /**
      * Désallouer une table à un client.
      */
     public static void desallouerPourClient() {
-        //UI et ORM
-        UI ui = getUI();
-        ORM orm = getORM();
-
         //Message de titre.
         ui.afficherAvecDelimiteurEtUtilisateur("Désallocation d'une table à un client :");
 
         //Afficher la liste des tables libres ou réservées.
-        List<Entite> places = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'occupé'", Place.class);
+        List<Entite> placesOccupees = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'occupé'", Place.class);
 
-        //Si pas de tables à désallouer pour le client.
-        if (places.isEmpty()) {
-            //Message d'erreur.
-            ui.afficher("Aucune table à désallouer dans le restaurant !");
-            //Sinon
-        } else {
+        //Si des tables occupées ont été trouvées.
+        String messageErreur = "Aucune table occupée dans le restaurant !";
+        if(!ui.afficherSiListeNUpletsVide(placesOccupees, messageErreur)) {
             //Questions et saisies.
-            int idPlace = ui.poserQuestionListeNUplets("Sélectionner une table :", places, (place) -> ((Place) place).toEtatString());
-            Place place = (Place) filtrerListeNUpletsAvecId(places, idPlace);
+            //Choix de la table.
+            Place place = (Place) ui.poserQuestionListeNUplets(MESSAGE_SELECTIONNER, placesOccupees, FORMATEUR_ETAT);
 
             //Sauvegarde : modification de la table.
+            //Lorsqu'un client quitte la table, elle passe à l'état sale.
             place.setEtat("sale");
             orm.persisterNUplet(place);
 
             //Message de résultat.
-            ui.afficher("Désallocation de la table réussie !");
-            ui.afficher(place.toEtatString());
+            ui.afficher("Désallocation de la table réussie !\n" + place);
         }
-
-        //Retour vers l'accueil.
-        AccueilControleur.consulter();
     }
 
     /**
-     * Lister les tables réservées
+     * Lister les tables réservées.
      */
-    public static void listerReserver() {
-        //UI et ORM
-        UI ui = getUI();
-        ORM orm = getORM();
-
+    public static void listerReservees() {
         //Message de titre.
         ui.afficherAvecDelimiteurEtUtilisateur("Listing des tables réservées :");
 
         //Récupération des tables réservées dans le restaurant.
-        List<Entite> placesReservees = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'réservé' ", Place.class);
+        List<Entite> placesReservees = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'réservé'", Place.class);
 
-        //Si pas de tables réservées.
-        if (placesReservees.isEmpty()) {
-            //Message d'erreur.
-            ui.afficher("Aucune table n'est réservées dans le restaurant !");
-        //Sinon
-        } else {
+        //Si des tables réservées dans le restaurant ont été trouvées.
+        String messageErreur = "Aucune table réservée trouvée dans le restaurant !";
+        if(!ui.afficherSiListeNUpletsVide(placesReservees, messageErreur)) {
             //Listing.
             ui.listerNUplets(placesReservees);
         }
-
-        //Retour vers l'accueil.
-        AccueilControleur.consulter();
     }
 
     /**
      * Réserver une table.
      */
-    public static void reserverTable() {
-        //UI et ORM
-        UI ui = getUI();
-        ORM orm = getORM();
-
+    public static void reserver() {
         //Message de titre.
         ui.afficherAvecDelimiteurEtUtilisateur("Réservation d'une table :");
 
         //Récupération de la liste des tables libres.
         List<Entite> placesLibres = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'libre'", Place.class);
 
-        //Si pas de tables à réserver.
-        if (placesLibres.isEmpty()) {
-            //Message d'erreur.
-            ui.afficher("Aucune table n'est disponible pour la réservation dans le restaurant !");
-        //Sinon.
-        } else {
+        //Si des tables disponibles dans le restaurant ont été trouvées.
+        String messageErreur = "Aucune table n'est disponible dans le restaurant !";
+        if(!ui.afficherSiListeNUpletsVide(placesLibres, messageErreur)) {
             //Questions et saisies.
-            int idPlace = ui.poserQuestionListeNUplets("Sélectionner une table :", placesLibres);
-            Place place = (Place) filtrerListeNUpletsAvecId(placesLibres, idPlace);
+            //Choix de la table.
+            Place place = (Place) ui.poserQuestionListeNUplets(MESSAGE_SELECTIONNER, placesLibres);
             //Saisie des informations pour la réservation d'une table.
             String nom = ui.poserQuestion("Saisir le nom pour la réservation :", UI.REGEX_CHAINE_DE_CARACTERES);
             String prenom = ui.poserQuestion("Saisir le prénom pour la réservation :", UI.REGEX_CHAINE_DE_CARACTERES);
@@ -481,44 +348,32 @@ public class PlaceControleur extends Controleur {
             orm.persisterNUplet(place);
 
             //Message de résultat.
-            ui.afficher("Nouvelle réservation de la table réussie !");
-            ui.afficher(place.toString());
+            ui.afficher("Nouvelle réservation de la table réussie !\n" + place);
         }
-
-        //Retour à l'accueil.
-        AccueilControleur.consulter();
     }
 
     /**
      * Annuler la réservation d'une table.
      */
     public static void annulerReservation() {
-        //UI et ORM
-        UI ui = getUI();
-        ORM orm = getORM();
-
         //Message de titre.
         ui.afficherAvecDelimiteurEtUtilisateur("Annulation d'une réservation dans le restaurant :");
 
         //Récupération de la liste des tables réservées.
         List<Entite> placesReservees = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'réservé'", Place.class);
 
-        //Si pas de tables.
-        if(placesReservees.isEmpty()) {
-            //Message d'erreur.
-            ui.afficher("Aucune table réservée trouvée dans le restaurant !");
-        //Sinon.
-        } else {
+        //Si des tables réservées dans le restaurant ont été trouvées.
+        String messageErreur = "Aucune table réservée trouvée dans le restaurant !";
+        if(!ui.afficherSiListeNUpletsVide(placesReservees, messageErreur)) {
             //Questions et saisies.
             //Saisie des informations pour la réservation d'une table.
             String nom = ui.poserQuestion("Saisir le nom pour la réservation :", UI.REGEX_CHAINE_DE_CARACTERES);
             String prenom = ui.poserQuestion("Saisir le prénom pour la réservation :", UI.REGEX_CHAINE_DE_CARACTERES);
-            placesReservees = orm.chercherNUpletsAvecPredicat("WHERE NOM_RESERVATION = '" + nom + "'" +
-                                                                    " AND PRENOM_RESERVATION = '" + prenom  + "'", Place.class);
-
-            //Questions et saisies.
-            int idPlace = ui.poserQuestionListeNUplets("Selectionner une table réservée :", placesReservees);
-            Place place = (Place) filtrerListeNUpletsAvecId(placesReservees, idPlace);
+            placesReservees = orm.chercherNUpletsAvecPredicat("WHERE NOM_RESERVATION = '" + nom + "'"  +
+                                                              "AND PRENOM_RESERVATION = '" + prenom  + "'",
+                                                               Place.class);
+            //Choix de la table.
+            Place place = (Place) ui.poserQuestionListeNUplets(MESSAGE_SELECTIONNER, placesReservees);
 
             //Sauvegarde : modification de la table.
             place.setNomReservation(null);
@@ -528,12 +383,7 @@ public class PlaceControleur extends Controleur {
             orm.persisterNUplet(place);
 
             //Message de résultat.
-            ui.afficher(" Annulation de la réservation réussie !");
-            ui.afficher(placesReservees.toString());
+            ui.afficher("Annulation de la réservation réussie !\n" + placesReservees);
         }
-
-        //Retour à l'accueil.
-        AccueilControleur.consulter();
     }
-
 }

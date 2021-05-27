@@ -1,13 +1,15 @@
 package fr.ul.miage.m1.projet_genie_logiciel.entites;
 
 import org.jetbrains.annotations.NotNull;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Entité stat chiffre d'affaire.
+ * Entité des statistiques de chiffre d'affaire :
+ * - chiffre d'affaire au déjeuner (11h - 14h) par jour ;
+ * - chiffre d'affaire au diner (19h - 23h) par jour ;
+ * - chiffre d'affaire total par jour.
  *
  * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */

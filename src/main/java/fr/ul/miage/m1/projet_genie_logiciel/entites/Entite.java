@@ -3,7 +3,6 @@ package fr.ul.miage.m1.projet_genie_logiciel.entites;
 import fr.ul.miage.m1.projet_genie_logiciel.orm.EntiteMetadonnee;
 import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -13,7 +12,7 @@ import java.util.Objects;
  * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */
 public abstract class Entite {
-    ///Attributs de l'entité.
+    //Attributs de l'entité.
     protected Map<String, Object> attributs;
 
     /**
@@ -28,7 +27,9 @@ public abstract class Entite {
     }
 
     /**
-     * Parser en objet un n-uplet de la base de données.
+     * Analyser puis convertir en objet un n-uplet de la base
+     * de données.
+     *
      * (Constructeur utilisé par l'ORM).
      */
     public Entite(@NotNull Map<String, Object> attributs) {

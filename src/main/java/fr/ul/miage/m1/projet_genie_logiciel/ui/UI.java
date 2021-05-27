@@ -5,13 +5,14 @@ import fr.ul.miage.m1.projet_genie_logiciel.entites.Entite;
 import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Scanner;
-import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
- * Programme utilitaire pour l'interface console.
+ * Classe utilitaire pour l'interface console.
+ *
+ * Cette classe propose différentes méthodes pour interagir avec
+ * les utilisateurs via l'interface console.
  *
  * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */
@@ -26,10 +27,10 @@ public class UI {
     //Expression régulière des grands nombres décimaux positifs.
     public final static String REGEX_GRAND_DECIMAL_POSITIF = "[0-9]{1,13}|[0-9]{1,13}\\.{1}[0-9]{1,3}";
     //Expression régulière des nombres décimaux positifs ou négatifs.
-    public final static String REGEX_GRAND_DECIMAL_POSITIF_OU_NEGATIF = "-{0,1}(" + REGEX_DECIMAL_POSITIF + ")";
+    public final static String REGEX_GRAND_DECIMAL_POSITIF_OU_NEGATIF = "-{0,1}(" + REGEX_GRAND_DECIMAL_POSITIF + ")";
 
     //Singleton.
-    private static UI UISingleton;
+    private static UI singletonUI;
 
     //Lecteur des saisies de l'utilisateur.
     private Scanner scanner;
@@ -48,10 +49,10 @@ public class UI {
      * @return
      */
     public static UI getInstance() {
-        if(UISingleton == null) {
-            UISingleton = new UI();
+        if(singletonUI == null) {
+            singletonUI = new UI();
         }
-        return UISingleton;
+        return singletonUI;
     }
 
     /**
@@ -64,7 +65,7 @@ public class UI {
     }
 
     /**
-     * Afficher un contenu en ajoutant avant un saut avec le délimiteur,
+     * Afficher un contenu en ajoutant avant le délimiteur,
      * et l'utilisateur connecté.
      *
      * @param contenu
@@ -74,10 +75,64 @@ public class UI {
     }
 
     /**
+     * Afficher le message d'erreur précisé si le prédicat
+     * précisé est vrai.
+     *
+     * La méthode retourne la valeur du prédicat / de la
+     * condition.
+     *
+     * @param predicat
+     * @param messageErreur
+     * @return
+     */
+    public boolean afficherSiPredicatVrai(boolean predicat, @NotNull String messageErreur) {
+        if(predicat) {
+            afficher(messageErreur);
+        }
+        return predicat;
+    }
+
+    /**
+     * Afficher le message d'erreur précisé si le nombre
+     * précisé est vide.
+     *
+     * La méthode retourne true si le nombre est nul.
+     *
+     * @see fr.ul.miage.m1.projet_genie_logiciel.ui.UI#afficherSiPredicatVrai(boolean, String)
+     *
+     * @param nombre
+     * @param messageErreur
+     * @return
+     */
+    public boolean afficherSiNombreNul(int nombre, @NotNull String messageErreur) {
+        return afficherSiPredicatVrai(nombre == 0, messageErreur);
+    }
+
+    /**
+     * Afficher le message d'erreur précisé si la liste de
+     * n-uplets précisée est vide.
+     *
+     * La méthode retourne true si la liste est vide.
+     *
+     * @see fr.ul.miage.m1.projet_genie_logiciel.ui.UI#afficherSiPredicatVrai(boolean, String) 
+     * 
+     * @param nUplets
+     * @param messageErreur
+     * @return
+     */
+    public boolean afficherSiListeNUpletsVide(@NotNull List<Entite> nUplets, @NotNull String messageErreur) {
+        return afficherSiPredicatVrai(nUplets.isEmpty(), messageErreur);
+    }
+
+    /**
      * Poser une question, en précisant :
      * - la question ;
-     * - une expression régulière décrivant les réponses possibles autorisées ;
-     * Tant que la réponse donnée est incorrecte, la fonction boucle récursivement.
+     * - une expression régulière décrivant les réponses possibles
+     *   autorisées ;
+     *
+     * Tant que la réponse donnée est incorrecte, la fonction boucle
+     * récursivement.
+     * 
      * La réponse correcte donnée est retournée.
      *
      * @param question
@@ -99,8 +154,12 @@ public class UI {
 
     /**
      * Poser une question dont la réponse est un entier
-     * Cette fonction sert à factoriser la conversion de chaine de caractères vers entier.
      *
+     * Cette méthode sert à factoriser la conversion de la réponse
+     * de chaine de caractères vers entier.
+     *
+     * @see fr.ul.miage.m1.projet_genie_logiciel.ui.UI#poserQuestion(String, String) 
+     * 
      * @param question
      * @param reponsesPossiblesRegex
      * @return
@@ -111,7 +170,11 @@ public class UI {
 
     /**
      * Poser une question dont la réponse est un nombre décimal
-     * Cette fonction sert à factoriser la conversion de chaine de caractères vers nombre décimal.
+     *
+     * Cette méthode sert à factoriser la conversion de la réponse
+     * de chaine de caractères vers nombre décimal.
+     *
+     * @see fr.ul.miage.m1.projet_genie_logiciel.ui.UI#poserQuestion(String, String)
      *
      * @param question
      * @param reponsesPossiblesRegex
@@ -122,7 +185,10 @@ public class UI {
     }
 
     /**
-     * Poser une question fermée (oui, non).
+     * Poser une question fermée, c'est-à-dire une question qui ne
+     * peut avoir en réponse que oui ou non.
+     *
+     * @see fr.ul.miage.m1.projet_genie_logiciel.ui.UI#poserQuestion(String, String)
      *
      * @param question
      * @return
@@ -135,14 +201,23 @@ public class UI {
     }
 
     /**
-     * Poser une question en proposant une liste d'options,
-     * et obtenir l'indice de l'option sélectionnée.
+     * Poser une question en proposant une liste d'options, et obtenir
+     * l'indice de l'option sélectionnée.
+     *
+     * @see fr.ul.miage.m1.projet_genie_logiciel.ui.UI#poserQuestion(String, String)
      *
      * @param question
      * @param options
      * @return
      */
     public int poserQuestionListeOptions(@NotNull String question, @NotNull List<String> options) {
+        //Si la liste de n-uplets est vide.
+        if(options.isEmpty()) {
+            throw new IllegalArgumentException("Erreur ! On ne peut passer poser une question avec une liste d'options vide !");
+        }
+
+        //Construction de la question, et de l'expression régulière des réponses
+        //possibles.
         String reponsesPossiblesRegex = "";
         int nbOptions = options.size();
         for(int index = 0; index < nbOptions; index++) {
@@ -150,56 +225,76 @@ public class UI {
             question += "\n" + option + " (saisir " + (index + 1) + ")";
             reponsesPossiblesRegex += (index + 1) + "{1}" + ((index < (nbOptions - 1)) ? "|" : "");
         }
+
+        //Récupération de l'indice de l'option sélectionnée.
         int index = poserQuestionEntier(question, reponsesPossiblesRegex) - 1;
+
         return index;
     }
 
     /**
-     * Poser une question en proposant une liste d'options
-     * pour une liste de n-uplets, et obtenir l'id de
-     * du n-uplet sélectionné.
+     * Poser une question en proposant une liste d'options, à partir d'une
+     * liste de n-uplets, et obtenir le n-uplet sélectionné.
      *
      * On peut préciser un formateur pour formater les
      * n-uplets en chaines de caractère.
+     *
+     * @see fr.ul.miage.m1.projet_genie_logiciel.ui.UI#poserQuestion(String, String)
      *
      * @param question
      * @param nUplets
      * @param formateur
      * @return
      */
-    public int poserQuestionListeNUplets(@NotNull String question, @NotNull List<Entite> nUplets,
-                                         Function<Entite, String> formateur) {
+    public Entite poserQuestionListeNUplets(@NotNull String question, @NotNull List<Entite> nUplets,
+                                            Function<Entite, String> formateur) {
+        //Si la liste de n-uplets est vide.
+        if(nUplets.isEmpty()) {
+            throw new IllegalArgumentException("Erreur ! On ne peut passer poser une question avec une liste d'options vide !");
+        }
+
+        //Construction de la question, et de l'expression régulière des réponses
+        //possibles.
         String reponsesPossiblesRegex = "";
         int nbNUplets = nUplets.size();
         for(int index = 0; index < nbNUplets; index++) {
             Entite nUplet = nUplets.get(index);
-            question += "\n" + (formateur == null ? nUplet : formateur.apply(nUplet)) +
-                        " (saisir " + nUplet.getId() + ")";
+            question += "\n" + (formateur == null ? nUplet : formateur.apply(nUplet)) + " (saisir " + nUplet.getId() + ")";
             reponsesPossiblesRegex += nUplet.getId() + "{1}" + ((index < (nbNUplets - 1)) ? "|" : "");
         }
+
+        //Saisie et attente de la réponsne de l'utilisateur.
         int id = poserQuestionEntier(question, reponsesPossiblesRegex);
-        return id;
+
+        //Récupération du n-uplet sélectionné à partir de l'id.
+        Entite nUplet = nUplets.stream()
+                               .filter(nUplet_ -> nUplet_.getId().equals(id))
+                               .findFirst()
+                               .get();
+
+        return nUplet;
     }
 
     /**
-     * Poser une question en proposant une liste d'options
-     * pour une liste de n-uplets, et obtenir l'id de
-     * du n-uplet sélectionné.
+     * Poser une question en proposant une liste d'options, à partir d'une
+     * liste de n-uplets, et obtenir le n-uplet sélectionné.
      *
      * On utilise toString comme formateur des n-uplets en
      * chaines de caractère.
      *
+     * @see fr.ul.miage.m1.projet_genie_logiciel.ui.UI#poserQuestionListeNUplets(String, List, Function)
+     *  
      * @param question
      * @param nUplets
      * @return
      */
-    public int poserQuestionListeNUplets(@NotNull String question, @NotNull List<Entite> nUplets) {
+    public Entite poserQuestionListeNUplets(@NotNull String question, @NotNull List<Entite> nUplets) {
         return poserQuestionListeNUplets(question, nUplets, null);
     }
 
     /**
-     * Afficher une liste de strings,
-     * sans selection par la suite.
+     * Afficher une liste de strings, sans selection par la suite /
+     * sans poser de question par la suite.
      *
      * @param elements
      */
@@ -214,8 +309,8 @@ public class UI {
     }
 
     /**
-     * Afficher une liste de n-uplets,
-     * sans selection par la suite.
+     * Afficher une liste de n-uplets, sans selection par la suite /
+     * sans poser de question par la suite.
      *
      * On peut préciser un formateur pour formater les 
      * n-uplets en chaines de caractère.
@@ -224,15 +319,14 @@ public class UI {
      * @param formateur
      */
     public void listerNUplets(@NotNull List<Entite> nUplets, Function<Entite, String> formateur) {
-        lister(nUplets
-              .stream()
-              .map(nUplet -> formateur == null ? nUplet.toString() : formateur.apply(nUplet))
-              .collect(Collectors.toList()));
+        lister(nUplets.stream()
+                      .map(nUplet -> formateur == null ? nUplet.toString() : formateur.apply(nUplet))
+                      .collect(Collectors.toList()));
     }
 
     /**
-     * Afficher une liste de n-uplets,
-     * sans selection par la suite.
+     * Afficher une liste de n-uplets, sans selection par la suite /
+     * sans poser de question par la suite.
      *
      * On utilise toString comme formateur des n-uplets en
      * chaines de caractère.
@@ -263,8 +357,7 @@ public class UI {
     }
 
     /**
-     * (Ré-)initialiser le scanner
-     * avec le flux d'entrée du système.
+     * (Ré-)initialiser le scanner avec le flux d'entrée du système.
      *
      * (Cette méthode sert aux tests.)
      */

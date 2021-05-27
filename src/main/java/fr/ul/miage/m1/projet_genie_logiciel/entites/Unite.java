@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Entité Unité.
+ * Entité des unités.
  *
  * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */
@@ -45,13 +45,11 @@ public class Unite extends Entite {
     }
 
     /**
-     * Savoir si une unité est utilisé par des ingrédients.
+     * Savoir si une unité est utilisée par des ingrédients.
      *
      * @return
      */
-    public boolean estUtiliseParIngredient() {
-        return ORM.getInstance().compterNUpletsAvecPredicat(
-                                "INNER JOIN INGREDIENT AS I " +
-                                "ON I.ID_UNITE = " + getId(), Unite.class) > 0;
+    public boolean estUtiliseeParIngredient() {
+        return ORM.getInstance().compterNUpletsAvecPredicat("WHERE ID_UNITE = " + getId(), Ingredient.class) > 0;
     }
 }

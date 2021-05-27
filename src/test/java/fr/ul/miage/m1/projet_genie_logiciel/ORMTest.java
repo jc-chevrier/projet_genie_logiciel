@@ -48,7 +48,6 @@ public class ORMTest {
     @Test
     @DisplayName("Test : chercher tous les n-uplets - cas n-uplets non trouvés")
     void testChercherTousLesNUpletsNonTrouves() {
-
         List<Entite> liste = orm.chercherTousLesNUplets(Unite.class);
         assertEquals(true, liste.isEmpty());
     }
@@ -118,7 +117,7 @@ public class ORMTest {
         unite2.setLibelle("libellé");
         orm.persisterNUplet(unite2);
 
-        List<Entite> list = orm.chercherNUpletsAvecPredicat("WHERE ID IN (1,2) ORDER BY ID", Role.class);
+        List<Entite> list = orm.chercherNUpletsAvecPredicat("WHERE ID IN (1,2)", Role.class);
         assertEquals(1,list.get(0).getId());
         assertEquals(2,list.get(1).getId());
     }

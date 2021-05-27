@@ -1,6 +1,5 @@
 package fr.ul.miage.m1.projet_genie_logiciel;
 
-
 import fr.ul.miage.m1.projet_genie_logiciel.controleurs.PlatControleur;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.*;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
@@ -8,14 +7,13 @@ import org.junit.jupiter.api.*;
 import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import static org.junit.jupiter.api.Assertions.*;
 
-
 @DisplayName("Plat")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class PlatTest {
     private static ORM orm;
     private static UI ui;
 
-    static void reinitialiserTables(){
+    static void reinitialiserTables() {
         //On réinitialise la table plat_ingrédiants.
         orm.reinitialiserTable(PlatIngredients.class);
         //On réinitialise la table plat.
@@ -32,7 +30,6 @@ public class PlatTest {
     static void faireAvantTousLesTests() {
         ORM.CONFIGURATION_FILENAME = "./configuration/configuration_bdd_test.properties";
         orm = ORM.getInstance();
-
         ui = UI.getInstance();
     }
 
@@ -64,10 +61,6 @@ public class PlatTest {
         plat1.setIdCategorie(1);
         orm.persisterNUplet(plat1);
 
-        //On simule les saisies de listing dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/plat_test/lister_cas_1.txt"));
-        ui.reinitialiserScanner();
-
         //On simule le scénario de listing.
         PlatControleur.lister();
     }
@@ -77,10 +70,6 @@ public class PlatTest {
     void testListerCas2PasTrouvees() {
         //On se connecte en tant que cuisinier.
         ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 3", Compte.class));
-
-        //On simule les saisies de listing dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/plat_test/lister_cas_2.txt"));
-        ui.reinitialiserScanner();
 
         //On simule le scénario de listing.
         PlatControleur.lister();
@@ -157,10 +146,6 @@ public class PlatTest {
     void testSupprimerCas3PasTrouves() {
         //On se connecte en tant que cuisinier.
         ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 3", Compte.class));
-
-        //On simule les saisies de la suppression dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/plat_test/supprimer_cas_3.txt"));
-        ui.reinitialiserScanner();
 
         //On simule le scénario de suppression.
         PlatControleur.supprimer();
@@ -239,8 +224,6 @@ public class PlatTest {
         //On se connecte en tant qu'assistant de service.
         ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 1", Compte.class));
 
-        //On vide la table plat.
-        orm.chercherTousLesNUplets(Plat.class).forEach(orm::supprimerNUplet);
         //On ajoute une catégorie pour pouvoir ajouter un plat.
         Categorie categorie = new Categorie();
         categorie.setLibelle("libellé1");
@@ -253,11 +236,6 @@ public class PlatTest {
         plat.setIdCategorie(1);
         orm.persisterNUplet(plat);
 
-
-        //On simule les saisies de validation dans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/plat_test/ajouter_carte_cas_3.txt"));
-        ui.reinitialiserScanner();
-
         //On simule le scénario de validation.
         PlatControleur.ajouterACarte();
     }
@@ -267,10 +245,6 @@ public class PlatTest {
     void testAjouterACarteCas4PasTrouves() {
         //On se connecte en tant qu'assistant de service.
         ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 1", Compte.class));
-
-        //On simule les saisies de validation dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/plat_test/ajouter_carte_cas_4.txt"));
-        ui.reinitialiserScanner();
 
         //On simule le scénario de validation.
         PlatControleur.ajouterACarte();
@@ -361,10 +335,6 @@ public class PlatTest {
         plat.setIdCategorie(1);
         orm.persisterNUplet(plat);
 
-        //On simule les saisies de validation dans ce fichier.
-        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/plat_test/supprimer_carte_cas_3.txt"));
-        ui.reinitialiserScanner();
-
         //On simule le scénario de validation.
         PlatControleur.supprimerDeCarte();
     }
@@ -375,13 +345,10 @@ public class PlatTest {
         //On se connecte en tant qu'assistant de service.
         ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 1", Compte.class));
 
-        //On simule les saisies de validation dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/plat_test/supprimer_carte_cas_4.txt"));
-        ui.reinitialiserScanner();
-
         //On simule le scénario de validation.
         PlatControleur.supprimerDeCarte();
     }
+
     @Test
     @DisplayName("Test : ajouter un plat - cas 1 : plat bien ajouté")
     void testAjouterCas1BienAjoute() {
@@ -482,14 +449,6 @@ public class PlatTest {
     void testAjouterCas4() {
         //On se connecte en tant que cuisinier.
         ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 3", Compte.class));
-        //On vide la table plat.
-        orm.chercherTousLesNUplets(Plat.class).forEach(orm::supprimerNUplet);
-        //On vide la table Catégorie.
-        orm.chercherTousLesNUplets(Categorie.class).forEach(orm::supprimerNUplet);
-
-        //On simule les saisies d'ajout dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/plat_test/ajouter_cas_4.txt"));
-        ui.reinitialiserScanner();
 
         //On simule le scénario d'ajout.
         PlatControleur.ajouter();
@@ -544,10 +503,6 @@ public class PlatTest {
         //On se connecte en tant que cuisinier.
         ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 3", Compte.class));
 
-        //On simule les saisies de modification dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/plat_test/modifier_cas_2.txt"));
-        ui.reinitialiserScanner();
-
         //On simule le scénario de modification.
         PlatControleur.modifier();
     }
@@ -570,10 +525,6 @@ public class PlatTest {
         plat.setIdCategorie(categorie.getId());
         plat.setPrix(1.5);
         orm.persisterNUplet(plat);
-
-        //On simule les saisies de lister dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/plat_test/lister_carte_cas_1.txt"));
-        ui.reinitialiserScanner();
 
         //On simule le scénario de lister.
         PlatControleur.listerCarte();
@@ -599,27 +550,17 @@ public class PlatTest {
         plat.setPrix(1.5);
         orm.persisterNUplet(plat);
 
-        //On simule les saisies de lister dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/plat_test/lister_carte_cas_2.txt"));
-        ui.reinitialiserScanner();
-
         //On simule le scénario de lister.
         PlatControleur.listerCarte();
-
     }
+
     @Test
     @DisplayName("Test : lister les plats de la carte - cas 1 : aucun plat trouvé")
     void testListerCarteCas3AucunPlatTrouve() {
         //On se connecte en tant que cuisinier.
         ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 4", Compte.class));
 
-        //On simule les saisies de lister dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/plat_test/lister_carte_cas_3.txt"));
-        ui.reinitialiserScanner();
-
         //On simule le scénario de lister.
         PlatControleur.listerCarte();
-
     }
-
 }

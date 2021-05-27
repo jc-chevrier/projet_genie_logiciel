@@ -6,12 +6,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Entité catégorie.
+ * Entité des catégories des plats.
  *
  * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */
 public class Categorie extends Entite {
-
     //Nom de la table correspondant à l'entité.
     public static String NOM_TABLE = "CATEGORIE";
     //Structure de l'entité [attribut -> type].
@@ -40,10 +39,13 @@ public class Categorie extends Entite {
         set("LIBELLE", libelle);
     }
 
-    public boolean estUtiliseParPlat() {
-        return ORM.getInstance().compterNUpletsAvecPredicat(
-                "INNER JOIN PLAT AS P " +
-                "ON P.ID_CATEGORIE = " + getId(), Categorie.class) > 0;
+    /**
+     * Savoir si une catégorie est utilisée par des plats.
+     *
+     * @return
+     */
+    public boolean estUtiliseeParPlat() {
+        return ORM.getInstance().compterNUpletsAvecPredicat("WHERE ID_CATEGORIE = " + getId(), Plat.class) > 0;
     }
 
     @Override
