@@ -166,9 +166,11 @@ public class StatControleur extends Controleur {
             statChiffreAffaires.forEach(entite -> {
                 StatChiffreAffaire statChiffreAffaire = (StatChiffreAffaire) entite;
                 Plat plat = (Plat) orm.chercherNUpletAvecPredicat("WHERE ID ="+statChiffreAffaire.getIdPlat(),Plat.class);
-                LigneCommande ligneCommande = (LigneCommande) orm.chercherNUpletAvecPredicat("WHERE ID_PLAT = "+plat.getId()+
-                                " AND ID_COMMANDE = "+commande.getId(),
-                        LigneCommande.class);
+                LigneCommande ligneCommande = (LigneCommande) orm.chercherNUpletAvecPredicat("WHERE ID_PLAT = " +
+                                                                                             plat.getId() +
+                                                                                             " AND ID_COMMANDE = " +
+                                                                                              commande.getId(),
+                                                                                              LigneCommande.class);
                 Double chiffreAffaire = plat.getPrix()*ligneCommande.getNbOccurences();
 
                 if(aujourdhui.getHours() > 11 && aujourdhui.getHours() < 14){

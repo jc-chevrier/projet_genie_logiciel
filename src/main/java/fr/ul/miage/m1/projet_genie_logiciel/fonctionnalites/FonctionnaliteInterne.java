@@ -1,5 +1,6 @@
-package fr.ul.miage.m1.projet_genie_logiciel.controleurs;
+package fr.ul.miage.m1.projet_genie_logiciel.fonctionnalites;
 
+import fr.ul.miage.m1.projet_genie_logiciel.controleurs.AccueilControleur;
 import org.jetbrains.annotations.NotNull;
 
 /**

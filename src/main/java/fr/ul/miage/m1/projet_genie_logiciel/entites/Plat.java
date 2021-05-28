@@ -97,7 +97,7 @@ public class Plat extends Entite {
         Categorie categorie = (Categorie) orm.chercherNUpletAvecPredicat("WHERE ID = " + getIdCategorie(), Categorie.class);
         String contenu = "Plat [ id = " + id +
                          ", libellé = " + getlibelle() +
-                         ", " + getPrix() + " €, catégorie = " + categorie.getLibelle() +
+                         ", prix = " + getPrix() + " €, catégorie = " + categorie.getLibelle() +
                          ", carte = " + (getCarte() == 1 ? "oui" : "non") +
                          " ]\nComposition [ ";
 

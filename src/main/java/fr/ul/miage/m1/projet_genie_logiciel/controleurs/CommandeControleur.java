@@ -401,22 +401,10 @@ public class CommandeControleur extends Controleur {
                 LigneCommande ligneCommande = (LigneCommande) ui.poserQuestionListeNUplets("Sélectionner un ligne de commande :",
                                                                                            lignesCommande);
 
-                //Récupération du nombre de plats encore en attente de la commande sélectionnée.
-                int nbPlatsEncoreEnAttente = orm.compterNUpletsAvecPredicat("WHERE ETAT = 'en attente' " +
-                                                                            "AND ID_COMMANDE = " + idCommande,
-                                                                            LigneCommande.class);
                 //Sauvegarde.
                 //La ligne de commande pas à l'état "prêt".
                 ligneCommande.setEtat("prêt");
                 orm.persisterNUplet(ligneCommande);
-                //Si tous les plats des la commande ont été préparés et donc servis.
-                if(nbPlatsEncoreEnAttente == 0) {
-                    //La commande passe à l'état "servie".
-                    commande.setEtat("servi");
-                    orm.persisterNUplet(commande);
-                    //Mise à jour du temps de préparation du jour.
-                    StatControleur.mettreAjourTempsPreparation(commande);
-                }
 
                 //Message de résultat.
                 ui.afficher("Plat prêt !\n" + ligneCommande);
@@ -457,6 +445,61 @@ public class CommandeControleur extends Controleur {
             if(!ui.afficherSiListeNUpletsVide(lignesCommandePretes, messageErreur)) {
                 //Listing.
                 ui.listerNUplets(lignesCommandePretes);
+            }
+        }
+    }
+
+    /**
+     * Valider le service d'un plat d'une commandz : c'est-à-dire
+     * que le plat a été servi à la table.
+     */
+    public static void validerService() {
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Validation du service d'un plat d'une commande :");
+
+        //Récupération des commandes en attente.
+        List<Entite> commandes = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'en attente'", Commande.class);
+
+        //Si des commandes en attente ont été trouvés.
+        String messageErreur = "Aucune commande en attente pas encore servie trouvée !";
+        if (!ui.afficherSiListeNUpletsVide(commandes, messageErreur)) {
+            //Question et saisies.
+            //Choix de la commande.
+            Commande commande = (Commande) ui.poserQuestionListeNUplets(MESSAGE_SELECTIONNER, commandes);
+            int idCommande = commande.getId();
+
+            //Récupération des plats prêts attendant d'être servi de la commande sélectionnée.
+            List<Entite> lignesCommande = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'prêt' " +
+                                                                          "AND ID_COMMANDE = " + idCommande,
+                                                                           LigneCommande.class);
+
+            //Si des plats en attente ont été trouvés.
+            messageErreur = "Aucun plat prêt attendant d'être servi trouvé !";
+            if (!ui.afficherSiListeNUpletsVide(lignesCommande, messageErreur)) {
+                //Question et saisies.
+                //Choix de la ligne de commande.
+                LigneCommande ligneCommande = (LigneCommande) ui.poserQuestionListeNUplets("Sélectionner un ligne de commande :",
+                                                                                            lignesCommande);
+
+                //Sauvegarde.
+                //La ligne de commande pas à l'état "servi".
+                ligneCommande.setEtat("servi");
+                orm.persisterNUplet(ligneCommande);
+                //Récupération du nombre de plats encore en attente de la commande sélectionnée.
+                int nbPlatsEncoreEnAttente = orm.compterNUpletsAvecPredicat("WHERE ETAT = 'prêt' " +
+                                                                            "AND ID_COMMANDE = " + idCommande,
+                                                                             LigneCommande.class);
+                //Si tous les plats des la commande ont été servis.
+                if(nbPlatsEncoreEnAttente == 0) {
+                    //La commande passe à l'état "servi".
+                    commande.setEtat("servi");
+                    orm.persisterNUplet(commande);
+                    //Mise à jour du temps de préparation du jour.
+                    StatControleur.mettreAjourTempsPreparation(commande);
+                }
+
+                //Message de résultat.
+                ui.afficher("Plat servi !\n" + ligneCommande);
             }
         }
     }

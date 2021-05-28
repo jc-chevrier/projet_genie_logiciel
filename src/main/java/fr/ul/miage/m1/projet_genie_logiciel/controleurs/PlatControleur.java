@@ -148,18 +148,18 @@ public class PlatControleur extends Controleur {
         //Message de titre.
         ui.afficherAvecDelimiteurEtUtilisateur("Ajout d'un plat au catalogue :");
 
-        //Récupération des catégories et des ingrédients.
-        List<Entite> categories = orm.chercherTousLesNUplets(Categorie.class);
-        List<Entite> ingredients = orm.chercherTousLesNUplets(Ingredient.class);
+        //Récupération du nombre de catégories et du nombre d'ingrédients.
+        int nbCategories = orm.compterTousLesNUplets(Categorie.class);
+        int nbIngredients = orm.compterTousLesNUplets(Ingredient.class);
 
         //Si pas de catégories trouvées.
         String messageErreur = "Aucune catégorie trouvée pour les plats !\n" +
                                "Ajoutez d'abord des catégories avant d'ajouter un plat !";
-        if (!ui.afficherSiListeNUpletsVide(categories, messageErreur)) {
-            //Si pas d'ingrdéient dans le catalogue.
+        if (!ui.afficherSiNombreNul(nbCategories, messageErreur)) {
+            //Si pas d'ingrédient dans le catalogue.
             messageErreur = "Aucun ingrédient trouvé dans le cataloque pour composer le plat !\n" +
                             "Ajoutez d'abord des ingrédients avant d'ajouter un plat !";
-            if (!ui.afficherSiListeNUpletsVide(ingredients, messageErreur)) {
+            if (!ui.afficherSiNombreNul(nbIngredients, messageErreur)) {
                 //Saisies et sauvegarde.
                 Plat plat = new Plat();
                 editerEtPersister(plat);
