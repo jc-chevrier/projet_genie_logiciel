@@ -71,9 +71,6 @@ public class CompteControleur extends Controleur {
 
         //Message de résultat.
         ui.afficher("Salarié ajouté !\n" + compte);
-
-        //Retour vers l'accueil.
-        AccueilControleur.consulter();
     }
 
     /**
