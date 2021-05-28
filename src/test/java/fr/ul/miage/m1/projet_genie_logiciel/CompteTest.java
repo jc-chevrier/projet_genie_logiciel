@@ -104,10 +104,37 @@ public class CompteTest {
         compte = (Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 1", Compte.class);
         assertNotNull(compte);
 
-        assertEquals("Suivrot", compte.getNom());
-        assertEquals("Guillaume", compte.getPrenom());
+        assertEquals("Porot", compte.getNom());
+        assertEquals("Olivier", compte.getPrenom());
         assertEquals(1, compte.getIdRole());
         assertEquals(1, compte.getActif());
+    }
+
+    @Test
+    @DisplayName("Test : modifier les informations d'un salarié - cas 1 : salarié modifié")
+    void testModifierCas1Modifie() {
+        //On ajoute un salarié.
+        ajouterCompte("Clondz", "Lisa", 1, 2);
+
+        //On simule les saisies de modification dans ce fichier.
+        System.setIn(IngredientTest.class.getResourceAsStream("./saisies/compte_test/modifier_cas_1.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de modification d'un salarié.
+        CompteControleur.modifier();
+
+        Compte compteApres = (Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 1", Compte.class);
+        assertEquals("Clond", compteApres.getNom());
+        assertEquals("Lise", compteApres.getPrenom());
+        assertEquals(3, compteApres.getIdRole());
+        assertEquals(1, compteApres.getActif());
+    }
+
+    @Test
+    @DisplayName("Test : modifier les informations d'un salarié - cas 2 : aucun salarié trouvé")
+    void testModifierCas2pasTrouve() {
+        //On simule le scénario de modification d'un salarié.
+        CompteControleur.modifier();
     }
 
     @Test
