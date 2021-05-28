@@ -133,26 +133,4 @@ public class CompteTest {
         assertEquals(1, compte.getIdRole());
         assertEquals(1, compte.getActif());
     }
-
-    @Test
-    @DisplayName("Test : ajouter un salarié - cas 2 : pas de ")
-    void testConnexionCas2PasTrouve() {
-        //On simule les saisies de connexion dans ce fichier.
-        System.setIn(IngredientTest.class.getResourceAsStream("./saisies/compte_test/ajouter_cas_2.txt"));
-        ui.reinitialiserScanner();
-
-        Compte compte = (Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 6", Compte.class);
-        assertNull(compte);
-
-        //On simule le scénario d'ajout d'un salarié.
-        CompteControleur.ajouter();
-
-        compte = (Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 6", Compte.class);
-        assertNotNull(compte);
-
-        assertEquals("Suivrot", compte.getNom());
-        assertEquals("Guillaume", compte.getPrenom());
-        assertEquals(1, compte.getIdRole());
-        assertEquals(1, compte.getActif());
-    }
 }
