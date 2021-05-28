@@ -274,5 +274,225 @@ public class CommandeTest {
         CommandeControleur.validerPaiement();
     }
 
+    @Test
+    @DisplayName("Test : Valider préparation d'un plat d'une commande - cas 1 : validation réussite")
+    void testValiderPreparationCas1BienFait() {
+        //On se connecte en tant que cuisinier.
+        ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 3", Compte.class));
+
+        //On simule les saisies de validation dans ce fichier.
+        System.setIn(CommandeTest.class.getResourceAsStream("./saisies/commande_test/valider_preparation_cas_1.txt"));
+        ui.reinitialiserScanner();
+
+        //On ajoute une table occupé pour pouvoir passer une commande.
+        Place place = new Place();
+        place.setEtat("occupé");
+        orm.persisterNUplet(place);
+
+        //On ajoute une catégorie.
+        Categorie categorie = new Categorie();
+        categorie.setLibelle("catégorie");
+        orm.persisterNUplet(categorie);
+
+        //On ajoute une unité pour pouvoir ajouter un ingrédient.
+        Unite unite = new Unite();
+        unite.setLibelle("unité");
+        orm.persisterNUplet(unite);
+
+        //On ajoute un ingrédient pour pouvoir l'ajouter à la composition du plat.
+        Ingredient ingredient = new Ingredient();
+        ingredient.setLibelle("ingredient");
+        ingredient.setStock(20.0);
+        ingredient.setIdUnite(1);
+        orm.persisterNUplet(ingredient);
+
+        //On ajoute un plat à la carte du jour.
+        Plat plat = new Plat();
+        plat.setLibelle("plat");
+        plat.setCarte(1);
+        plat.setIdCategorie(categorie.getId());
+        plat.setPrix(1.5);
+        orm.persisterNUplet(plat);
+
+        //On ajoute un platIngredients car un plat est disponible uniquement
+        // si la quantité utilisé par ce plat est inferieure ou égale aux stocks des ingrédients qui le compose.
+        PlatIngredients platIngredient = new PlatIngredients();
+        platIngredient.setQuantite(2.0);
+        platIngredient.setIdPlat(1);
+        platIngredient.setIdIngredient(1);
+        orm.persisterNUplet(platIngredient);
+
+        //On ajoute une commande
+        Commande commande = new Commande();
+        commande.setEtat("en attente");
+        commande.setCoutTotal(1.5);
+        commande.setDatetimeCreation(new Date());
+        commande.setIdPlace(place.getId());
+        orm.persisterNUplet(commande);
+
+        //On ajoute une ligne commande
+        LigneCommande ligneCommande = new LigneCommande();
+        ligneCommande.setEtat("en attente");
+        ligneCommande.setNbOccurences(1);
+        ligneCommande.setIdCommande(commande.getId());
+        ligneCommande.setIdPlat(plat.getId());
+        orm.persisterNUplet(ligneCommande);
+
+
+        //On simule le scénario de validation.
+        CommandeControleur.validerPreparation();
+
+    }
+
+    @Test
+    @DisplayName("Test : Valider la préparation d'un plat d'une commande - cas 2 : validation correcte")
+    void testValiderPreparationCas2Correcte() {
+        //On se connecte en tant que cuisinier.
+        ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 3", Compte.class));
+
+        //On simule les saisies de validation dans ce fichier.
+        System.setIn(CommandeTest.class.getResourceAsStream("./saisies/commande_test/valider_preparation_cas_2.txt"));
+        ui.reinitialiserScanner();
+
+        //On ajoute une table occupé pour pouvoir passer une commande.
+        Place place = new Place();
+        place.setEtat("occupé");
+        orm.persisterNUplet(place);
+
+        //On ajoute une catégorie.
+        Categorie categorie = new Categorie();
+        categorie.setLibelle("catégorie");
+        orm.persisterNUplet(categorie);
+
+        //On ajoute une unité pour pouvoir ajouter un ingrédient.
+        Unite unite = new Unite();
+        unite.setLibelle("unité");
+        orm.persisterNUplet(unite);
+
+        //On ajoute un ingrédient pour pouvoir l'ajouter à la composition du plat.
+        Ingredient ingredient = new Ingredient();
+        ingredient.setLibelle("ingredient");
+        ingredient.setStock(20.0);
+        ingredient.setIdUnite(1);
+        orm.persisterNUplet(ingredient);
+
+        //On ajoute un plat à la carte du jour.
+        Plat plat = new Plat();
+        plat.setLibelle("plat");
+        plat.setCarte(1);
+        plat.setIdCategorie(categorie.getId());
+        plat.setPrix(1.5);
+        orm.persisterNUplet(plat);
+
+        //On ajoute un platIngredients car un plat est disponible uniquement
+        // si la quantité utilisé par ce plat est inferieure ou égale aux stocks des ingrédients qui le compose.
+        PlatIngredients platIngredient = new PlatIngredients();
+        platIngredient.setQuantite(2.0);
+        platIngredient.setIdPlat(1);
+        platIngredient.setIdIngredient(1);
+        orm.persisterNUplet(platIngredient);
+
+        //On ajoute une commande
+        Commande commande = new Commande();
+        commande.setEtat("en attente");
+        commande.setCoutTotal(1.5);
+        commande.setDatetimeCreation(new Date());
+        commande.setIdPlace(place.getId());
+        orm.persisterNUplet(commande);
+
+        //On ajoute une ligne commande
+        LigneCommande ligneCommande = new LigneCommande();
+        ligneCommande.setEtat("en attente");
+        ligneCommande.setNbOccurences(1);
+        ligneCommande.setIdCommande(commande.getId());
+        ligneCommande.setIdPlat(plat.getId());
+        orm.persisterNUplet(ligneCommande);
+
+        LigneCommande lignecommandeAvant = (LigneCommande) orm.chercherNUpletAvecPredicat("WHERE ID = 1",LigneCommande.class);
+        assertEquals("en attente", lignecommandeAvant.getEtat());
+
+        //On simule le scénario de validation.
+        CommandeControleur.validerPreparation();
+
+        LigneCommande lignecommandeApres = (LigneCommande) orm.chercherNUpletAvecPredicat("WHERE ID = 1",LigneCommande.class);
+        assertEquals("prêt", lignecommandeApres.getEtat());
+    }
+
+
+    @Test
+    @DisplayName("Test : Valider préparation d'un plat d'une commande - cas 3 : aucune commande en attente trouvée dans la base")
+    void testValiderPreCas3PasServiesTrouvees() {
+        //On se connecte en tant que cuisinier.
+        ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 3", Compte.class));
+
+        //On ajoute une table occupé pour pouvoir passer une commande.
+        Place place = new Place();
+        place.setEtat("occupé");
+        orm.persisterNUplet(place);
+
+        //On ajoute une catégorie.
+        Categorie categorie = new Categorie();
+        categorie.setLibelle("catégorie");
+        orm.persisterNUplet(categorie);
+
+        //On ajoute une unité pour pouvoir ajouter un ingrédient.
+        Unite unite = new Unite();
+        unite.setLibelle("unité");
+        orm.persisterNUplet(unite);
+
+        //On ajoute un ingrédient pour pouvoir l'ajouter à la composition du plat.
+        Ingredient ingredient = new Ingredient();
+        ingredient.setLibelle("ingredient");
+        ingredient.setStock(20.0);
+        ingredient.setIdUnite(1);
+        orm.persisterNUplet(ingredient);
+
+        //On ajoute un plat à la carte du jour.
+        Plat plat = new Plat();
+        plat.setLibelle("plat");
+        plat.setCarte(1);
+        plat.setIdCategorie(categorie.getId());
+        plat.setPrix(1.5);
+        orm.persisterNUplet(plat);
+
+        //On ajoute un platIngredients car un plat est disponible uniquement
+        // si la quantité utilisé par ce plat est inferieure ou égale aux stocks des ingrédients qui le compose.
+        PlatIngredients platIngredient = new PlatIngredients();
+        platIngredient.setQuantite(2.0);
+        platIngredient.setIdPlat(1);
+        platIngredient.setIdIngredient(1);
+        orm.persisterNUplet(platIngredient);
+
+        //On ajoute une commande
+        Commande commande = new Commande();
+        commande.setEtat("payé");
+        commande.setCoutTotal(1.5);
+        commande.setDatetimeCreation(new Date());
+        commande.setIdPlace(place.getId());
+        orm.persisterNUplet(commande);
+
+        //On ajoute une ligne commande
+        LigneCommande ligneCommande = new LigneCommande();
+        ligneCommande.setEtat("prêt");
+        ligneCommande.setNbOccurences(1);
+        ligneCommande.setIdCommande(commande.getId());
+        ligneCommande.setIdPlat(plat.getId());
+        orm.persisterNUplet(ligneCommande);
+
+
+        //On simule le scénario de validation.
+        CommandeControleur.validerPreparation();
+    }
+
+    @Test
+    @DisplayName("Test : Valider préparation d'un plat d'une commande - cas 4 : aucune commande trouvée dans la base")
+    void testValiderPreparationCas4PasTrouvees() {
+        //On se connecte en tant que cuisiner.
+        ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 3", Compte.class));
+
+        //On simule le scénario de validation.
+        CommandeControleur.validerPreparation();
+    }
+
 
 }
