@@ -118,7 +118,7 @@ public class CompteControleur extends Controleur {
             orm.persisterNUplet(compte);
 
             //Message de résultat.
-            ui.afficher("Salarié supprimé !");
+            ui.afficher("Salarié supprimé !\n" + compte);
         }
     }
 }
