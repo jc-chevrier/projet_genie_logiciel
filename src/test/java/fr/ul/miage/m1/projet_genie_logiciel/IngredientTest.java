@@ -13,7 +13,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("Ingrédient")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class IngredientTest {
     private static ORM orm;
     private static UI ui;

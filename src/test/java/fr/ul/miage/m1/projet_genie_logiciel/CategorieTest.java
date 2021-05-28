@@ -9,7 +9,6 @@ import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Catégorie")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CategorieTest {
     private static ORM orm;
     private static UI ui;

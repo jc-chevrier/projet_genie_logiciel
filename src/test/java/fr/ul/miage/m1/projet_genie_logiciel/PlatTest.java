@@ -8,7 +8,6 @@ import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Plat")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class PlatTest {
     private static ORM orm;
     private static UI ui;
