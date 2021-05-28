@@ -8,7 +8,6 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Compte")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CompteTest {
     private static ORM orm;
     private static UI ui;

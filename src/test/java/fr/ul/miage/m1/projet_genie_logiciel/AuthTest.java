@@ -8,7 +8,6 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Authentification")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AuthTest {
     private static ORM orm;
     private static UI ui;
