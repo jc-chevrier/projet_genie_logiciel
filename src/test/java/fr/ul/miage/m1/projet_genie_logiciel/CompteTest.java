@@ -79,9 +79,25 @@ public class CompteTest {
         reinitialiserTables();
     }
 
+
+    @Test
+    @DisplayName("Test : lister les salariés - cas 1 : salariés trouvés")
+    void testListerCas1Trouve() {
+        //On crée un salarié.
+        Compte compte = new Compte();
+        compte.setPrenom("Joe");
+        compte.setNom("Loan");
+        compte.setActif(1);
+        compte.setIdRole(1);
+        orm.persisterNUplet(compte);
+
+        //On simule le scénario de listing des salariés.
+        CompteControleur.lister();
+    }
+
     @Test
     @DisplayName("Test : ajouter un salarié - cas 1 : salarié bien ajouté")
-    void testConnexionCas1BienAjoute() {
+    void testAjouterCas1BienAjoute() {
         //On simule les saisies de connexion dans ce fichier.
         System.setIn(IngredientTest.class.getResourceAsStream("./saisies/compte_test/ajouter_cas_1.txt"));
         ui.reinitialiserScanner();
@@ -98,7 +114,7 @@ public class CompteTest {
 
     @Test
     @DisplayName("Test : ajouter un salarié - cas 2 : salarié ajouté correct")
-    void testConnexionCas2AjouteCorrect() {
+    void testAjouterCas2AjouteCorrect() {
         //On simule les saisies de connexion dans ce fichier.
         System.setIn(IngredientTest.class.getResourceAsStream("./saisies/compte_test/ajouter_cas_2.txt"));
         ui.reinitialiserScanner();
