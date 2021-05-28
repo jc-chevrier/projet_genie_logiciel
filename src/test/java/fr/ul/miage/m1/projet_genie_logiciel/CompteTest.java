@@ -79,7 +79,6 @@ public class CompteTest {
         reinitialiserTables();
     }
 
-
     @Test
     @DisplayName("Test : lister les salariés - cas 1 : salariés trouvés")
     void testListerCas1Trouve() {
@@ -90,6 +89,15 @@ public class CompteTest {
         compte.setActif(1);
         compte.setIdRole(1);
         orm.persisterNUplet(compte);
+
+        //On simule le scénario de listing des salariés.
+        CompteControleur.lister();
+    }
+
+    @Test
+    @DisplayName("Test : lister les salariés - cas 2 : aucun salarié trouvé")
+    void testListerCas2PasTrouve() {
+        orm.supprimerTousLesNUplets(Compte.class);
 
         //On simule le scénario de listing des salariés.
         CompteControleur.lister();
