@@ -305,12 +305,15 @@ public class PlatControleur extends Controleur {
         ui.afficherAvecDelimiteurEtUtilisateur("Listing des plats disponibles de la carte du jour :");
 
         //Récupération des plats disponibles de la carte.
-        String predicat = "INNER JOIN PLAT_INGREDIENTS AS PI " +
-                          "ON PI.ID_PLAT = FROM_TABLE.ID " +
-                          "INNER JOIN INGREDIENT AS I " +
-                          "ON I.ID = PI.ID_INGREDIENT " +
-                          "WHERE PI.QUANTITE <= I.STOCK " +
-                          "AND FROM_TABLE.CARTE = 1";
+        String predicat = "WHERE CARTE = 1 " +
+                          "AND ID NOT IN " +
+                            "(SELECT P.ID " +
+                            "FROM PLAT AS P "+
+                            "INNER JOIN PLAT_INGREDIENTS AS PI " +
+                            "ON PI.ID_PLAT = P.ID " +
+                            "INNER JOIN INGREDIENT AS I " +
+                            "ON I.ID = PI.ID_INGREDIENT " +
+                            "WHERE PI.QUANTITE > I.STOCK) " ;
         List<Entite> platsDisponiblesCarte = orm.chercherNUpletsAvecPredicat(predicat, Plat.class);
 
         //Si des plats de la carte sont disponibles.
