@@ -18,7 +18,25 @@ import org.jetbrains.annotations.NotNull;
  */
 public class CommandeControleur extends Controleur {
     //Messages courants.
+    private final static String MESSAGE_AUCUNE_TROUVEE = "Aucune commande trouvée !";
     private final static String MESSAGE_SELECTIONNER = "Sélectionner une commande :";
+
+    /**
+     * Lister toutes les commandes.
+     */
+    public static void lister() {
+        //Message de titre.
+        ui.afficherAvecDelimiteurEtUtilisateur("Listing des commandes :");
+
+        //Récupération des commandes existantes.
+        List<Entite> commandes = orm.chercherTousLesNUplets(Commande.class);
+
+        //Si des commandes ont été trouvées.
+        if(!ui.afficherSiListeNUpletsVide(commandes, MESSAGE_AUCUNE_TROUVEE)) {
+            //Listing.
+            ui.listerNUplets(commandes);
+        }
+    }
 
     /**
      * Obtenir l'expression régulière définissant le nombre d'occurences
@@ -207,11 +225,8 @@ public class CommandeControleur extends Controleur {
      * @param commande
      */
     private static void editerEtPersister(@NotNull Commande commande) {
-        //Récupération des tables occupées du restaurant allouées au serveur connecté.
-        List<Entite> placesOccupees = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'occupé' " +
-                                                                      "AND ID_COMPTE_SERVEUR = " +
-                                                                      getUtilisateurConnecte().getId(),
-                                                                      Place.class);
+        //Récupération des tables occupées du restaurant.
+        List<Entite> placesOccupees = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'occupé'", Place.class);
 
         //Questions et saisies.
         //Choix d'une table du restaurant.
@@ -244,30 +259,19 @@ public class CommandeControleur extends Controleur {
         //Message de titre.
         ui.afficherAvecDelimiteurEtUtilisateur("Ajout d'une commande :");
 
-        //Récupération du nombre de tables occupées du restaurant allouées au serveur connecté.
-        int nbPlacesOccupees = orm.compterNUpletsAvecPredicat("WHERE ETAT = 'occupé' " +
-                                                              "AND ID_COMPTE_SERVEUR = " +
-                                                               getUtilisateurConnecte().getId(),
-                                                               Place.class);
-
         //Récupération du nombre de plats disponibles du restaurant (en fonction des stocks).
-        int nbPlatsDisponibles = orm.compterNUpletsAvecPredicat("WHERE " + Plat.PREDICAT_DISPONIBLE_EN_STOCK,
-                                                                Plat.class);
+        int nbPlatsDisponibles = orm.compterNUpletsAvecPredicat("WHERE " + Plat.PREDICAT_DISPONIBLE_EN_STOCK, Plat.class);
 
-        //Si des tables du serveur connecté sont occupées par des clients.
-        String messageErreur = "Aucune table occupée parmi mes tables dans le restaurant !";
-        if(!ui.afficherSiNombreNul(nbPlacesOccupees, messageErreur)) {
-            messageErreur = "Aucun plat disponible en stock : pour aucun plat les quantités d'ingrédients requises " +
-                            "sont toutes présentes en stock !";
-            //Si des plats sont disponibles en stock.
-            if(!ui.afficherSiNombreNul(nbPlatsDisponibles, messageErreur)) {
-                //Saisie et sauvegarde.
-                Commande commande = new Commande();
-                editerEtPersister(commande);
+        String messageErreur = "Aucun plat disponible en stock : pour aucun plat les quantités d'ingrédients requises " +
+                               "sont toutes présentes en stock !";
+        //Si des plats sont disponibles en stock.
+        if(!ui.afficherSiNombreNul(nbPlatsDisponibles, messageErreur)) {
+            //Saisie et sauvegarde.
+            Commande commande = new Commande();
+            editerEtPersister(commande);
 
-                //Message de résultat.
-                ui.afficher("Commande ajoutée !\n" + commande);
-            }
+            //Message de résultat.
+            ui.afficher("Commande ajoutée !\n" + commande);
         }
     }
 
@@ -282,13 +286,10 @@ public class CommandeControleur extends Controleur {
         ui.afficherAvecDelimiteurEtUtilisateur("Suppression d'une commande :");
 
         //Récupération des tables occupées dans le restaurant.
-        List<Entite> placesOccupees = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'occupé' " +
-                                                                      "AND ID_COMPTE_SERVEUR = " +
-                                                                      getUtilisateurConnecte().getId(),
-                                                                      Place.class);
+        List<Entite> placesOccupees = orm.chercherNUpletsAvecPredicat("WHERE ETAT = 'occupé'", Place.class);
 
-        //Si des tables du serveur connecté sont occupées par des clients.
-        String messageErreur = "Aucune table occupée trouvée parmi mes tables dans le restaurant !";
+        //Si des tables sont occupées par des clients.
+        String messageErreur = "Aucune table occupée trouvée dans le restaurant !";
         if(!ui.afficherSiListeNUpletsVide(placesOccupees, messageErreur)) {
             //Question et saisies.
             //Choix de la table.
@@ -413,8 +414,8 @@ public class CommandeControleur extends Controleur {
     }
 
     /**
-     * Lister les plats prêts dans le restaurant, pour une table
-     * du serveur connecté.
+     * Lister les plats prêts pas encore servis dans le restaurant,
+     * pour une des tables du serveur connecté.
      */
     public static void listerLignesPretesPlace() {
         //Message de titre.
@@ -478,7 +479,7 @@ public class CommandeControleur extends Controleur {
             if (!ui.afficherSiListeNUpletsVide(lignesCommande, messageErreur)) {
                 //Question et saisies.
                 //Choix de la ligne de commande.
-                LigneCommande ligneCommande = (LigneCommande) ui.poserQuestionListeNUplets("Sélectionner un ligne de commande :",
+                LigneCommande ligneCommande = (LigneCommande) ui.poserQuestionListeNUplets("Sélectionner une ligne de commande :",
                                                                                             lignesCommande);
 
                 //Sauvegarde.

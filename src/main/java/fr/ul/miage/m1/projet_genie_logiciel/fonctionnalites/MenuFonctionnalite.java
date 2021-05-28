@@ -138,13 +138,22 @@ public class MenuFonctionnalite {
                 new MenuFonctionnalite("Mes tables", fonctionnalitesMesTables);
 
         List<Fonctionnalite> fonctionnalitesGestionCommandes = new ArrayList<Fonctionnalite>(Arrays.asList(
-                new FonctionnaliteInterne("Ajouter une commande pour une de mes tables", CommandeControleur::ajouter),
-                new FonctionnaliteInterne("Supprimer une commande", CommandeControleur::supprimer),
-                new FonctionnaliteInterne("Lister les plats prêts pour mes tables", CommandeControleur::listeLignesPretes),
-                new FonctionnaliteInterne("Lister les plats prêts pour une de mes tables", CommandeControleur::listerLignesPretesPlace),
-                new FonctionnaliteInterne("Valider un service", CommandeControleur::validerService)));
+                new FonctionnaliteInterne("Lister les commandes", CommandeControleur::lister),
+                new FonctionnaliteInterne("Ajouter une commande", CommandeControleur::ajouter),
+                new FonctionnaliteInterne("Supprimer une commande", CommandeControleur::supprimer)));
         MenuFonctionnalite menuFonctionnaliteGestionCommandes =
-                new MenuFonctionnalite("Gestion des commandes de mes tables", fonctionnalitesGestionCommandes);
+                new MenuFonctionnalite("Gestion des commandes", fonctionnalitesGestionCommandes);
+
+        List<Fonctionnalite> fonctionnalitesSuiviCommandesMesTables = new ArrayList<Fonctionnalite>(Arrays.asList(
+                new FonctionnaliteInterne("Lister les plats prêts pour mes tables", CommandeControleur::listeLignesPretes),
+                new FonctionnaliteInterne("Lister les plats prêts pour une de mes tables", CommandeControleur::listerLignesPretesPlace)));
+        MenuFonctionnalite menuFonctionnaliteSuiviCommandesMesTables =
+                new MenuFonctionnalite("Suivi des commandes de mes tables", fonctionnalitesSuiviCommandesMesTables);
+
+        List<Fonctionnalite> fonctionnalitesGestionServicesCommandes = new ArrayList<Fonctionnalite>(Arrays.asList(
+                new FonctionnaliteInterne("Valider un service", CommandeControleur::validerService)));
+        MenuFonctionnalite menuFonctionnaliteGestionServicesCommandes =
+                new MenuFonctionnalite("Gestion des services des commandes", fonctionnalitesGestionServicesCommandes);
 
         List<Fonctionnalite> fonctionnalitesConsultationCarte = new ArrayList<Fonctionnalite>(Arrays.asList(
                 new FonctionnaliteInterne("Lister tous les plats de la carte", PlatControleur::listerCarte),
@@ -191,7 +200,9 @@ public class MenuFonctionnalite {
                 menuFonctionnaliteGestionAllocationsTables,
                 menuFonctionnaliteGestionReservationsTables,
                 menuFonctionnaliteGestionPreparationsTables,
+                menuFonctionnaliteGestionCommandes,
                 menuFonctionnaliteGestionPreparationsCommandes,
+                menuFonctionnaliteGestionServicesCommandes,
                 menuFonctionnaliteGestionPaiementsCommandes,
                 menuFonctionnaliteGestionSalaries,
                 menuFonctionnaliteConsultationStats,
@@ -216,6 +227,8 @@ public class MenuFonctionnalite {
         MENU_FONCTIONNALITE_PAR_ROLE.put(Role.SERVEUR, Arrays.asList(
                 menuFonctionnaliteMesTables,
                 menuFonctionnaliteGestionCommandes,
+                menuFonctionnaliteSuiviCommandesMesTables,
+                menuFonctionnaliteGestionServicesCommandes,
                 menuFonctionnaliteConsultationCarte,
                 menuFonctionnaliteRecherchePlat,
                 menuFonctionnaliteSortie));
