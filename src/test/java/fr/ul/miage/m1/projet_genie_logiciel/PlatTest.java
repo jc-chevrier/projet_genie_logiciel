@@ -506,7 +506,6 @@ public class PlatTest {
         //On simule le scénario de modification.
         PlatControleur.modifier();
     }
-
     @Test
     @DisplayName("Test : lister les plats de la carte - cas 1 : plats trouvés")
     void testListerCarteCasTrouve() {
@@ -534,7 +533,7 @@ public class PlatTest {
     @Test
     @DisplayName("Test : lister les plats de la carte - cas 1 : aucun plat dans la carte")
     void testListerCarteCas2AucunDansCarte() {
-        //On se connecte en tant que cuisinier.
+        //On se connecte en tant que serveur.
         ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 4", Compte.class));
 
         //On ajoute une catégorie.
@@ -555,12 +554,163 @@ public class PlatTest {
     }
 
     @Test
-    @DisplayName("Test : lister les plats de la carte - cas 1 : aucun plat trouvé")
+    @DisplayName("Test : lister les plats de la carte - cas 2 : aucun plat trouvé")
     void testListerCarteCas3AucunPlatTrouve() {
-        //On se connecte en tant que cuisinier.
+        //On se connecte en tant que serveur.
         ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 4", Compte.class));
 
         //On simule le scénario de lister.
         PlatControleur.listerCarte();
+    }
+
+    @Test
+    @DisplayName("Test : lister les plats disponibles de la carte - cas 1 : plats trouvés")
+    void testListerDisponiblesCarteCasTrouve() {
+        //On se connecte en tant que serveur.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 4", Compte.class));
+
+        //On ajoute une catégorie.
+        Categorie categorie = new Categorie();
+        categorie.setLibelle("catégorie");
+        orm.persisterNUplet(categorie);
+
+        //On ajoute une unité pour pouvoir ajouter un ingrédient.
+        Unite unite = new Unite();
+        unite.setLibelle("unité");
+        orm.persisterNUplet(unite);
+
+        //On ajoute un ingrédient pour pouvoir l'ajouter à la composition du plat.
+        Ingredient ingredient = new Ingredient();
+        ingredient.setLibelle("ingredient");
+        ingredient.setStock(20.0);
+        ingredient.setIdUnite(1);
+        orm.persisterNUplet(ingredient);
+
+        //On ajoute un plat à la carte du jour.
+        Plat plat = new Plat();
+        plat.setLibelle("plat jour");
+        plat.setCarte(1);
+        plat.setIdCategorie(categorie.getId());
+        plat.setPrix(1.5);
+        orm.persisterNUplet(plat);
+
+        //On ajoute un platIngredients car un plat est disponible uniquement
+        // si la quantité utilisé par ce plat est inferieure ou égale aux stocks des ingrédients qui le compose.
+        PlatIngredients platIngredient = new PlatIngredients();
+        platIngredient.setQuantite(2.0);
+        platIngredient.setIdPlat(1);
+        platIngredient.setIdIngredient(1);
+        orm.persisterNUplet(platIngredient);
+
+        //On simule le scénario de lister.
+        PlatControleur.listerDisponiblesCarte();
+    }
+
+    @Test
+    @DisplayName("Test : lister les plats disponibles de la carte - cas 1 : aucun plat disponible dans la carte")
+    void testListerCarteCas1AucunDisponibleDansCarte() {
+        //On se connecte en tant que serveur.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 4", Compte.class));
+
+        //On ajoute une catégorie.
+        Categorie categorie = new Categorie();
+        categorie.setLibelle("catégorie");
+        orm.persisterNUplet(categorie);
+
+        //On ajoute une unité pour pouvoir ajouter un ingrédient.
+        Unite unite = new Unite();
+        unite.setLibelle("unité");
+        orm.persisterNUplet(unite);
+
+        //On ajoute un ingrédient pour pouvoir l'ajouter à la composition du plat.
+        Ingredient ingredient = new Ingredient();
+        ingredient.setLibelle("ingredient");
+        ingredient.setStock(20.0);
+        ingredient.setIdUnite(1);
+        orm.persisterNUplet(ingredient);
+
+        //On ajoute un plat disponible mais n'est pas dans la carte du jour.
+        Plat plat = new Plat();
+        plat.setLibelle("plat jour");
+        plat.setCarte(0);
+        plat.setIdCategorie(categorie.getId());
+        plat.setPrix(1.5);
+        orm.persisterNUplet(plat);
+
+        //On ajoute un platIngredients car un plat est disponible uniquement
+        // si la quantité utilisé par ce plat est inferieure ou égale aux stocks des ingrédients qui le compose.
+        PlatIngredients platIngredient = new PlatIngredients();
+        platIngredient.setQuantite(2.0);
+        platIngredient.setIdPlat(1);
+        platIngredient.setIdIngredient(1);
+        orm.persisterNUplet(platIngredient);
+
+        //On simule le scénario de lister.
+        PlatControleur.listerDisponiblesCarte();
+    }
+    @Test
+    @DisplayName("Test : lister les plats disponibles de la carte - cas 2 : aucun plat disponible dans la carte")
+    void testListerCarteCas2AucunDisponibleDansCarte() {
+        //On se connecte en tant que serveur.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 4", Compte.class));
+
+        //On ajoute une catégorie.
+        Categorie categorie = new Categorie();
+        categorie.setLibelle("catégorie");
+        orm.persisterNUplet(categorie);
+
+        //On ajoute une unité pour pouvoir ajouter un ingrédient.
+        Unite unite = new Unite();
+        unite.setLibelle("unité");
+        orm.persisterNUplet(unite);
+
+        //On ajoute un ingrédient avec le stock à 0  pour pouvoir l'ajouter à la composition du plat.
+        Ingredient ingredient = new Ingredient();
+        ingredient.setLibelle("ingredient1");
+        ingredient.setStock(0.0);
+        ingredient.setIdUnite(1);
+        orm.persisterNUplet(ingredient);
+        Ingredient ingredient1 = new Ingredient();
+        ingredient1.setLibelle("ingredient2");
+        ingredient1.setStock(20.0);
+        ingredient1.setIdUnite(1);
+        orm.persisterNUplet(ingredient1);
+
+        //On ajoute un plat à la carte du jour.
+        Plat plat = new Plat();
+        plat.setLibelle("plat");
+        plat.setCarte(1);
+        plat.setIdCategorie(categorie.getId());
+        plat.setPrix(1.5);
+        orm.persisterNUplet(plat);
+
+        //On ajoute un platIngredients car un plat est disponible uniquement
+        // si la quantité utilisé par ce plat est inferieure ou égale aux stocks des ingrédients qui le compose.
+        PlatIngredients platIngredient = new PlatIngredients();
+        platIngredient.setQuantite(2.0);
+        platIngredient.setIdPlat(1);
+        platIngredient.setIdIngredient(1);
+        orm.persisterNUplet(platIngredient);
+
+        //On ajoute un platIngredient avec stock d'ingrédient égal à 0
+        PlatIngredients platIngredient1 = new PlatIngredients();
+        platIngredient1.setQuantite(3.0);
+        platIngredient1.setIdPlat(1);
+        platIngredient1.setIdIngredient(2);
+        orm.persisterNUplet(platIngredient1);
+
+        //On simule le scénario de lister.
+        //Dans ce cas aucun plat est lister car un des ingrédients composant le plat n'est pas disponible.
+        PlatControleur.listerDisponiblesCarte();
+    }
+
+    @Test
+    @DisplayName("Test : lister les plats disponible de la carte - cas 3 : aucun plat trouvé dans la base")
+    void testListerCarteCas3AucunPlatDisponibleTrouve() {
+        //On se connecte en tant que serveur.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 4", Compte.class));
+
+        //On simule le scénario de lister les plats disponibles de la carte.
+        PlatControleur.listerDisponiblesCarte();
     }
 }
