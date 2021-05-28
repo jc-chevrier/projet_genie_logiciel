@@ -530,9 +530,6 @@ public class PlatTest {
 
     }
 
-
-
-
     @Test
     @DisplayName("Test : lister les plats de la carte - cas 1 : aucun plat dans la carte")
     void testListerCarteCas2AucunDansCarte() {
@@ -557,7 +554,7 @@ public class PlatTest {
     }
 
     @Test
-    @DisplayName("Test : lister les plats de la carte - cas 1 : aucun plat trouvé")
+    @DisplayName("Test : lister les plats de la carte - cas 2 : aucun plat trouvé")
     void testListerCarteCas3AucunPlatTrouve() {
         //On se connecte en tant que serveur.
         ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 4", Compte.class));
