@@ -1,5 +1,6 @@
-package fr.ul.miage.m1.projet_genie_logiciel.controleurs;
+package fr.ul.miage.m1.projet_genie_logiciel.fonctionnalites;
 
+import fr.ul.miage.m1.projet_genie_logiciel.controleurs.*;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Role;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
 import org.jetbrains.annotations.NotNull;
@@ -178,7 +179,7 @@ public class MenuFonctionnalite {
                 new MenuFonctionnalite("Sorties", fonctionnalitesSortie);
 
 
-        //Répartition des menus de fonctionnalitéscc par rôle.
+        //Répartition des menus de fonctionnalité par rôle.
         MENU_FONCTIONNALITE_PAR_ROLE = new HashMap<Integer, List<MenuFonctionnalite>>();
 
         MENU_FONCTIONNALITE_PAR_ROLE.put(Role.DIRECTEUR, Arrays.asList(
@@ -240,7 +241,7 @@ public class MenuFonctionnalite {
     /**
      * Obtenir les libellés des menus de fonctionnalité pour un rôle, avec l'identifiant du rôle.
      *
-     * @see fr.ul.miage.m1.projet_genie_logiciel.controleurs.MenuFonctionnalite#getRoleMenusFonctionnalite(int)
+     * @see MenuFonctionnalite#getRoleMenusFonctionnalite(int)
      *
      * @param idRole
      * @return
@@ -269,7 +270,7 @@ public class MenuFonctionnalite {
      * Obtenir les fonctionnalités d'un menu, avec l'identifiant du rôle, et l'indice
      * du menu de fonctionnalité.
      *
-     * @see fr.ul.miage.m1.projet_genie_logiciel.controleurs.MenuFonctionnalite#getMenuFonctionnalite(int, int)
+     * @see MenuFonctionnalite#getMenuFonctionnalite(int, int)
      *
      * @param idRole
      * @param indexMenuFonctionnalite
@@ -284,7 +285,7 @@ public class MenuFonctionnalite {
      * Obtenir les libellés des fonctionnalités d'un menu, avec l'identifiant du rôle, et l'indice
      * du menu de fonctionnalités.
      *
-     * @see fr.ul.miage.m1.projet_genie_logiciel.controleurs.MenuFonctionnalite#getFonctionnalites(int, int)
+     * @see MenuFonctionnalite#getFonctionnalites(int, int)
      *
      * @param idRole
      * @param indexMenuFonctionnalite
@@ -301,7 +302,7 @@ public class MenuFonctionnalite {
      * Obtenir les libellés des fonctionnalités d'un menu, avec l'identifiant du rôle, l'indice
      * du menu de fonctionnalités, et l'indice de la fonctionnalité.
      *
-     * @see fr.ul.miage.m1.projet_genie_logiciel.controleurs.MenuFonctionnalite#getFonctionnalites(int, int)
+     * @see MenuFonctionnalite#getFonctionnalites(int, int)
      *
      * @param idRole
      * @param indexMenuFonctionnalite

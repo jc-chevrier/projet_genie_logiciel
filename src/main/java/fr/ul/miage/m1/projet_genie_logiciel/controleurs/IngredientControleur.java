@@ -62,13 +62,13 @@ public class IngredientControleur extends Controleur {
         //Message de titre.
         ui.afficherAvecDelimiteurEtUtilisateur("Ajout d'un ingrédient :");
 
-        //Récupération des unités existantes.
-        List<Entite> unites = orm.chercherTousLesNUplets(Unite.class);
+        //Récupération du nombbre d'unités existantes.
+        int nbUnites = orm.compterTousLesNUplets(Unite.class);
 
         //Si des unités ont été trouvées dans le catalogue.
         String messageErreur = "Aucune unité trouvée dans le cataloque à associer pour l'ingrédient à ajouter !\n" +
                                "Ajoutez d'abord une unité avant d'ajouter un ingrédient !";
-        if(!ui.afficherSiListeNUpletsVide(unites, messageErreur)) {
+        if(!ui.afficherSiNombreNul(nbUnites, messageErreur)) {
             //Saisie et sauvegarde.
             Ingredient ingredient = new Ingredient();
             ingredient.setStock(0.0);

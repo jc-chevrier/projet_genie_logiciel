@@ -1,5 +1,8 @@
 package fr.ul.miage.m1.projet_genie_logiciel.controleurs;
 
+import fr.ul.miage.m1.projet_genie_logiciel.fonctionnalites.Fonctionnalite;
+import fr.ul.miage.m1.projet_genie_logiciel.fonctionnalites.MenuFonctionnalite;
+
 import java.util.List;
 
 /**
