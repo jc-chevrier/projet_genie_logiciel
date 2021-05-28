@@ -60,11 +60,7 @@ public class MenuFonctionnalite {
                 new FonctionnaliteInterne("Lister toutes les tables", PlaceControleur::lister),
                 new FonctionnaliteInterne("Lister toutes les tables disponibles", PlaceControleur::listerDisponibles),
                 new FonctionnaliteInterne("Ajouter une table", PlaceControleur::ajouter),
-                new FonctionnaliteInterne("Supprimer une table", PlaceControleur::supprimer),
-                new FonctionnaliteInterne("Allouer une table à un client", PlaceControleur::allouerPourClient),
-                new FonctionnaliteInterne("Désallouer une table à un client", PlaceControleur::desallouerPourClient),
-                new FonctionnaliteInterne("Allouer une table à un serveur", PlaceControleur::allouerPourServeur),
-                new FonctionnaliteInterne("Désallouer une table à un serveur", PlaceControleur::desallouerPourServeur)));
+                new FonctionnaliteInterne("Supprimer une table", PlaceControleur::supprimer)));
         MenuFonctionnalite menuFonctionnaliteGestionTables =
                 new MenuFonctionnalite("Gestion des tables", fonctionnalitesGestionTables);
 
@@ -101,9 +97,9 @@ public class MenuFonctionnalite {
 
         List<Fonctionnalite> fonctionnalitesGestionIngredients = new ArrayList<Fonctionnalite>(Arrays.asList(
                 new FonctionnaliteInterne("Lister les ingrédients", IngredientControleur::lister),
-                new FonctionnaliteInterne("Ajouter un ingrédient au catalogue des ingrédients", IngredientControleur::ajouter),
+                new FonctionnaliteInterne("Ajouter un ingrédient", IngredientControleur::ajouter),
                 new FonctionnaliteInterne("Modifier un ingrédient", IngredientControleur::modifier),
-                new FonctionnaliteInterne("Supprimer un ingrédient au catalogue des ingrédients", IngredientControleur::supprimer)));
+                new FonctionnaliteInterne("Supprimer un ingrédient", IngredientControleur::supprimer)));
         MenuFonctionnalite menuFonctionnaliteGestionIngredients =
                 new MenuFonctionnalite("Gestion du catalogue des ingrédients", fonctionnalitesGestionIngredients);
 
@@ -145,7 +141,8 @@ public class MenuFonctionnalite {
                 new FonctionnaliteInterne("Ajouter une commande pour une de mes tables", CommandeControleur::ajouter),
                 new FonctionnaliteInterne("Supprimer une commande", CommandeControleur::supprimer),
                 new FonctionnaliteInterne("Lister les plats prêts pour mes tables", CommandeControleur::listeLignesPretes),
-                new FonctionnaliteInterne("Lister les plats prêts pour une de mes tables", CommandeControleur::listerLignesPretesPlace)));
+                new FonctionnaliteInterne("Lister les plats prêts pour une de mes tables", CommandeControleur::listerLignesPretesPlace),
+                new FonctionnaliteInterne("Valider un service", CommandeControleur::validerService)));
         MenuFonctionnalite menuFonctionnaliteGestionCommandes =
                 new MenuFonctionnalite("Gestion des commandes de mes tables", fonctionnalitesGestionCommandes);
 
