@@ -12,7 +12,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Unité")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class UniteTest {
     private static ORM orm;
     private static UI ui;

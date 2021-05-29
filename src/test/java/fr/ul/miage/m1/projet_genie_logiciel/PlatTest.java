@@ -3,15 +3,31 @@ package fr.ul.miage.m1.projet_genie_logiciel;
 import fr.ul.miage.m1.projet_genie_logiciel.controleurs.PlatControleur;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.*;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
+import org.checkerframework.checker.units.qual.C;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.*;
 import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Plat")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class PlatTest {
     private static ORM orm;
     private static UI ui;
+
+    static void ajouterCategorie(@NotNull String libelle) {
+        Categorie categorie = new Categorie();
+        categorie.setLibelle(libelle);
+        orm.persisterNUplet(categorie);
+    }
+
+    static void ajouterPlat(@NotNull String libelle, int carte, double prix, int idCategorie) {
+        Plat plat = new Plat();
+        plat.setLibelle(libelle);
+        plat.setCarte(carte);
+        plat.setPrix(prix);
+        plat.setIdCategorie(idCategorie);
+        orm.persisterNUplet(plat);
+    }
 
     static void reinitialiserTables() {
         //On réinitialise la table plat_ingrédiants.
@@ -712,5 +728,94 @@ public class PlatTest {
 
         //On simule le scénario de lister les plats disponibles de la carte.
         PlatControleur.listerDisponiblesCarte();
+    }
+
+    @Test
+    @DisplayName("Test : chercher un plat avec son libellé - cas 1 : un plat trouvé avec libellé partiel")
+    void testChercherAvecLibelleCas1UniqueTrouve() {
+        //On se connecte en tant que serveur.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 4", Compte.class));
+
+        //Ajout de catégorie et de plats.
+        ajouterCategorie("Cuisine française");
+        ajouterPlat("Nouille", 1, 5.5, 1);
+        ajouterPlat("Ratatouille", 1, 5.5, 1);
+
+        //On simule les saisies de recherche dans ce fichier.
+        System.setIn(PlatTest.class.getResourceAsStream("./saisies/plat_test/chercher_cas_1.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de recherche.
+        PlatControleur.chercherAvecLibelle();
+    }
+
+    @Test
+    @DisplayName("Test : chercher un plat avec son libellé - cas 2 : plusieurs plats trouvés avec libellé partiel")
+    void testChercherAvecLibelleCas2PlusieursTrouves() {
+        //On se connecte en tant que serveur.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 4", Compte.class));
+
+        //Ajout de catégorie et de plats.
+        ajouterCategorie("Cuisine française");
+        ajouterCategorie("Cuisine algérienne");
+        ajouterPlat("Cassoulet", 1, 5.5, 1);
+        ajouterPlat("Taboulé", 1, 5.5, 2);
+
+        //On simule les saisies de recherche dans ce fichier.
+        System.setIn(PlatTest.class.getResourceAsStream("./saisies/plat_test/chercher_cas_2.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de recherche.
+        PlatControleur.chercherAvecLibelle();
+    }
+
+    @Test
+    @DisplayName("Test : chercher un plat avec son libellé - cas 3 : un plat trouvé avec la casse")
+    void testChercherAvecLibelleCas3TrouveCasse() {
+        //On se connecte en tant que serveur.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 4", Compte.class));
+
+        //Ajout de catégorie et de plats.
+        ajouterCategorie("Cuisine française");
+        ajouterPlat("pâte", 1, 5.5, 1);
+
+        //On simule les saisies de recherche dans ce fichier.
+        System.setIn(PlatTest.class.getResourceAsStream("./saisies/plat_test/chercher_cas_3.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de recherche.
+        PlatControleur.chercherAvecLibelle();
+    }
+
+    @Test
+    @DisplayName("Test : chercher un plat avec son libellé - cas 4 : un plat trouvé avec libellé complet")
+    void testChercherAvecLibelleCas4UniqueTrouveLiblelComplet() {
+        //On se connecte en tant que serveur.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 4", Compte.class));
+
+        //Ajout de catégorie et de plats.
+        ajouterCategorie("Cuisine française");
+        ajouterPlat("Pâtes à la bolognaise", 1, 5.5, 1);
+
+        //On simule les saisies de recherche dans ce fichier.
+        System.setIn(PlatTest.class.getResourceAsStream("./saisies/plat_test/chercher_cas_4.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de recherche.
+        PlatControleur.chercherAvecLibelle();
+    }
+
+    @Test
+    @DisplayName("Test : chercher un plat avec son libellé - cas 5 : aucun plat trouvé")
+    void testChercherAvecLibelleCas5PasTrouve() {
+        //On se connecte en tant que serveur.
+        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 4", Compte.class));
+
+        //On simule les saisies de recherche dans ce fichier.
+        System.setIn(PlatTest.class.getResourceAsStream("./saisies/plat_test/chercher_cas_5.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de recherche.
+        PlatControleur.chercherAvecLibelle();
     }
 }
