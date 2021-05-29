@@ -12,6 +12,12 @@ public class PlaceTest {
     private static ORM orm;
     private static UI ui;
 
+    static void ajouterPlace() {
+        Place place = new Place();
+        place.setEtat("libre");
+        orm.persisterNUplet(place);
+    }
+
     static void reinitialiserTables() {
         //On réinitialise la table place.
         orm.reinitialiserTable(Place.class);
@@ -741,4 +747,30 @@ public class PlaceTest {
         PlaceControleur.desallouerPourServeur();
     }
 
+    @Test
+    @DisplayName("Test : réserver une table : cas 1 - table bien réservée")
+    void testReserverCas1BienReservee() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
+        //On ajoute une table.
+        ajouterPlace();
+
+        //On simule les saisies de réservation dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/reserver_cas_1.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de réservation.
+        PlaceControleur.reserver();
+    }
+
+    @Test
+    @DisplayName("Test : réserver une table : cas 2 - aucune table trouvée")
+    void testReserverCas2PasTrouvee() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
+        //On simule le scénario de réservation.
+        PlaceControleur.reserver();
+    }
 }
