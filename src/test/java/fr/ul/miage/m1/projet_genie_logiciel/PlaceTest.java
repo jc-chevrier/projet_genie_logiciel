@@ -4,6 +4,7 @@ import fr.ul.miage.m1.projet_genie_logiciel.controleurs.PlaceControleur;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.*;
 import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,9 +13,9 @@ public class PlaceTest {
     private static ORM orm;
     private static UI ui;
 
-    static void ajouterPlace() {
+    static void ajouterPlace(@NotNull String etat) {
         Place place = new Place();
-        place.setEtat("libre");
+        place.setEtat(etat);
         orm.persisterNUplet(place);
     }
 
@@ -748,13 +749,36 @@ public class PlaceTest {
     }
 
     @Test
+    @DisplayName("Test : lister les tables réservées - cas 1 : tables trouvées")
+    void testListerReserveesCas1Trouve() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
+        //On ajoute une table réservée.
+        ajouterPlace("réservé");
+
+        //On simule le scénario de listing des tables réservées.
+        PlaceControleur.listerReservees();
+    }
+
+    @Test
+    @DisplayName("Test : lister les tables réservées - cas 2 : aucune table trouvée")
+    void testListerReserveesCas2PasTrouve() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
+        //On simule le scénario de listing des tables réservées.
+        PlaceControleur.listerReservees();
+    }
+
+    @Test
     @DisplayName("Test : réserver une table : cas 1 - table bien réservée")
     void testReserverCas1BienReservee() {
         //On se connecte en tant que maitre d'hotel.
         ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
 
         //On ajoute une table.
-        ajouterPlace();
+        ajouterPlace("libre");
 
         //On simule les saisies de réservation dans ce fichier.
         System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/reserver_cas_1.txt"));
