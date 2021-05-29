@@ -6,6 +6,9 @@ import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.*;
+
+import java.util.Date;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Table")
@@ -16,6 +19,16 @@ public class PlaceTest {
     static void ajouterPlace(@NotNull String etat) {
         Place place = new Place();
         place.setEtat(etat);
+        orm.persisterNUplet(place);
+    }
+
+    static void ajouterPlaceReservee(@NotNull String etat, @NotNull String nom, @NotNull String prenom,
+                                     @NotNull Date date) {
+        Place place = new Place();
+        place.setEtat(etat);
+        place.setNomReservation(nom);
+        place.setPrenomReservation(prenom);
+        place.setDatetimeReservation(date);
         orm.persisterNUplet(place);
     }
 
@@ -784,17 +797,158 @@ public class PlaceTest {
         System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/reserver_cas_1.txt"));
         ui.reinitialiserScanner();
 
+        int nbPlacesAvant = orm.compterNUpletsAvecPredicat("WHERE etat = 'libre'", Place.class);
+        assertEquals(1, nbPlacesAvant);
+
         //On simule le scénario de réservation.
         PlaceControleur.reserver();
+
+        int nbPlacesApres = orm.compterNUpletsAvecPredicat("WHERE etat = 'libre'", Place.class);
+        assertEquals(0, nbPlacesApres);
+        nbPlacesApres = orm.compterNUpletsAvecPredicat("WHERE etat = 'réservé'", Place.class);
+        assertEquals(1, nbPlacesApres);
+
     }
 
     @Test
-    @DisplayName("Test : réserver une table : cas 2 - aucune table trouvée")
-    void testReserverCas2PasTrouvee() {
+    @DisplayName("Test : réserver une table : cas 2 - table réservée correcte")
+    void testReserverCas2ReserveeCorrect() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
+        //On ajoute une table.
+        ajouterPlace("libre");
+
+        //On simule les saisies de réservation dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/reserver_cas_2.txt"));
+        ui.reinitialiserScanner();
+
+        Place placeAvant = (Place) orm.chercherNUpletAvecPredicat("WHERE ID = 1", Place.class);
+        assertEquals("libre", placeAvant.getEtat());
+
+        //On simule le scénario de réservation.
+        PlaceControleur.reserver();
+
+        Place placeApres = (Place) orm.chercherNUpletAvecPredicat("WHERE ID = 1", Place.class);
+        assertEquals("réservé", placeApres.getEtat());
+    }
+
+    @Test
+    @DisplayName("Test : réserver une table : cas 3 - aucune table trouvée")
+    void testReserverCas3PasTrouvee() {
         //On se connecte en tant que maitre d'hotel.
         ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
 
         //On simule le scénario de réservation.
         PlaceControleur.reserver();
+    }
+
+    @Test
+    @DisplayName("Test : annuler une réservation d'une table : cas 1 - bien annulée")
+    void testAnnulerReservationCas1BienAnnulee() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
+        //On ajoute une table réservée.
+        ajouterPlaceReservee("réservé", "Torent", "Loïc", new Date());
+
+        //On simule les saisies d'annulation de réseravtion dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/annuler_reservation_cas_1.txt"));
+        ui.reinitialiserScanner();
+
+        int nbPlacesAvant = orm.compterNUpletsAvecPredicat("WHERE etat = 'réservé'", Place.class);
+        assertEquals(1, nbPlacesAvant);
+
+        //On simule le scénario d'annulation de réservation.
+        PlaceControleur.annulerReservation();
+
+        int nbPlacesApres = orm.compterNUpletsAvecPredicat("WHERE etat = 'réservé'", Place.class);
+        assertEquals(0, nbPlacesApres);
+        nbPlacesApres = orm.compterNUpletsAvecPredicat("WHERE etat = 'libre'", Place.class);
+        assertEquals(1, nbPlacesApres);
+    }
+
+    @Test
+    @DisplayName("Test : annuler une réservation d'une table : cas 2 - annulée correcte")
+    void testAnnulerReservationCas2Correct() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
+        //On ajoute une table réservée.
+        ajouterPlaceReservee("réservé", "Rollui", "Evan", new Date());
+
+        //On simule les saisies d'annulation de réseravtion dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/annuler_reservation_cas_2.txt"));
+        ui.reinitialiserScanner();
+
+        Place placeAvant = (Place) orm.chercherNUpletAvecPredicat("WHERE ID = 1", Place.class);
+        assertEquals("réservé", placeAvant.getEtat());
+
+        //On simule le scénario d'annulation de réservation.
+        PlaceControleur.annulerReservation();
+
+        Place placeApres = (Place) orm.chercherNUpletAvecPredicat("WHERE ID = 1", Place.class);
+        assertEquals("libre", placeApres.getEtat());
+    }
+
+    @Test
+    @DisplayName("Test : annuler une réservation d'une table : cas 3 - mauvais nom et / ou prenom")
+    void testAnnulerReservationCas3Annulee() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
+        //On ajoute une table réservée.
+        ajouterPlaceReservee("réservé", "Nols", "Léa", new Date());
+
+        //On simule les saisies d'annulation de réseravtion dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/annuler_reservation_cas_3.txt"));
+        ui.reinitialiserScanner();
+
+        Place placeAvant = (Place) orm.chercherNUpletAvecPredicat("WHERE ID = 1", Place.class);
+        assertEquals("réservé", placeAvant.getEtat());
+
+        //On simule le scénario d'annulation de réservation.
+        PlaceControleur.annulerReservation();
+
+        Place placeApres = (Place) orm.chercherNUpletAvecPredicat("WHERE ID = 1", Place.class);
+        assertEquals("réservé", placeApres.getEtat());
+
+    }
+
+    @Test
+    @DisplayName("Test : annuler une réservation d'une table : cas 4 - annulée avec casse")
+    void testAnnulerReservationCas4AnnuleeAvecCasse() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
+        //On ajoute une table réservée.
+        ajouterPlaceReservee("réservé", "Foldi", "Julien", new Date());
+
+        //On simule les saisies d'annulation de réseravtion dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/annuler_reservation_cas_4.txt"));
+        ui.reinitialiserScanner();
+
+        Place placeAvant = (Place) orm.chercherNUpletAvecPredicat("WHERE ID = 1", Place.class);
+        assertEquals("réservé", placeAvant.getEtat());
+
+        //On simule le scénario d'annulation de réservation.
+        PlaceControleur.annulerReservation();
+
+        Place placeApres = (Place) orm.chercherNUpletAvecPredicat("WHERE ID = 1", Place.class);
+        assertEquals("libre", placeApres.getEtat());
+    }
+
+    @Test
+    @DisplayName("Test : annuler une réservation d'une table : cas 5 - aucune table trouvée")
+    void testAnnulerReservationCas5PasTrouvee() {
+        //On se connecte en tant que maitre d'hotel.
+        ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 2", Compte.class));
+
+        //On simule les saisies d'annulation de réseravtion dans ce fichier.
+        System.setIn(PlaceTest.class.getResourceAsStream("./saisies/place_test/annuler_reservation_cas_5.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario d'annulation de réservation.
+        PlaceControleur.annulerReservation();
     }
 }
