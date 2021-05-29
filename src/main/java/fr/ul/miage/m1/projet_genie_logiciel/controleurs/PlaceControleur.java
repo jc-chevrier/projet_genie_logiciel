@@ -7,6 +7,7 @@ import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Function;
 
 /**
@@ -367,23 +368,29 @@ public class PlaceControleur extends Controleur {
         if(!ui.afficherSiListeNUpletsVide(placesReservees, messageErreur)) {
             //Questions et saisies.
             //Saisie des informations pour la réservation d'une table.
-            String nom = ui.poserQuestion("Saisir le nom pour la réservation :", UI.REGEX_CHAINE_DE_CARACTERES);
-            String prenom = ui.poserQuestion("Saisir le prénom pour la réservation :", UI.REGEX_CHAINE_DE_CARACTERES);
-            placesReservees = orm.chercherNUpletsAvecPredicat("WHERE NOM_RESERVATION = '" + nom + "'"  +
-                                                              "AND PRENOM_RESERVATION = '" + prenom  + "'",
+            String nom = ui.poserQuestion("Saisir le nom pour la réservation :", UI.REGEX_CHAINE_DE_CARACTERES).toLowerCase();
+            String prenom = ui.poserQuestion("Saisir le prénom pour la réservation :", UI.REGEX_CHAINE_DE_CARACTERES).toLowerCase();
+            placesReservees = orm.chercherNUpletsAvecPredicat("WHERE LOWER(NOM_RESERVATION) = '" + nom + "'"  +
+                                                              "AND LOWER(PRENOM_RESERVATION) = '" + prenom  + "'",
                                                                Place.class);
-            //Choix de la table.
-            Place place = (Place) ui.poserQuestionListeNUplets(MESSAGE_SELECTIONNER, placesReservees);
+            //Si des tables réservées ont été trouvées pour pour ces nom et prénom.
+            messageErreur = "Aucune table réservée trouvée pour ces nom et prénom !";
+            if(!ui.afficherSiListeNUpletsVide(placesReservees, messageErreur)) {
+                //Questions et saisies.
+                //Choix de la table.
+                Place place = (Place) ui.poserQuestionListeNUplets(MESSAGE_SELECTIONNER, placesReservees);
 
-            //Sauvegarde : modification de la table.
-            place.setNomReservation(null);
-            place.setPrenomReservation(null);
-            place.setDatetimeReservation(null);
-            place.setEtat("libre");
-            orm.persisterNUplet(place);
+                //Sauvegarde
+                //Modification de la table.
+                place.setNomReservation(null);
+                place.setPrenomReservation(null);
+                place.setDatetimeReservation(null);
+                place.setEtat("libre");
+                orm.persisterNUplet(place);
 
-            //Message de résultat.
-            ui.afficher("Annulation de la réservation réussie !\n" + placesReservees);
+                //Message de résultat.
+                ui.afficher("Annulation de la réservation réussie !\n" + place);
+            }
         }
     }
 }
