@@ -56,8 +56,8 @@ public class IngredientTest {
     }
 
     @Test
-    @DisplayName("Test - ajouter un ingrédient - cas 1 : n-uplet ingrédient bien ajouté")
-    void testAjouterIngredientCasBienAjoute() {
+    @DisplayName("Test - ajouter un ingrédient - cas 1 : ingrédient bien ajouté")
+    void testAjouterIngredientCas1BienAjoute() {
         //On simule les saisies de l'ajout dans ce fichier.
         System.setIn(IngredientTest.class.getResourceAsStream("./saisies/ingredient_test/ajouter_cas_1.txt"));
         ui.reinitialiserScanner();
@@ -78,7 +78,7 @@ public class IngredientTest {
     }
 
     @Test
-    @DisplayName("Test - ajouter un ingrédient - cas 2 : n-uplet ingrédient bien ajouté avec le bon libellé")
+    @DisplayName("Test - ajouter un ingrédient - cas 2 : ingrédient bien ajouté avec le bon libellé")
     void testAjouterIngredientCas2BonLibelle() {
         //On simule les saisies de l'ajout dans ce fichier.
         System.setIn(IngredientTest.class.getResourceAsStream("./saisies/ingredient_test/ajouter_cas_2.txt"));
@@ -99,14 +99,14 @@ public class IngredientTest {
 
     @Test
     @DisplayName("Test - ajouter un ingrédient - cas 3 : aucune unité trouvée")
-    void testAjouterIngredientCasPasDUnite() {
+    void testAjouterIngredientCas3PasDUnite() {
         //On simule le scénario d'ajout.
         IngredientControleur.ajouter();
     }
 
     @Test
     @DisplayName("Test : modifier un ingrédient - cas 1 : ingrédient bien trouvé")
-    void testModifierIngredientCasBienTrouve() {
+    void testModifierIngredientCas1BienTrouve() {
         //On ajoute une unité.
         Unite unite = new Unite();
         unite.setLibelle("kg");
@@ -133,13 +133,13 @@ public class IngredientTest {
 
     @Test
     @DisplayName("Test : modifier un ingrédient - cas 2 : aucun ingrédient trouvé")
-    void testModifierIngredientCasNonTrouve() {
+    void testModifierIngredientCas3PasTrouve() {
         //On simule le scénario de modification.
         IngredientControleur.modifier();
     }
 
     @Test
-    @DisplayName("Test : supprimer un ingrédient - cas 1 : n-uplet ingrédient bien supprimé")
+    @DisplayName("Test : supprimer un ingrédient - cas 1 : ingrédient bien supprimé")
     void testSupprimerIngrédientCas1Supprime() {
         //Ajouter un unité pour pouvoir ajouter un ingrédient.
         Unite unite = new Unite();
@@ -168,40 +168,68 @@ public class IngredientTest {
     }
 
     @Test
-    @DisplayName("Test - supprimer un ingrédient - cas 2 : aucun n-uplet ingrédient trouvé")
-    void testSupprimerIngredientCas2PasDeUnite() {
+    @DisplayName("Test - supprimer un ingrédient - cas 2 : aucun ingrédient trouvé")
+    void testSupprimerIngredientCas2PasTrouve() {
         //On simule le scénario de suppression.
         IngredientControleur.supprimer();
     }
 
     @Test
-    @DisplayName("Test : modifier stock d'un ingrédient - cas 1 : n-uplet ingrédient non trouvé")
-    void testModifierStockIngredientCasNontrouve(){
+    @DisplayName("Test : modifier stock d'un ingrédient - cas 1 : stock incrémenté")
+    void testModifierStockIngredientCas1Incremente(){
         //on ajoute une unité.
         Unite unite = new Unite();
         unite.setLibelle("kg");
         orm.persisterNUplet(unite);
 
-        //On crée et on ajoute un ingrédient.
+        //On ajoute un ingrédient.
         Ingredient ingredientsAvant = new Ingredient();
         ingredientsAvant.setLibelle("libellé ingredient de stock à modifier");
         ingredientsAvant.setStock(2.4);
         ingredientsAvant.setIdUnite(1);
         orm.persisterNUplet(ingredientsAvant);
-        orm.supprimerNUplet(ingredientsAvant);
 
-        //On simule les saisies de modification de stock d'ingrédient dans ce fichier.
+        //On simule les saisies de modification de stock dans ce fichier.
         System.setIn(IngredientTest.class.getResourceAsStream("./saisies/ingredient_test/modifier_stock_cas_1.txt"));
         ui.reinitialiserScanner();
 
-        //On simule le scénario d'incrémentation.
+        //On simule le scénario de modification de stock.
         IngredientControleur.modifierStock();
+
+        Ingredient ingredientsApres = (Ingredient) orm.chercherNUpletAvecPredicat("WHERE ID = 1", Ingredient.class);
+        assertEquals(3.9, ingredientsApres.getStock());
     }
 
     @Test
-    @DisplayName("Test : modifier stock d'un ingrédient - cas 2 : aucun ingrédient trouvé")
-    void testModifierStockIngredientCasTrouve() {
-        //On simule le scénario d'incrémentation.
+    @DisplayName("Test : modifier stock d'un ingrédient - cas 1 : stock décrémenté")
+    void testModifierStockIngredientCas2Decremente() {
+        //on ajoute une unité.
+        Unite unite = new Unite();
+        unite.setLibelle("L");
+        orm.persisterNUplet(unite);
+
+        //On ajoute un ingrédient.
+        Ingredient ingredientsAvant = new Ingredient();
+        ingredientsAvant.setLibelle("libellé ingredient de stock à modifier");
+        ingredientsAvant.setStock(5.4);
+        ingredientsAvant.setIdUnite(1);
+        orm.persisterNUplet(ingredientsAvant);
+
+        //On simule les saisies de modification de stock dans ce fichier.
+        System.setIn(IngredientTest.class.getResourceAsStream("./saisies/ingredient_test/modifier_stock_cas_2.txt"));
+        ui.reinitialiserScanner();
+
+        //On simule le scénario de modification de stock.
+        IngredientControleur.modifierStock();
+
+        Ingredient ingredientsApres = (Ingredient) orm.chercherNUpletAvecPredicat("WHERE ID = 1", Ingredient.class);
+        assertEquals(2.4, ingredientsApres.getStock());
+    }
+
+    @Test
+    @DisplayName("Test : modifier stock d'un ingrédient - cas 3 : aucun ingrédient trouvé")
+    void testModifierStockIngredientCas3PasTrouve() {
+        //On simule le scénario de modification du stock.
         IngredientControleur.modifierStock();
     }
 }
