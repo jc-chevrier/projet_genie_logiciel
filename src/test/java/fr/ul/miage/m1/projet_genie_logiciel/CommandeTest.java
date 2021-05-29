@@ -801,4 +801,78 @@ public class CommandeTest {
         CommandeControleur.validerService();
 
     }
+
+    @Test
+    @DisplayName("Test : Lister les commandes - cas 1 : commande trouvé")
+    void testListerCas1rouvees() {
+        //On se connecte en tant que serveur.
+        ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 4", Compte.class));
+
+        //On ajoute une table occupé pour pouvoir passer une commande.
+        Place place = new Place();
+        place.setEtat("occupé");
+        orm.persisterNUplet(place);
+
+        //On ajoute une catégorie.
+        Categorie categorie = new Categorie();
+        categorie.setLibelle("catégorie");
+        orm.persisterNUplet(categorie);
+
+        //On ajoute une unité pour pouvoir ajouter un ingrédient.
+        Unite unite = new Unite();
+        unite.setLibelle("unité");
+        orm.persisterNUplet(unite);
+
+        //On ajoute un ingrédient pour pouvoir l'ajouter à la composition du plat.
+        Ingredient ingredient = new Ingredient();
+        ingredient.setLibelle("ingredient");
+        ingredient.setStock(20.0);
+        ingredient.setIdUnite(1);
+        orm.persisterNUplet(ingredient);
+
+        //On ajoute un plat à la carte du jour.
+        Plat plat = new Plat();
+        plat.setLibelle("plat");
+        plat.setCarte(1);
+        plat.setIdCategorie(categorie.getId());
+        plat.setPrix(1.5);
+        orm.persisterNUplet(plat);
+
+        //On ajoute un platIngredients car un plat est disponible uniquement
+        // si la quantité utilisé par ce plat est inferieure ou égale aux stocks des ingrédients qui le compose.
+        PlatIngredients platIngredient = new PlatIngredients();
+        platIngredient.setQuantite(2.0);
+        platIngredient.setIdPlat(1);
+        platIngredient.setIdIngredient(1);
+        orm.persisterNUplet(platIngredient);
+
+        //On ajoute une commande
+        Commande commande = new Commande();
+        commande.setEtat("payé");
+        commande.setCoutTotal(1.5);
+        commande.setDatetimeCreation(new Date());
+        commande.setIdPlace(place.getId());
+        orm.persisterNUplet(commande);
+
+        //On ajoute une ligne commande
+        LigneCommande ligneCommande = new LigneCommande();
+        ligneCommande.setEtat("servi");
+        ligneCommande.setNbOccurences(1);
+        ligneCommande.setIdCommande(commande.getId());
+        ligneCommande.setIdPlat(plat.getId());
+        orm.persisterNUplet(ligneCommande);
+
+        //On simule le scénario du listing.
+        CommandeControleur.lister();
+    }
+
+    @Test
+    @DisplayName("Test : Lister toutes les commandes - cas 2 : aucune commande trouvée dans la base")
+    void testListerCas2PasTrouvees() {
+        //On se connecte en tant que serveur.
+        ui.setUtilisateurConnecte((Compte) orm.chercherNUpletAvecPredicat("WHERE ID = 4", Compte.class));
+
+        //On simule le scénario du listing.
+        CommandeControleur.lister();
+    }
 }
