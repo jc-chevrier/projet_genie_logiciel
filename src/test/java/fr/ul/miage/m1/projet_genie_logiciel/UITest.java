@@ -2,38 +2,21 @@ package fr.ul.miage.m1.projet_genie_logiciel;
 
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Entite;
 import fr.ul.miage.m1.projet_genie_logiciel.entites.Unite;
-import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.*;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("UI")
-public class UITest {
-    private static ORM orm;
-    private static UI ui;
-
-    static Unite ajouterUnite(@NotNull String libelle) {
-        Unite unite = new Unite();
-        unite.setLibelle(libelle);
-        orm.persisterNUplet(unite);
-        return unite;
-    }
-
-    static void reinitialiserTables(){
+public class UITest extends GlobalTest {
+    /**
+     * Réinitialiser les tables utilisées dans les tests
+     * de cette classe.
+     */
+    static void reinitialiserTables() {
         //On réinitialise la table unité.
         orm.reinitialiserTable(Unite.class);
-    }
-
-    @BeforeAll
-    static void setUp() {
-        ORM.CONFIGURATION_FILENAME = "./configuration/configuration_bdd_test.properties";
-        orm = ORM.getInstance();
-        ui = UI.getInstance();
     }
 
     @BeforeEach
@@ -103,8 +86,7 @@ public class UITest {
     @DisplayName("Test : poser question - chaîne de caractères : cas 1 - simple")
     void testPoserQuestionChaineCas1Simple() {
         //On simule les saisies de chaine de caractères dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/ui_test/poser_question_chaine_cas_1.txt"));
-        ui.reinitialiserScanner();
+        chargerSaisies("./saisies/ui_test/poser_question_chaine_cas_1.txt");
 
         //On simule le scénario de saisie d'une chaîne de caractères.
         String chaine = ui.poserQuestion("Saisie une chaine :",  UI.REGEX_CHAINE_DE_CARACTERES);
@@ -115,8 +97,7 @@ public class UITest {
     @DisplayName("Test : poser question - chaîne de caractères : cas 2 - tout pile, égale à 50 caractères")
     void testPoserQuestionChaineCas2ToutPileEgale50() {
         //On simule les saisies de chaine de caractères dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/ui_test/poser_question_chaine_cas_2.txt"));
-        ui.reinitialiserScanner();
+        chargerSaisies("./saisies/ui_test/poser_question_chaine_cas_2.txt");
 
         //On simule le scénario de saisie d'une chaîne de caractères.
         String chaine = ui.poserQuestion("Saisie une chaine :",  UI.REGEX_CHAINE_DE_CARACTERES);
@@ -127,8 +108,7 @@ public class UITest {
     @DisplayName("Test : poser question - chaîne de caractères : cas 3 - trop longue, supérieure à 50 caractères")
     void testPoserQuestionChaineCas3TropLongueSup50() {
         //On simule les saisies de chaine de caractères dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/ui_test/poser_question_chaine_cas_3.txt"));
-        ui.reinitialiserScanner();
+        chargerSaisies("./saisies/ui_test/poser_question_chaine_cas_3.txt");
 
         //On simule le scénario de saisie d'une chaîne de caractères.
         String chaine = ui.poserQuestion("Saisie une chaine :",  UI.REGEX_CHAINE_DE_CARACTERES);
@@ -139,8 +119,7 @@ public class UITest {
     @DisplayName("Test : poser question - chaîne de caractères : cas 4 - vide")
     void testPoserQuestionChaineCas4Vide() {
         //On simule les saisies de chaine de caractères dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/ui_test/poser_question_chaine_cas_4.txt"));
-        ui.reinitialiserScanner();
+        chargerSaisies("./saisies/ui_test/poser_question_chaine_cas_4.txt");
 
         //On simule le scénario de saisie d'une chaîne de caractères.
         String chaine = ui.poserQuestion("Saisie une chaine :",  UI.REGEX_CHAINE_DE_CARACTERES);
@@ -151,8 +130,7 @@ public class UITest {
     @DisplayName("Test : poser question - nombre décimal : cas 1 - entier")
     void testPoserQuestionDecimalCas1Entier() {
         //On simule les saisies de nombre décimal dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/ui_test/poser_question_decimal_cas_1.txt"));
-        ui.reinitialiserScanner();
+        chargerSaisies("./saisies/ui_test/poser_question_decimal_cas_1.txt");
 
         //On simule le scénario de saisie d'un nombre décimal.
         double nombreDecimal = ui.poserQuestionDecimal("Saisie un nombre décimal :",  UI.REGEX_DECIMAL_POSITIF);
@@ -163,8 +141,7 @@ public class UITest {
     @DisplayName("Test : poser question - nombre décimal : cas 2 - une seule décimale")
     void testPoserQuestionDecimalCas2UniqueDecimale() {
         //On simule les saisies de nombre décimal dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/ui_test/poser_question_decimal_cas_2.txt"));
-        ui.reinitialiserScanner();
+        chargerSaisies("./saisies/ui_test/poser_question_decimal_cas_2.txt");
 
         //On simule le scénario de saisie d'un nombre décimal.
         double nombreDecimal = ui.poserQuestionDecimal("Saisie un nombre décimal :",  UI.REGEX_DECIMAL_POSITIF);
@@ -175,8 +152,7 @@ public class UITest {
     @DisplayName("Test : poser question - nombre décimal : cas 3 - plusieurs décimales")
     void testPoserQuestionDecimalCas3PlusieursDecimales() {
         //On simule les saisies de nombre décimal dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/ui_test/poser_question_decimal_cas_3.txt"));
-        ui.reinitialiserScanner();
+        chargerSaisies("./saisies/ui_test/poser_question_decimal_cas_3.txt");
 
         //On simule le scénario de saisie d'un nombre décimal.
         double nombreDecimal = ui.poserQuestionDecimal("Saisie un nombre décimal :",  UI.REGEX_DECIMAL_POSITIF);
@@ -187,8 +163,7 @@ public class UITest {
     @DisplayName("Test : poser question - nombre décimal : cas 4 - tout pile 3 décimales")
     void testPoserQuestionDecimalCas4ToutPile3Decimales() {
         //On simule les saisies de nombre décimal dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/ui_test/poser_question_decimal_cas_4.txt"));
-        ui.reinitialiserScanner();
+        chargerSaisies("./saisies/ui_test/poser_question_decimal_cas_4.txt");
 
         //On simule le scénario de saisie d'un nombre décimal.
         double nombreDecimal = ui.poserQuestionDecimal("Saisie un nombre décimal :",  UI.REGEX_DECIMAL_POSITIF);
@@ -199,8 +174,7 @@ public class UITest {
     @DisplayName("Test : poser question - nombre décimal : cas 4 - plus de 3 décimales")
     void testPoserQuestionDecimalCas5Sup3Decimales() {
         //On simule les saisies de nombre décimal dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/ui_test/poser_question_decimal_cas_5.txt"));
-        ui.reinitialiserScanner();
+        chargerSaisies("./saisies/ui_test/poser_question_decimal_cas_5.txt");
 
         //On simule le scénario de saisie d'un nombre décimal.
         double nombreDecimal = ui.poserQuestionDecimal("Saisie un nombre décimal :",  UI.REGEX_DECIMAL_POSITIF);
@@ -211,8 +185,7 @@ public class UITest {
     @DisplayName("Test : poser question - nombre décimal : cas 6 - tout pile 5 entiers")
     void testPoserQuestionDecimalCas6ToutPile5Entiers() {
         //On simule les saisies de nombre décimal dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/ui_test/poser_question_decimal_cas_6.txt"));
-        ui.reinitialiserScanner();
+       chargerSaisies("./saisies/ui_test/poser_question_decimal_cas_6.txt");
 
         //On simule le scénario de saisie d'un nombre décimal.
         double nombreDecimal = ui.poserQuestionDecimal("Saisie un nombre décimal :",  UI.REGEX_DECIMAL_POSITIF);
@@ -223,8 +196,7 @@ public class UITest {
     @DisplayName("Test : poser question - nombre décimal : cas 7 - plus de 5 entiers")
     void testPoserQuestionDecimalCas7Sup5Entiers() {
         //On simule les saisies de nombre décimal dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/ui_test/poser_question_decimal_cas_7.txt"));
-        ui.reinitialiserScanner();
+        chargerSaisies("./saisies/ui_test/poser_question_decimal_cas_7.txt");
 
         //On simule le scénario de saisie d'un nombre décimal.
         double nombreDecimal = ui.poserQuestionDecimal("Saisie un nombre décimal :",  UI.REGEX_DECIMAL_POSITIF);
@@ -234,9 +206,8 @@ public class UITest {
     @Test
     @DisplayName("Test : poser question - nombre décimal : cas 8 - vide")
     void testPoserQuestionDecimalCas8Vide() {
-        //On simule les saisies de nombre décimal dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/ui_test/poser_question_decimal_cas_8.txt"));
-        ui.reinitialiserScanner();
+        //On simule les saisies de nombre décimal dans ce fichier.c
+        chargerSaisies("./saisies/ui_test/poser_question_decimal_cas_8.txt");
 
         //On simule le scénario de saisie d'un nombre décimal.
         double nombreDecimal = ui.poserQuestionDecimal("Saisie un nombre décimal :",  UI.REGEX_DECIMAL_POSITIF);
@@ -247,8 +218,7 @@ public class UITest {
     @DisplayName("Test : poser question - nombre décimal : cas 9 - chaîne de caractères")
     void testPoserQuestionDecimalCas9Chaine() {
         //On simule les saisies de nombre décimal dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/ui_test/poser_question_decimal_cas_9.txt"));
-        ui.reinitialiserScanner();
+        chargerSaisies("./saisies/ui_test/poser_question_decimal_cas_9.txt");
 
         //On simule le scénario de saisie d'un nombre décimal.
         double nombreDecimal = ui.poserQuestionDecimal("Saisie un nombre décimal :",  UI.REGEX_DECIMAL_POSITIF);
@@ -259,8 +229,7 @@ public class UITest {
     @DisplayName("Test : poser question - nombre décimal : cas 10 - négatif")
     void testPoserQuestionDecimalCas10Negatif() {
         //On simule les saisies de nombre décimal dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/ui_test/poser_question_decimal_cas_10.txt"));
-        ui.reinitialiserScanner();
+        chargerSaisies("./saisies/ui_test/poser_question_decimal_cas_10.txt");
 
         //On simule le scénario de saisie d'un nombre décimal.
         double nombreDecimal = ui.poserQuestionDecimal("Saisie un nombre décimal :",  UI.REGEX_DECIMAL_POSITIF);
@@ -271,8 +240,7 @@ public class UITest {
     @DisplayName("Test : poser question - grand nombre décimal : cas 1 - une seule décimale")
     void testPoserQuestionGrandDecimalCas1UniqueDecimale() {
         //On simule les saisies de nombre décimal dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/ui_test/poser_question_grand_decimal_cas_1.txt"));
-        ui.reinitialiserScanner();
+        chargerSaisies("./saisies/ui_test/poser_question_grand_decimal_cas_1.txt");
 
         //On simule le scénario de saisie d'un grand nombre décimal.
         double nombreDecimal = ui.poserQuestionDecimal("Saisie un grand nombre décimal :",  UI.REGEX_GRAND_DECIMAL_POSITIF);
@@ -283,8 +251,7 @@ public class UITest {
     @DisplayName("Test : poser question - grand nombre décimal : cas 2 - plusieurs décimales")
     void testPoserQuestionGrandDecimalCas2PlusieursDecimales() {
         //On simule les saisies de nombre décimal dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/ui_test/poser_question_grand_decimal_cas_2.txt"));
-        ui.reinitialiserScanner();
+        chargerSaisies("./saisies/ui_test/poser_question_grand_decimal_cas_2.txt");
 
         //On simule le scénario de saisie d'un grand nombre décimal.
         double nombreDecimal = ui.poserQuestionDecimal("Saisie un grand nombre décimal :",  UI.REGEX_GRAND_DECIMAL_POSITIF);
@@ -295,8 +262,7 @@ public class UITest {
     @DisplayName("Test : poser question - grand nombre décimal : cas 3 - tout pile 13 entiers")
     void testPoserQuestionGrandDecimalCas3ToutPile13Entiers() {
         //On simule les saisies de nombre décimal dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/ui_test/poser_question_grand_decimal_cas_3.txt"));
-        ui.reinitialiserScanner();
+        chargerSaisies("./saisies/ui_test/poser_question_grand_decimal_cas_3.txt");
 
         //On simule le scénario de saisie d'un grand nombre décimal.
         double nombreDecimal = ui.poserQuestionDecimal("Saisie un grand nombre décimal :",  UI.REGEX_GRAND_DECIMAL_POSITIF);
@@ -307,8 +273,7 @@ public class UITest {
     @DisplayName("Test : poser question - grand nombre décimal : cas 4 - plus de 13 entiers")
     void testPoserQuestionGrandDecimalCas4Sup13Entiers() {
         //On simule les saisies de nombre décimal dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/ui_test/poser_question_grand_decimal_cas_4.txt"));
-        ui.reinitialiserScanner();
+        chargerSaisies("./saisies/ui_test/poser_question_grand_decimal_cas_4.txt");
 
         //On simule le scénario de saisie d'un grand nombre décimal.
         double nombreDecimal = ui.poserQuestionDecimal("Saisie un grand nombre décimal :",  UI.REGEX_GRAND_DECIMAL_POSITIF);
@@ -319,8 +284,7 @@ public class UITest {
     @DisplayName("Test : poser question - grand nombre décimal : cas 5 - négatif impossible")
     void testPoserQuestionGrandDecimalCas5() {
         //On simule les saisies de nombre décimal dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/ui_test/poser_question_grand_decimal_cas_5.txt"));
-        ui.reinitialiserScanner();
+        chargerSaisies("./saisies/ui_test/poser_question_grand_decimal_cas_5.txt");
 
         //On simule le scénario de saisie d'un grand nombre décimal.
         double nombreDecimal = ui.poserQuestionDecimal("Saisie un grand nombre décimal :",  UI.REGEX_GRAND_DECIMAL_POSITIF);
@@ -331,8 +295,7 @@ public class UITest {
     @DisplayName("Test : poser question - grand nombre décimal : cas 6 - négatif possible")
     void testPoserQuestionGrandDecimalCas6() {
         //On simule les saisies de nombre décimal dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/ui_test/poser_question_grand_decimal_cas_6.txt"));
-        ui.reinitialiserScanner();
+        chargerSaisies("./saisies/ui_test/poser_question_grand_decimal_cas_6.txt");
 
         //On simule le scénario de saisie d'un grand nombre décimal.
         double nombreDecimal = ui.poserQuestionDecimal("Saisie un grand nombre décimal :",  UI.REGEX_GRAND_DECIMAL_POSITIF_OU_NEGATIF);
@@ -357,8 +320,7 @@ public class UITest {
         Unite unite3 = ajouterUnite("unité 3");
 
         //On simule les saisies de choix d'un n-uplet dans ce fichier.
-        System.setIn(PlatTest.class.getResourceAsStream("./saisies/ui_test/poser_question_options_nuplets_cas_1.txt"));
-        ui.reinitialiserScanner();
+        chargerSaisies("./saisies/ui_test/poser_question_options_nuplets_cas_1.txt");
 
         //On simule le scénario du choix d'un n-uplet.
         Entite uniteChoisie = ui.poserQuestionListeNUplets("Sélectionner un n-uplet :", Arrays.asList(unite1, unite2, unite3));
