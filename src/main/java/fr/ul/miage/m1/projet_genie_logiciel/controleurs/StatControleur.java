@@ -208,12 +208,12 @@ public class StatControleur extends Controleur {
         Function<Entite, String> formateurJour = entite -> {
             StatGeneral statGeneral = (StatGeneral) entite;
             String statFormatee = JAVA_DATE_FORMATEUR.format(statGeneral.getDateJour()) +
-                                " [ Nombre de clients : "  + statGeneral.getNbCommandesPayees() + "," +
+                                " [ Nombre de clients : "  + statGeneral.getNbClients() + "," +
                                 " Nombre de commandes (payées) : "  + statGeneral.getNbCommandesPayees() + "," +
-                                " Temps mpyen de prépration des commandes : " +
+                                " Temps moyen de prépration des commandes : " +
                                 Math.round((double) statGeneral.getTempsPreparation() /
                                         (double) statGeneral.getNbCommandesPreparees()) +
-                                " ]" ;
+                                " minutes ]" ;
             return statFormatee;
         };
         ui.listerNUplets(statsGenerales7DerniersJours, formateurJour);
@@ -249,10 +249,10 @@ public class StatControleur extends Controleur {
                                 JAVA_DATE_FORMATEUR.format(nUplet.get("DATE_FIN_SEMAINE")) +
                                 " [ Nombre de clients : "  + nUplet.get("NB_CLIENTS") + "," +
                                 " Nombre de commandes (payées) : "  + nUplet.get("NB_COMMANDES_PAYEES") + "," +
-                                " Temps mpyen de prépration des commandes : " +
+                                " Temps moyen de prépration des commandes : " +
                                 Math.round(((Number) nUplet.get("TEMPS_PREPARATION")).doubleValue() /
                                         ((Number) nUplet.get("NB_COMMANDES_PREPAREES")).doubleValue()) +
-                                " ]" ;
+                                " minutes ]" ;
             return statFormatee;
         };
         statsGeneralesSemaine.forEach(nUplet -> ui.afficher(formateurSemaine.apply(nUplet)));
@@ -285,10 +285,10 @@ public class StatControleur extends Controleur {
             String statFormatee = nUplet.get("MOIS") +
                                 " [ Nombre de clients : "  + nUplet.get("NB_CLIENTS") + "," +
                                 " Nombre de commandes (payées) : "  + nUplet.get("NB_COMMANDES_PAYEES") + "," +
-                                " Temps mpyen de prépration des commandes : " +
+                                " Temps moyen de prépration des commandes : " +
                                 Math.round(((Number) nUplet.get("TEMPS_PREPARATION")).doubleValue() /
                                         ((Number) nUplet.get("NB_COMMANDES_PREPAREES")).doubleValue()) +
-                                " ]" ;
+                                " minutes ]" ;
             return statFormatee;
         };
         statsGeneralesMois.forEach(nUplet -> ui.afficher(formateurMois.apply(nUplet)));
@@ -319,10 +319,10 @@ public class StatControleur extends Controleur {
             String statFormatee = nUplet.get("ANNEE") +
                                 " [ Nombre de clients : "  + nUplet.get("NB_CLIENTS") + "," +
                                 " Nombre de commandes (payées) : "  + nUplet.get("NB_COMMANDES_PAYEES") + "," +
-                                " Temps mpyen de prépration des commandes : " +
+                                " Temps moyen de prépration des commandes : " +
                                 Math.round(((Number) nUplet.get("TEMPS_PREPARATION")).doubleValue() /
                                         ((Number) nUplet.get("NB_COMMANDES_PREPAREES")).doubleValue()) +
-                                " ]" ;
+                                " minutes ]" ;
             return statFormatee;
         };
         statsGeneralesAnnee.forEach(nUplet -> ui.afficher(formateurAnnee.apply(nUplet)));

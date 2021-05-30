@@ -74,6 +74,7 @@ public class Commande extends Entite {
 
         //Formatage de la commande en chaine de caractères.
         String contenu = "Commande [ id = " + id +
+                         ", table = #" + getIdPlace() +
                          ", date de création = " + getDatetimeCreation().toLocaleString() +
                          ", coût total = " + getCoutTotal() + " €, état = " + getEtat() +
                          " ]\nComposition [ ";

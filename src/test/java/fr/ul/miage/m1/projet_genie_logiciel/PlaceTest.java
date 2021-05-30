@@ -22,7 +22,7 @@ public class PlaceTest extends GlobalTest {
         int compte4Existe = orm.compterNUpletsAvecPredicat("WHERE ID = 4", Compte.class);
         if(compte4Existe == 0) {
             orm.reinitialiserSequenceId(4, Compte.class);
-            ajouterCompte("DUPONT", "Théo", 1, 4);
+            ajouterCompte("DUPONT", "Theo", 1, 4);
         }
     }
 

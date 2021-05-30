@@ -30,14 +30,14 @@ public class Plat extends Entite {
     //Prédicat permettant de détermminer si pour un plat
     //tous les ingrédients sont disponibles en stock avec
     //les quantités minimales nécessaires.
-    public final static String PREDICAT_DISPONIBLE_EN_STOCK =  "FROM_TABLE.ID IN ( " +
-                                                                "SELECT P.ID " +
-                                                                "FROM PLAT AS P " +
-                                                                "INNER JOIN PLAT_INGREDIENTS AS PI " +
-                                                                "ON PI.ID_PLAT = P.ID " +
-                                                                "INNER JOIN INGREDIENT AS I " +
-                                                                "ON I.ID = PI.ID_INGREDIENT " +
-                                                                "WHERE PI.QUANTITE <= I.STOCK)";
+    public final static String PREDICAT_DISPONIBLE_EN_STOCK =  "ID NOT IN " +
+                                                                   "(SELECT P.ID " +
+                                                                    "FROM PLAT AS P " +
+                                                                    "INNER JOIN PLAT_INGREDIENTS AS PI " +
+                                                                    "ON PI.ID_PLAT = P.ID " +
+                                                                    "INNER JOIN INGREDIENT AS I " +
+                                                                    "ON I.ID = PI.ID_INGREDIENT " +
+                                                                    "WHERE PI.QUANTITE > I.STOCK)";
 
     public Plat() {
         super();

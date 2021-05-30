@@ -75,8 +75,7 @@ public class MenuFonctionnalite {
         List<Fonctionnalite> fonctionnalitesGestionReservationsTables = new ArrayList<Fonctionnalite>(Arrays.asList(
                 new FonctionnaliteInterne("Lister les tables réservées", PlaceControleur::listerReservees),
                 new FonctionnaliteInterne("Réserver une table", PlaceControleur::reserver),
-                new FonctionnaliteInterne("Annuler la réservation d'une table", PlaceControleur::annulerReservation),
-                new FonctionnaliteInterne("Valider le paiement d'une commande", CommandeControleur::validerPaiement)));
+                new FonctionnaliteInterne("Annuler la réservation d'une table", PlaceControleur::annulerReservation)));
         MenuFonctionnalite menuFonctionnaliteGestionReservationsTables  =
                 new MenuFonctionnalite("Gestion des réservations de table", fonctionnalitesGestionReservationsTables);
 

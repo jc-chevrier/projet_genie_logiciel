@@ -68,10 +68,6 @@ public class Place extends Entite {
 
     public void setIdCompteServeur(Integer idCompteServeur) { set("ID_COMPTE_SERVEUR", idCompteServeur);}
 
-    public String toEtatString() {
-        return "Table [ id = " + getId() + ", état = " + getEtat() + " ]";
-    }
-
     /**
      * Savoir si un table est utilisée par des commandes.
      *
@@ -83,6 +79,10 @@ public class Place extends Entite {
         int nbCommandes = orm.compterNUpletsAvecPredicat("WHERE ID_PLACE = " + id, Commande.class);
         int aServeur = orm.compterNUpletsAvecPredicat("WHERE ID_COMPTE_SERVEUR IS NOT NULL AND ID = " + id, Place.class);
         return nbCommandes > 0 || aServeur == 1;
+    }
+
+    public String toEtatString() {
+        return "Table [ id = " + getId() + ", état = " + getEtat() + " ]";
     }
 
     /**

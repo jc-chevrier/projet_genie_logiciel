@@ -339,18 +339,16 @@ public class PlatControleur extends Controleur {
         int idCategorie = ui.poserQuestionListeNUplets("Sélectionner une catégorie :", categories).getId();
 
         //Récupération des plats disponibles pour une categorie.
-        String predicat = "WHERE FROM_TABLE.ID IN ( " +
-                          "SELECT P.ID " +
-                          "FROM PLAT AS P " +
-                          "INNER JOIN CATEGORIE AS C " +
-                          "ON P.ID_CATEGORIE = C.ID " +
-                          "INNER JOIN PLAT_INGREDIENTS AS PI " +
-                          "ON PI.ID_PLAT = P.ID " +
-                          "INNER JOIN INGREDIENT AS I " +
-                          "ON I.ID = PI.ID_INGREDIENT " +
-                          "WHERE PI.QUANTITE <= I.STOCK " +
-                          "AND P.CARTE = 1 " +
-                          "AND C.ID = " + idCategorie + ")";
+        String predicat = "WHERE CARTE = 1 " +
+                          "AND ID_CATEGORIE = " + idCategorie + " " +
+                          "AND ID NOT IN " +
+                            "(SELECT P.ID " +
+                            "FROM PLAT AS P "+
+                            "INNER JOIN PLAT_INGREDIENTS AS PI " +
+                            "ON PI.ID_PLAT = P.ID " +
+                            "INNER JOIN INGREDIENT AS I " +
+                            "ON I.ID = PI.ID_INGREDIENT " +
+                            "WHERE PI.QUANTITE > I.STOCK)";
         List<Entite> platsDisponiblesCarte = orm.chercherNUpletsAvecPredicat(predicat, Plat.class);
 
         //Si des plats de la carte sont disponibles,

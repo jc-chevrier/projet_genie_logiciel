@@ -204,21 +204,10 @@ public class UITest extends GlobalTest {
     }
 
     @Test
-    @DisplayName("Test : poser question - nombre décimal : cas 8 - vide")
-    void testPoserQuestionDecimalCas8Vide() {
-        //On simule les saisies de nombre décimal dans ce fichier.c
-        chargerSaisies("./saisies/ui_test/poser_question_decimal_cas_8.txt");
-
-        //On simule le scénario de saisie d'un nombre décimal.
-        double nombreDecimal = ui.poserQuestionDecimal("Saisie un nombre décimal :",  UI.REGEX_DECIMAL_POSITIF);
-        assertEquals(6, nombreDecimal);
-    }
-
-    @Test
-    @DisplayName("Test : poser question - nombre décimal : cas 9 - chaîne de caractères")
-    void testPoserQuestionDecimalCas9Chaine() {
+    @DisplayName("Test : poser question - nombre décimal : cas 8 - 0")
+    void testPoserQuestionDecimalCas8Entier0() {
         //On simule les saisies de nombre décimal dans ce fichier.
-        chargerSaisies("./saisies/ui_test/poser_question_decimal_cas_9.txt");
+        chargerSaisies("./saisies/ui_test/poser_question_decimal_cas_8.txt");
 
         //On simule le scénario de saisie d'un nombre décimal.
         double nombreDecimal = ui.poserQuestionDecimal("Saisie un nombre décimal :",  UI.REGEX_DECIMAL_POSITIF);
@@ -226,10 +215,43 @@ public class UITest extends GlobalTest {
     }
 
     @Test
-    @DisplayName("Test : poser question - nombre décimal : cas 10 - négatif")
-    void testPoserQuestionDecimalCas10Negatif() {
+    @DisplayName("Test : poser question - nombre décimal : cas 9 - 0.0")
+    void testPoserQuestionDecimalCas9Decimal0() {
         //On simule les saisies de nombre décimal dans ce fichier.
+        chargerSaisies("./saisies/ui_test/poser_question_decimal_cas_9.txt");
+
+        //On simule le scénario de saisie d'un nombre décimal.
+        double nombreDecimal = ui.poserQuestionDecimal("Saisie un nombre décimal :",  UI.REGEX_DECIMAL_POSITIF);
+        assertEquals(3, nombreDecimal);
+    }
+
+    @Test
+    @DisplayName("Test : poser question - nombre décimal : cas 10 - vide")
+    void testPoserQuestionDecimalCas10Vide() {
+        //On simule les saisies de nombre décimal dans ce fichier.c
         chargerSaisies("./saisies/ui_test/poser_question_decimal_cas_10.txt");
+
+        //On simule le scénario de saisie d'un nombre décimal.
+        double nombreDecimal = ui.poserQuestionDecimal("Saisie un nombre décimal :",  UI.REGEX_DECIMAL_POSITIF);
+        assertEquals(6, nombreDecimal);
+    }
+
+    @Test
+    @DisplayName("Test : poser question - nombre décimal : cas 11 - chaîne de caractères")
+    void testPoserQuestionDecimalCas11Chaine() {
+        //On simule les saisies de nombre décimal dans ce fichier.
+        chargerSaisies("./saisies/ui_test/poser_question_decimal_cas_11.txt");
+
+        //On simule le scénario de saisie d'un nombre décimal.
+        double nombreDecimal = ui.poserQuestionDecimal("Saisie un nombre décimal :",  UI.REGEX_DECIMAL_POSITIF);
+        assertEquals(5, nombreDecimal);
+    }
+
+    @Test
+    @DisplayName("Test : poser question - nombre décimal : cas 12 - négatif")
+    void testPoserQuestionDecimalCas12Negatif() {
+        //On simule les saisies de nombre décimal dans ce fichier.
+        chargerSaisies("./saisies/ui_test/poser_question_decimal_cas_12.txt");
 
         //On simule le scénario de saisie d'un nombre décimal.
         double nombreDecimal = ui.poserQuestionDecimal("Saisie un nombre décimal :",  UI.REGEX_DECIMAL_POSITIF);
@@ -266,7 +288,7 @@ public class UITest extends GlobalTest {
 
         //On simule le scénario de saisie d'un grand nombre décimal.
         double nombreDecimal = ui.poserQuestionDecimal("Saisie un grand nombre décimal :",  UI.REGEX_GRAND_DECIMAL_POSITIF);
-        assertEquals(0123456789012D, nombreDecimal);
+        assertEquals(1234567891234D, nombreDecimal);
     }
 
     @Test

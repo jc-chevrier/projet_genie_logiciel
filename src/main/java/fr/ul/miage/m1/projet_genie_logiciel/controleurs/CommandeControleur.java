@@ -38,33 +38,40 @@ public class CommandeControleur extends Controleur {
         }
     }
 
+
     /**
-     * Obtenir l'expression régulière définissant le nombre d'occurences
-     * commandables pour un plat en fonction des stocks.
+     * Calculer le nombre d'occurences maximal commandables
+     * pour un plat en fonction des stocks.
      *
      * @param idPlat
      */
-    private static String obtenirRegexNombreOccurences(int idPlat) {
+    private static int calculerNombreOccurencesMax(int idPlat) {
         //Calcul du nombre d'occurences commendable.
-        int nbOccurencesMax = orm.chercherNUpletsAvecPredicat("WHERE ID_PLAT = " + idPlat, PlatIngredients.class)
-                                 .stream()
-                                 .mapToInt(entite -> {
-                                    PlatIngredients platIngredients = (PlatIngredients) entite;
-                                    Ingredient ingredient = (Ingredient) orm.chercherNUpletAvecPredicat(
-                                                                        "WHERE ID = " + platIngredients.getIdIngredient(),
-                                                                        Ingredient.class);
-                                    return (int) Math.floor(ingredient.getStock() / platIngredients.getQuantite());
-                                 })
-                                 .min()
-                                 .getAsInt();
+        return orm.chercherNUpletsAvecPredicat("WHERE ID_PLAT = " + idPlat, PlatIngredients.class)
+                .stream()
+                .mapToInt(entite -> {
+                    PlatIngredients platIngredients = (PlatIngredients) entite;
+                    Ingredient ingredient = (Ingredient) orm.chercherNUpletAvecPredicat(
+                            "WHERE ID = " + platIngredients.getIdIngredient(),
+                            Ingredient.class);
+                    return (int) Math.floor(ingredient.getStock() / platIngredients.getQuantite());
+                })
+                .min()
+                .getAsInt();
+    }
 
+
+    /**
+     * Génerer l'expression régulière pour une séquence entre
+     * minimum et un maximum.
+     */
+    private static String genererRegexSequence(int minimum, int maximum) {
         //Construction de l'expression régulière.
-        String regexNbOccurencesPossibles = "";
-        for(int i = 1; i <= nbOccurencesMax; i++) {
-            regexNbOccurencesPossibles += i + "{1}" + (i == nbOccurencesMax ? "" : "|");
+        String regex = "";
+        for(int i = minimum; i <= maximum; i++) {
+            regex += i + "{1}" + (i == maximum ? "" : "|");
         }
-
-       return regexNbOccurencesPossibles;
+        return regex;
     }
 
     /**
@@ -106,8 +113,9 @@ public class CommandeControleur extends Controleur {
             //Choix du plat.
             int idPlat = ui.poserQuestionListeNUplets("Sélectionner un plat :", platsDisponibles).getId();
             //Saisie du nombre d'occurences.
-            String regexNbOccurencesPossibles = obtenirRegexNombreOccurences(idPlat);
-            int nbOccurences = ui.poserQuestionEntier("Saisir un nombre d'occurences : ", regexNbOccurencesPossibles);
+            int nbOccurencesMax = calculerNombreOccurencesMax(idPlat);
+            String regexNbOccurencesPossibles = genererRegexSequence(1, nbOccurencesMax);
+            int nbOccurences = ui.poserQuestionEntier("Saisir un nombre d'occurences (maximum : " + nbOccurencesMax + ") : ", regexNbOccurencesPossibles);
 
             //Création de la la ligne de commande.
             LigneCommande ligneCommande = new LigneCommande();
@@ -260,18 +268,23 @@ public class CommandeControleur extends Controleur {
         ui.afficherAvecDelimiteurEtUtilisateur("Ajout d'une commande :");
 
         //Récupération du nombre de plats disponibles du restaurant (en fonction des stocks).
+        int nbPlacesOccupees  = orm.compterNUpletsAvecPredicat("WHERE ETAT = 'occupé'", Place.class);
         int nbPlatsDisponibles = orm.compterNUpletsAvecPredicat("WHERE " + Plat.PREDICAT_DISPONIBLE_EN_STOCK, Plat.class);
 
-        String messageErreur = "Aucun plat disponible en stock : pour aucun plat les quantités d'ingrédients requises " +
-                               "sont toutes présentes en stock !";
-        //Si des plats sont disponibles en stock.
-        if(!ui.afficherSiNombreNul(nbPlatsDisponibles, messageErreur)) {
-            //Saisie et sauvegarde.
-            Commande commande = new Commande();
-            editerEtPersister(commande);
+        String messageErreur = "Aucune table occupée par un client trouvée dans le restaurant !";
+        //Si des tables occupées dans le restaurant ont été trouvées.
+        if(!ui.afficherSiNombreNul(nbPlacesOccupees, messageErreur)) {
+            messageErreur = "Aucun plat disponible en stock : pour aucun plat les quantités d'ingrédients requises " +
+                            "sont toutes présentes en stock !";
+            //Si des plats sont disponibles en stock.
+            if(!ui.afficherSiNombreNul(nbPlatsDisponibles, messageErreur)) {
+                //Saisie et sauvegarde.
+                Commande commande = new Commande();
+                editerEtPersister(commande);
 
-            //Message de résultat.
-            ui.afficher("Commande ajoutée !\n" + commande);
+                //Message de résultat.
+                ui.afficher("Commande ajoutée !\n" + commande);
+            }
         }
     }
 
@@ -399,7 +412,7 @@ public class CommandeControleur extends Controleur {
             if (!ui.afficherSiListeNUpletsVide(lignesCommande, messageErreur)) {
                 //Question et saisies.
                 //Choix de la ligne de commande.
-                LigneCommande ligneCommande = (LigneCommande) ui.poserQuestionListeNUplets("Sélectionner un ligne de commande :",
+                LigneCommande ligneCommande = (LigneCommande) ui.poserQuestionListeNUplets("Sélectionner une ligne de commande :",
                                                                                            lignesCommande);
 
                 //Sauvegarde.
