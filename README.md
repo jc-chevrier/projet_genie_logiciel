@@ -148,19 +148,24 @@ Pour installer l'environnement de production :
 2. Avoir le répertoitre `bin/` de `PostgreSQL` dans la variable PATH de votre OS.
    <br>
    Sous windows, le chemin du `bin/` de `PostgreSQL` ressemble en génaral à ça : `C:\Program Files\PostgreSQL\{{VERSION}}\bin`.
-   
 
 3. Compléter le fichier de configuration de la base de données de l'environnement de production : 
    `/bin/fr/ul/miage/m1/projet_genie_logiciel/configuration/configuration_bdd.properties`
-   (la base de données n'a pas besoin d'être créée avant, l'application la créera, prenez juste le soin de renseigner
-   un nom qui vous convient dans la configuration).
+   
+
+   Notes :
    <br>
-   <br>
-   ![Configuration](doc/readme_images/configuration.png)
+   - ATTENTION : veillez toujours à remettre le fichier de configuration dans l'encodage attendu par votre OS : LF
+     pour linux, CRLF pour windows, etc, et ce via un éditeur ;
+   -  la base de données n'a pas besoin d'être créée avant, l'application la créera, prenez juste le soin de renseigner
+   un nom qui vous convient dans la configuration. 
+      <br>
+      <br>
+    ![Configuration](doc/readme_images/configuration.png)
 
 4. Lancer l'exécutable .bat ou .sh (selon votre OS) de réinitialisation de la base de données
    de l'environnement de production :
-   `/bin/fr/ul/miage/m1/projet_genie_logiciel/reconstruire_bdd.(bat|sh)` .
+   `/bin/fr/ul/miage/m1/projet_genie_logiciel/reconstruire_bdd.(bat|sh)`  .
    
 
    Notes : 
