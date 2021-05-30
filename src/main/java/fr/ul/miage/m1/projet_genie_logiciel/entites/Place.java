@@ -2,13 +2,14 @@ package fr.ul.miage.m1.projet_genie_logiciel.entites;
 
 import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Entité rôle.
+ * Entité des tables du restaurant.
+ *
+ * Elle a nommée "PLACE" car "TABLE" est un mot clé réservé en SQL.
  *
  * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */
@@ -67,27 +68,47 @@ public class Place extends Entite {
 
     public void setIdCompteServeur(Integer idCompteServeur) { set("ID_COMPTE_SERVEUR", idCompteServeur);}
 
+    /**
+     * Savoir si un table est utilisée par des commandes.
+     *
+     * @return
+     */
+    public boolean estUtiliseeParCommandeOuServeur() {
+        ORM orm =  ORM.getInstance();
+        int id = getId();
+        int nbCommandes = orm.compterNUpletsAvecPredicat("WHERE ID_PLACE = " + id, Commande.class);
+        int aServeur = orm.compterNUpletsAvecPredicat("WHERE ID_COMPTE_SERVEUR IS NOT NULL AND ID = " + id, Place.class);
+        return nbCommandes > 0 || aServeur == 1;
+    }
+
     public String toEtatString() {
         return "Table [ id = " + getId() + ", état = " + getEtat() + " ]";
     }
 
+    /**
+     * Formateur en chaine de caractères partiel, permettant d'afficher
+     * que de manière partielle une table, en ne conservant que l'id,
+     * l'état, et le serveur de la table.
+     *
+     * @return
+     */
     public String toEtatServeurString() {
         Compte serveur = (Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = " + getIdCompteServeur(), Compte.class);
         return "Table [ id = " + getId() +
-                ", état = " + getEtat() +
-                (serveur == null ?
-                ", pas de serveur associé" : (", serveur = " + serveur.getNom() + " " + serveur.getPrenom())) + " ]";
+               ", état = " + getEtat() +
+               (serveur == null ?
+               ", pas de serveur associé" : (", serveur = " + serveur.getNom() + " " + serveur.getPrenom())) + " ]";
     }
 
     @Override
     public String toString() {
         Compte serveur = (Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = " + getIdCompteServeur(), Compte.class);
         return "Table [ id = " + getId() +
-                ", état = " + getEtat() +
-                (serveur == null ?
-                ", pas de serveur associé" : (", serveur = " + serveur.getNom() + " " + serveur.getPrenom())) +
-                (getDatetimeReservation() == null ?
-                 ", pas de réservation associée" : (", réservation = " + getNomReservation() + " " + getPrenomReservation() +
-                 ", date de réservation = " + getDatetimeReservation().toLocaleString())) + " ]";
+               ", état = " + getEtat() +
+               (serveur == null ?
+               ", pas de serveur associé" : (", serveur = " + serveur.getNom() + " " + serveur.getPrenom())) +
+               (getDatetimeReservation() == null ?
+               ", pas de réservation associée" : (", réservation = " + getNomReservation() + " " + getPrenomReservation() +
+               ", date de réservation = " + getDatetimeReservation().toLocaleString())) + " ]";
     }
 }

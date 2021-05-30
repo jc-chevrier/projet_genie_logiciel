@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Entité Ingredient.
+ * Entité des ingredients.
  *
  * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */
@@ -58,14 +58,12 @@ public class Ingredient extends Entite {
     }
 
     /**
-     * Savoir si un ingrédient est utilisé par un plat.
+     * Savoir si un ingrédient est utilisé par des plats.
      *
      * @return
      */
     public boolean estUtiliseParPlat() {
-        return ORM.getInstance().compterNUpletsAvecPredicat(
-                "INNER JOIN PLAT_INGREDIENTS AS PI " +
-                        "ON PI.ID_INGREDIENT = " + getId(), Ingredient.class) > 0;
+        return ORM.getInstance().compterNUpletsAvecPredicat("WHERE ID_INGREDIENT = " + getId(), PlatIngredients.class) > 0;
     }
 
     @Override

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Entité Plat.
+ * Entité des plats du catalogue du restaurant.
  *
  * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */
@@ -27,14 +27,17 @@ public class Plat extends Entite {
         STRUCTURE.put("ID_CATEGORIE", Integer.class);
     }
 
-    public final static String PREDICAT_DISPONIBLE_EN_STOCK =  "FROM_TABLE.ID IN ( " +
-                                                                "SELECT P.ID " +
-                                                                "FROM PLAT AS P " +
-                                                                "INNER JOIN PLAT_INGREDIENTS AS PI " +
-                                                                "ON PI.ID_PLAT = P.ID " +
-                                                                "INNER JOIN INGREDIENT AS I " +
-                                                                "ON I.ID = PI.ID_INGREDIENT " +
-                                                                "WHERE PI.QUANTITE <= I.STOCK)";
+    //Prédicat permettant de détermminer si pour un plat
+    //tous les ingrédients sont disponibles en stock avec
+    //les quantités minimales nécessaires.
+    public final static String PREDICAT_DISPONIBLE_EN_STOCK =  "ID NOT IN " +
+                                                                   "(SELECT P.ID " +
+                                                                    "FROM PLAT AS P " +
+                                                                    "INNER JOIN PLAT_INGREDIENTS AS PI " +
+                                                                    "ON PI.ID_PLAT = P.ID " +
+                                                                    "INNER JOIN INGREDIENT AS I " +
+                                                                    "ON I.ID = PI.ID_INGREDIENT " +
+                                                                    "WHERE PI.QUANTITE > I.STOCK)";
 
     public Plat() {
         super();
@@ -76,34 +79,40 @@ public class Plat extends Entite {
         set("ID_CATEGORIE", idCategorie);
     }
 
+    /**
+     * Savoir si un plat est utilisé par des lignes de commande.
+     *
+     * @return
+     */
+    public boolean estUtiliseParLigneCommande() {
+        return ORM.getInstance().compterNUpletsAvecPredicat("WHERE ID_PLAT = " + getId(), LigneCommande.class) > 0;
+    }
+
     @Override
     public String toString() {
         ORM orm = ORM.getInstance();
         Integer id = getId();
-        Categorie categorie = (Categorie) orm.chercherNUpletAvecPredicat(
-                                                                    "WHERE ID = " + getIdCategorie(),
-                                                                     Categorie.class);
-        List<Entite> platIngredients = orm.chercherNUpletsAvecPredicat(
-                                                                "WHERE ID_PLAT = "  + id,
-                                                                 PlatIngredients.class);
+
+        //Formatage du plat en chaine de caractères.
+        Categorie categorie = (Categorie) orm.chercherNUpletAvecPredicat("WHERE ID = " + getIdCategorie(), Categorie.class);
         String contenu = "Plat [ id = " + id +
                          ", libellé = " + getlibelle() +
-                         ", " + getPrix() + " €, catégorie = " + categorie.getLibelle() +
+                         ", prix = " + getPrix() + " €, catégorie = " + categorie.getLibelle() +
                          ", carte = " + (getCarte() == 1 ? "oui" : "non") +
                          " ]\nComposition [ ";
+
+        //Formatage de la composition du plat en chaine de caractères.
+        List<Entite> platIngredients = orm.chercherNUpletsAvecPredicat("WHERE ID_PLAT = " + id, PlatIngredients.class);
         int nbPlatsIngredients = platIngredients.size();
         for(int index = 0; index < nbPlatsIngredients; index++) {
             PlatIngredients platIngredient = (PlatIngredients) platIngredients.get(index);
-            Ingredient ingredient = (Ingredient) orm.chercherNUpletAvecPredicat(
-                                                        "WHERE ID = " + platIngredient.getIdIngredient(),
-                                                        Ingredient.class);
-            Unite unite = (Unite) orm.chercherNUpletAvecPredicat(
-                                                        "WHERE ID = " + ingredient.getIdUnite(),
-                                                         Unite.class);
+            Ingredient ingredient = (Ingredient) orm.chercherNUpletAvecPredicat("WHERE ID = " + platIngredient.getIdIngredient(), Ingredient.class);
+            Unite unite = (Unite) orm.chercherNUpletAvecPredicat("WHERE ID = " + ingredient.getIdUnite(), Unite.class);
             contenu += "(" + ingredient.getLibelle() + " : " +
                        platIngredient.getQuantite() + " " + unite.getLibelle() + ")" +
                        ((index < (nbPlatsIngredients - 1)) ? ", " : " ]");
         }
+
         return contenu;
     }
 }

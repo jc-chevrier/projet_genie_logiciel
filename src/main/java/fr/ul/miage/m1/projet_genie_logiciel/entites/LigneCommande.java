@@ -2,13 +2,11 @@ package fr.ul.miage.m1.projet_genie_logiciel.entites;
 
 import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
 import org.jetbrains.annotations.NotNull;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
- * Entité ligne de commande.
+ * Entité des lignes de composition des commandes.
  *
  * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */
@@ -70,14 +68,11 @@ public class LigneCommande extends Entite {
 
     @Override
     public String toString() {
-        ORM orm = ORM.getInstance();
-        Integer id = getId();
-
-        Plat plat = (Plat) orm.chercherNUpletAvecPredicat("WHERE ID = "  + id, Plat.class);
-        String contenu = "Ligne de commande [ id = " + id +
-                ", état = " + getEtat() +
-                ", id de la commande = " + getIdCommande() + " ]\n" + getNbOccurences() + "x " + plat.toString();
-
-        return contenu;
+        Plat plat = (Plat) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = "  + getIdPlat(), Plat.class);
+        return "Ligne de commande [" +
+               " id = " + getId() +
+               ", état = " + getEtat() +
+               ", id de la commande = " + getIdCommande() + " ]\n" +
+               getNbOccurences() + "x " + plat.toString();
     }
 }

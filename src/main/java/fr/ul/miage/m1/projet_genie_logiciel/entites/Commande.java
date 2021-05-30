@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Entité commande.
+ * Entité des commandes des clients.
  *
  * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */
@@ -71,24 +71,26 @@ public class Commande extends Entite {
     public String toString() {
         ORM orm = ORM.getInstance();
         Integer id = getId();
-        List<Entite> ligneCommandes = orm.chercherNUpletsAvecPredicat(
-                "WHERE ID_Commande = "  + id,
-                LigneCommande.class);
+
+        //Formatage de la commande en chaine de caractères.
         String contenu = "Commande [ id = " + id +
-                ", date de création = " + getDatetimeCreation().toLocaleString() +
-                ", coût total = " + getCoutTotal() + " €, état = " + getEtat() +
-                " ]\nComposition [ ";
+                         ", table = #" + getIdPlace() +
+                         ", date de création = " + getDatetimeCreation().toLocaleString() +
+                         ", coût total = " + getCoutTotal() + " €, état = " + getEtat() +
+                         " ]\nComposition [ ";
+
+        //Formatage de la composition de la commande en chaine de caractères.
+        List<Entite> ligneCommandes = orm.chercherNUpletsAvecPredicat("WHERE ID_Commande = " + id, LigneCommande.class);
         int nbLignesCommandes = ligneCommandes.size();
         for(int index = 0; index < nbLignesCommandes; index++) {
             LigneCommande ligneCommande = (LigneCommande) ligneCommandes.get(index);
-            Plat plat = (Plat) orm.chercherNUpletAvecPredicat(
-                    "WHERE ID = " + ligneCommande.getIdPlat(),
-                     Plat.class);
-            contenu += "(" + plat.getlibelle()+ ", " +
-                    plat.getPrix()+" €, x"+
-                    ligneCommande.getNbOccurences() + ")" +
-                    ((index < (nbLignesCommandes - 1)) ? ", " : " ]");
+            Plat plat = (Plat) orm.chercherNUpletAvecPredicat("WHERE ID = " + ligneCommande.getIdPlat(), Plat.class);
+            contenu += "(" + plat.getlibelle() + ", " +
+                       plat.getPrix() +" €, x"+
+                       ligneCommande.getNbOccurences() + ")" +
+                       ((index < (nbLignesCommandes - 1)) ? ", " : " ]");
         }
+
         return contenu;
     }
 }

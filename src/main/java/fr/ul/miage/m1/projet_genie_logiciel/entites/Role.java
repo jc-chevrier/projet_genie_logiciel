@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Entité rôle.
+ * Entité des rôles des utilisateurs.
  *
  * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */
@@ -43,5 +43,10 @@ public class Role extends Entite {
 
     public void setLibelle(@NotNull String libelle) {
          set("LIBELLE", libelle);
+    }
+
+    @Override
+    public String toString() {
+        return "Rôle [ id = " + getId() + ", libellé = " + getLibelle() + " ]";
     }
 }

@@ -1,37 +1,28 @@
 package fr.ul.miage.m1.projet_genie_logiciel;
 
-
 import fr.ul.miage.m1.projet_genie_logiciel.controleurs.CategorieControleur;
 import fr.ul.miage.m1.projet_genie_logiciel.controleurs.UniteControleur;
-import fr.ul.miage.m1.projet_genie_logiciel.entites.Categorie;
-import fr.ul.miage.m1.projet_genie_logiciel.entites.Compte;
-import fr.ul.miage.m1.projet_genie_logiciel.entites.Unite;
-import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
+import fr.ul.miage.m1.projet_genie_logiciel.entites.*;
 import org.junit.jupiter.api.*;
-import fr.ul.miage.m1.projet_genie_logiciel.entites.Entite;
-import fr.ul.miage.m1.projet_genie_logiciel.orm.ORM;
-import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
-@DisplayName("Categorie")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class CategorieTest {
-    private static ORM orm;
-    private static UI ui;
-
-    static void reinitialiserTables(){
+@DisplayName("Catégorie")
+public class CategorieTest extends GlobalTest {
+    /**
+     * Réinitialiser les tables utilisées dans les tests
+     * de cette classe.
+     */
+    static void reinitialiserTables() {
+        //On réinitialise la table plat_ingrédiants.
+        orm.reinitialiserTable(PlatIngredients.class);
+        //On réinitialise la table plat.
+        orm.reinitialiserTable(Plat.class);
         //On réinitialise la table catégorie.
         orm.reinitialiserTable(Categorie.class);
-    }
-
-    @BeforeAll
-    static void faireAvantTousLesTests() {
-        ORM.CONFIGURATION_FILENAME = "./configuration/configuration_bdd_test.properties";
-        orm = ORM.getInstance();
-
-        ui = UI.getInstance();
-        //On se connecte en tant que cuisinier.
-        ui.setUtilisateurConnecte((Compte) ORM.getInstance().chercherNUpletAvecPredicat("WHERE ID = 3", Compte.class));
+        //On réinitialise la table ingrédient.
+        orm.reinitialiserTable(Ingredient.class);
+        //On réinitialise la table unité.
+        orm.reinitialiserTable(Unite.class);
     }
 
     @BeforeEach
@@ -47,14 +38,11 @@ public class CategorieTest {
     @Test
     @DisplayName("Test : lister les categories - cas 1 : categories trouvées")
     void testListerCas1Trouvees() {
-        //On ajoute une categorie à lister.
-        Categorie categorie1 = new Categorie();
-        categorie1.setLibelle("libellé");
-        orm.persisterNUplet(categorie1);
+        //On se connecte en tant que cuisinier.
+        seConnecterEnCuisinier();
 
-        //On simule les saisies de listing dans ce fichier.
-        System.setIn(UniteTest.class.getResourceAsStream("./saisies/categorie_test/lister_cas_1.txt"));
-        ui.reinitialiserScanner();
+        ajouterCategorie("Cuisine française");
+        ajouterCategorie("Cuisine indienne");
 
         //On simule le scénario de listing.
         CategorieControleur.lister();
@@ -63,9 +51,8 @@ public class CategorieTest {
     @Test
     @DisplayName("Test : lister les catégories - cas 2 : aucune catégorie trouvée")
     void testListerCas2PasTrouvees() {
-        //On simule les saisies de listing dans ce fichier.
-        System.setIn(CategorieTest.class.getResourceAsStream("./saisies/categorie_test/lister_cas_2.txt"));
-        ui.reinitialiserScanner();
+        //On se connecte en tant que cuisinier.
+        seConnecterEnCuisinier();
 
         //On simule le scénario de listing.
         UniteControleur.lister();
@@ -74,26 +61,31 @@ public class CategorieTest {
     @Test
     @DisplayName("Test : ajouter une catégorie - cas 1 : catégorie bien ajoutée")
     void testAjouterCas1BienAjoutee() {
+        //On se connecte en tant que cuisinier.
+        seConnecterEnCuisinier();
+
         //On simule les saisies d'ajout dans ce fichier.
-        System.setIn(UniteTest.class.getResourceAsStream("./saisies/categorie_test/ajouter_cas_1.txt"));
-        ui.reinitialiserScanner();
+        chargerSaisies("./saisies/categorie_test/ajouter_cas_1.txt");
 
         int nbCategoriesAvant = orm.compterTousLesNUplets(Categorie.class);
+        assertEquals(0, nbCategoriesAvant);
 
         //On simule le scénario d'ajout.
         CategorieControleur.ajouter();
 
         //Une unité a due être insérée.
         int nbCategoriesApres = orm.compterTousLesNUplets(Categorie.class);
-        assertEquals(nbCategoriesAvant + 1, nbCategoriesApres);
+        assertEquals(1, nbCategoriesApres);
     }
 
     @Test
     @DisplayName("Test : ajouter une catégorie - cas 2 : catégorie bien ajoutée avec bon libellé")
     void testAjouterCas2BonLibelle() {
+        //On se connecte en tant que cuisinier.
+        seConnecterEnCuisinier();
+
         //On simule les saisies de l'ajout dans ce fichier.
-        System.setIn(CategorieTest.class.getResourceAsStream("./saisies/categorie_test/ajouter_cas_2.txt"));
-        ui.reinitialiserScanner();
+        chargerSaisies("./saisies/categorie_test/ajouter_cas_2.txt");
 
         //On simule le scénario d'ajout.
         CategorieControleur.ajouter();
@@ -106,29 +98,33 @@ public class CategorieTest {
     @Test
     @DisplayName("Test : modifier une catégorie - cas 1 : catégorie bien modifiée")
     void testModifierCas1BienModifiee() {
-        //On ajoute une catégorie à modifier.
-        Categorie categorie = new Categorie();
-        categorie.setLibelle("libellé");
-        orm.persisterNUplet(categorie);
+        //On se connecte en tant que cuisinier.
+        seConnecterEnCuisinier();
+
+        ajouterCategorie("à modifier");
 
         //On simule les saisies de modification dans ce fichier.
-        System.setIn(CategorieTest.class.getResourceAsStream("./saisies/categorie_test/modifier_cas_1.txt"));
-        ui.reinitialiserScanner();
+        chargerSaisies("./saisies/categorie_test/modifier_cas_1.txt");
+
+        Categorie categorieAvant = (Categorie) orm.chercherNUpletAvecPredicat("WHERE ID = 1", Categorie.class);
+        assertEquals("à modifier", categorieAvant.getLibelle());
 
         //On simule le scénario de modification.
         CategorieControleur.modifier();
 
         //La catégorie modifiée doit avoir ce libellé : "libellé modifié".
-        Categorie categorieModifie = (Categorie) orm.chercherNUpletAvecPredicat("WHERE ID = 1", Categorie.class);
-        assertEquals("libellé modifié", categorieModifie.getLibelle());
+        Categorie categorieApres = (Categorie) orm.chercherNUpletAvecPredicat("WHERE ID = 1", Categorie.class);
+        assertEquals("libellé modifié", categorieApres.getLibelle());
     }
 
     @Test
     @DisplayName("Test : modifier une catégorie - cas 2 : aucune catégorie trouvée")
     void testModifierCa2PasTrouvees() {
+        //On se connecte en tant que cuisinier.
+        seConnecterEnCuisinier();
+
         //On simule les saisies de modification dans ce fichier.
-        System.setIn(CategorieTest.class.getResourceAsStream("./saisies/categorie_test/modifier_cas_1.txt"));
-        ui.reinitialiserScanner();
+        chargerSaisies("./saisies/categorie_test/modifier_cas_1.txt");
 
         //On simule le scénario de modification.
         CategorieControleur.modifier();
@@ -137,36 +133,35 @@ public class CategorieTest {
     @Test
     @DisplayName("Test : supprimer une catégorie - cas 1 : catégorie bien supprimée")
     void testSupprimerCas1BienSupprimee() {
-        //On ajoute une catégorie à supprimer.
-        Categorie categorie = new Categorie();
-        categorie.setLibelle("libellé");
-        orm.persisterNUplet(categorie);
+        //On se connecte en tant que cuisinier.
+        seConnecterEnCuisinier();
+
+        ajouterCategorie("à supprimer");
 
         //On simule les saisies de la suppression dans ce fichier.
-        System.setIn(CategorieTest.class.getResourceAsStream("./saisies/categorie_test/supprimer_cas_1.txt"));
-        ui.reinitialiserScanner();
+        chargerSaisies("./saisies/categorie_test/supprimer_cas_1.txt");
 
         int nbCategoriesAvant = orm.compterTousLesNUplets(Categorie.class);
+        assertEquals(1, nbCategoriesAvant);
 
         //On simule le scénario de suppression.
         CategorieControleur.supprimer();
 
         //Une catégorie a due être supprimée.
         int nbCategoriesApres = orm.compterTousLesNUplets(Categorie.class);
-        assertEquals(nbCategoriesAvant - 1, nbCategoriesApres);
+        assertEquals(0, nbCategoriesApres);
     }
 
     @Test
     @DisplayName("Test : supprimer une catégorie - cas 2 : catégorie supprimée correcte")
     void testSupprimerCas2Correcte() {
-        //On ajoute une catégorie à supprimer.
-        Categorie categorie = new Categorie();
-        categorie.setLibelle("libellé");
-        orm.persisterNUplet(categorie);
+        //On se connecte en tant que cuisinier.
+        seConnecterEnCuisinier();
+
+        ajouterCategorie("à supprimer - autre");
 
         //On simule les saisies de la suppression dans ce fichier.
-        System.setIn(CategorieTest.class.getResourceAsStream("./saisies/categorie_test/supprimer_cas_2.txt"));
-        ui.reinitialiserScanner();
+        chargerSaisies("./saisies/categorie_test/supprimer_cas_2.txt");
 
         //Catégorie existante avant.
         Categorie categorieAvant = (Categorie) orm.chercherNUpletAvecPredicat("WHERE ID = 1", Categorie.class);
@@ -183,11 +178,71 @@ public class CategorieTest {
     @Test
     @DisplayName("Test : supprimer une catégorie - cas 3 : aucune catégorie trouvée")
     void testSupprimerCas3PasTrouvees() {
-        //On simule les saisies de la suppression dans ce fichier.
-        System.setIn(UniteTest.class.getResourceAsStream("./saisies/categorie_test/supprimer_cas_3.txt"));
-        ui.reinitialiserScanner();
+        //On se connecte en tant que cuisinier.
+        seConnecterEnCuisinier();
 
         //On simule le scénario de suppression.
         CategorieControleur.supprimer();
+    }
+
+    @Test
+    @DisplayName("Test : lister les catégories des plats disponibles dans la carte du jour - cas 1 : catégories trouvées")
+    void testListerDisponiblesCas1Trouve() {
+        //On se connecte en tant que serveur.
+        seConnecterEnServeur();
+
+        ajouterCategorie("catégorie 1");
+        ajouterCategorie("catégorie 2");
+        ajouterUnite("unité");
+        ajouterIngredient("ingrédient", 20.0, 1);
+        ajouterPlat("plat 1", 1.5, 1, 1);
+        ajouterPlatIngredient(1.0, 1, 1);
+        ajouterPlat("plat 2", 1.5, 0, 2);
+        ajouterPlatIngredient(3.5, 2, 1);
+
+        //On simule le scénario de listing.
+        CategorieControleur.listerDisponiblesCarte();
+    }
+
+    @Test
+    @DisplayName("Test : lister les catégories des plats disponibles dans la carte du jour - cas 2 : catégories pas trouvées - stocks insuffisants")
+    void testListerDisponiblesCas2PasTrouveStockInsuffisant() {
+        //On se connecte en tant que serveur.
+        seConnecterEnServeur();
+
+        ajouterCategorie("catégorie");
+        ajouterUnite("unité");
+        ajouterIngredient("ingrédient", 2, 1);
+        ajouterPlat("plat", 1.5, 1, 1);
+        ajouterPlatIngredient(5, 1, 1);
+
+        //On simule le scénario de listing.
+        CategorieControleur.listerDisponiblesCarte();
+    }
+
+    @Test
+    @DisplayName("Test : lister les catégories des plats disponible dans la carte du jour - cas 3 : aucune catégorie trouvée - carte du jour vide")
+    void testListerCas3PasTrouveCarteVide() {
+        //On se connecte en tant que serveur.
+        seConnecterEnServeur();
+
+        ajouterCategorie("catégorie");
+        ajouterUnite("unité");
+        ajouterIngredient("ingrédient", 20.0, 1);
+        ajouterPlat("plat", 1.5, 0, 1);
+        ajouterPlatIngredient(1.0, 1, 1);
+
+        //On simule le scénario de listing.
+        CategorieControleur.listerDisponiblesCarte();
+    }
+
+    @Test
+    @DisplayName("Test : lister les catégories des plats disponibles dans la carte - cas 4 : aucune catégorie trouvée - categorie vide ")
+    void testListerCas4PasTrouveCategorieVide() {
+        //On se connecte en tant que serveur.
+        seConnecterEnServeur();
+
+        //On simule le scénario de listing des catégories des plats disponibles dans la carte.
+        CategorieControleur.listerDisponiblesCarte();
     }
 }

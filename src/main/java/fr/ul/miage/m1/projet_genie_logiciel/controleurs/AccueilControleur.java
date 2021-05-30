@@ -1,6 +1,8 @@
 package fr.ul.miage.m1.projet_genie_logiciel.controleurs;
 
-import fr.ul.miage.m1.projet_genie_logiciel.ui.UI;
+import fr.ul.miage.m1.projet_genie_logiciel.fonctionnalites.Fonctionnalite;
+import fr.ul.miage.m1.projet_genie_logiciel.fonctionnalites.MenuFonctionnalite;
+
 import java.util.List;
 
 /**
@@ -13,24 +15,25 @@ public class AccueilControleur extends Controleur {
      * Obtenir l'accueil de l'interface.
      */
     public static void consulter() {
-        //UI.
-        UI ui = getUI();
-
         //Connexion.
         if(!utilisateurConnecte()) {
             AuthControleur.seConnecter();
         }
 
-        //Message titre.
+        //Message de titre.
         ui.afficherAvecDelimiteurEtUtilisateur("Accueil :");
 
         //Question et saisie fonctionnalités.
         int idRole = getUtilisateurConnecte().getIdRole();
-        List<String> fonctionnalitesLibelles = Fonctionnalite.getRoleFonctionnalitesLibelles(idRole);
+        //Choix du menu.
+        List<String> menusFonctionnaliteLibelles = MenuFonctionnalite.getRoleMenusFonctionnaliteLibelles(idRole);
+        int indexMenuFonctionnalite = ui.poserQuestionListeOptions("Sélectionner un menu :", menusFonctionnaliteLibelles);
+        //Choix de la fonctionnalité.
+        List<String> fonctionnalitesLibelles = MenuFonctionnalite.getFonctionnalitesLibelles(idRole, indexMenuFonctionnalite);
         int indexFonctionnalite = ui.poserQuestionListeOptions("Sélectionner une action :", fonctionnalitesLibelles);
 
         //Exécution de la fonctionnalité sélectionnée.
-        Fonctionnalite fonctionnalite = Fonctionnalite.getFonctionnalite(idRole, indexFonctionnalite);
+        Fonctionnalite fonctionnalite = MenuFonctionnalite.getFonctionnalite(idRole, indexMenuFonctionnalite, indexFonctionnalite);
         fonctionnalite.executer();
     }
 }

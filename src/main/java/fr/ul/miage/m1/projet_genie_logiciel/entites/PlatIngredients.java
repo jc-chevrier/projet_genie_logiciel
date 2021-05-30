@@ -1,12 +1,11 @@
 package fr.ul.miage.m1.projet_genie_logiciel.entites;
 
 import org.jetbrains.annotations.NotNull;
-
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Entité PlatIngredients.
+ * Entité des lignes de composition des plats.
  *
  * @author CHEVRIER, HADJ MESSAOUD, LOUGADI
  */
