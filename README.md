@@ -386,8 +386,9 @@ Les 4 versions fonctionelles du projet, liées aux fins de chaque sprint, ont é
   https://github.com/jc-chevrier/projet_genie_logiciel/tree/570fc5e1b82dd82c9a971123428b95f3c2c7586c
 - Version `4.0` (finale)
   <br>
+  https://github.com/jc-chevrier/projet_genie_logiciel/tree/266952e22c6220f25aac0f7ab28370807d41bc82
 
-![Git tags](doc/readme_images/git_tags.png)
+![Git tags](doc/readme_images/tags.png)
 
 Ci-après un lien vers la page des versions : https://github.com/jc-chevrier/projet_genie_logiciel/tags.
 
