@@ -1,7 +1,7 @@
 @ECHO OFF
 
-SET configurationFile=..\..\resources\fr\ul\miage\m1\projet_genie_logiciel\configuration\configuration_bdd.properties
-FOR /F "tokens=1,2 delims==" %%G IN (%configurationFile%) DO (set %%G=%%H)
+SET configurationFichier=..\..\resources\fr\ul\miage\m1\projet_genie_logiciel\configuration\configuration_bdd.properties
+FOR /F "tokens=1,2 delims==" %%G IN (%configurationFichier%) DO (set %%G=%%H)
 
 SET PGPASSWORD=%motDePasse%
 psql -h %hote% -p %port% -U %utilisateur% -d postgres -q -v baseDeDonnees=%baseDeDonnees% < .\initialisation\script_creation_bdd.sql

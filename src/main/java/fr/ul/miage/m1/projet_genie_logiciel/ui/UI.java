@@ -23,9 +23,13 @@ public class UI {
     //Expression régulière des chaines de caractères.
     public final static String REGEX_CHAINE_DE_CARACTERES = ".{1,50}";
     //Expression régulière des nombres décimaux positifs.
-    public final static String REGEX_DECIMAL_POSITIF = "[1-9]{1}[0-9]{0,4}|[1-9]{1}[0-9]{0,4}\\.{1}[1-9]{1}[0-9]{0,2}";
+    public final static String REGEX_DECIMAL_POSITIF = "0*[1-9]{1}[0-9]{0,4}(\\.{1}0*){0,1}|" +
+                                                       "0*[1-9]{1}[0-9]{0,4}\\.{1}[0-9]{0,2}[1-9]{1}0*|" +
+                                                       "0+\\.{1}[0-9]{0,2}[1-9]{1}0*";
     //Expression régulière des grands nombres décimaux positifs.
-    public final static String REGEX_GRAND_DECIMAL_POSITIF = "[1-9]{1}[0-9]{0,12}|[1-9]{1}[0-9]{0,12}\\.{1}[1-9]{1}[0-9]{0,2}";
+    public final static String REGEX_GRAND_DECIMAL_POSITIF = "0*[1-9]{1}[0-9]{0,12}(\\.{1}0*){0,1}|" +
+                                                             "0*[1-9]{1}[0-9]{0,12}\\.{1}[0-9]{0,2}[1-9]{1}0*|" +
+                                                             "0+\\.{1}[0-9]{0,2}[1-9]{1}0*";
     //Expression régulière des nombres décimaux positifs ou négatifs.
     public final static String REGEX_GRAND_DECIMAL_POSITIF_OU_NEGATIF = "-{0,1}(" + REGEX_GRAND_DECIMAL_POSITIF + ")";
 

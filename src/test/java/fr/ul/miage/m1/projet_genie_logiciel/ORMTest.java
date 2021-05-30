@@ -11,7 +11,7 @@ public class ORMTest extends GlobalTest {
      * Réinitialiser les tables utilisées dans les tests
      * de cette classe.
      */
-    static void reinitialiserTables(){
+    static void reinitialiserTables() {
         //On réinitialise la table place.
         orm.reinitialiserTable(Place.class);
         //On réinitialise la table unité.
